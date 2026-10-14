@@ -1,0 +1,99 @@
+:root {
+  /* Canvas & Surface - Clean Light Aesthetics */
+  --bg-page: #f1f4f8;
+  --bg-canvas: #ffffff;
+  --bg-card: #ffffff;
+  --bg-subtle: #f8fafc;
+  --bg-muted: #eef2f6;
+
+  /* 2 Primary Accents (Strictly Pure Solid Colors - No Gradients) */
+  --accent-red: #E3000C;             /* Primary Accent 1: Pure Red */
+  --accent-red-hover: #C2000A;
+  --accent-red-subtle: #FFF1F2;
+  --accent-red-border: rgba(227, 0, 12, 0.25);
+
+  --accent-yellow: #FDC700;          /* Primary Accent 2: Pure Yellow/Gold */
+  --accent-yellow-hover: #E5B400;
+  --accent-yellow-subtle: #FEFCE8;
+  --accent-yellow-border: rgba(253, 199, 0, 0.35);
+
+  --accent-sunset: #FDC700;          /* Secondary Accent mapped to #FDC700 */
+  --accent-sunset-hover: #E5B400;
+  --accent-sunset-subtle: #FEFCE8;
+  --accent-sunset-border: rgba(253, 199, 0, 0.35);
+
+  --accent-gold: #FDC700;
+
+  /* Neutral Dark for Primary Buttons & Headers */
+  --btn-dark: #0f172a;
+  --btn-dark-hover: #1e293b;
+
+  /* Typography Colors */
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --text-light: #64748b;
+  --text-inverse: #ffffff;
+
+  /* Borders & Shadows */
+  --border-color: #e2e8f0;
+  --border-light: rgba(0, 0, 0, 0.06);
+  --border-focus: var(--accent-red);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 8px 20px -4px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 20px 35px -10px rgba(15, 23, 42, 0.08);
+  --shadow-card-fan: 0 15px 30px -5px rgba(15, 23, 42, 0.12);
+
+  /* Fonts */
+  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--text-main);
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-sunset);
+  outline-offset: 2px;
+}
