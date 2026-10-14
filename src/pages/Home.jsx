@@ -2,6 +2,11 @@ import { useState } from 'react'
 import HeroSection from '../components/HeroSection.jsx'
 import ServicesSection from '../components/ServicesSection.jsx'
 import FeaturedVehiclesSection from '../components/FeaturedVehiclesSection.jsx'
+import SalesOfTheMonthSection from '../components/SalesOfTheMonthSection.jsx'
+import DealerTeamSection from '../components/DealerTeamSection.jsx'
+import WarningNoticeSection from '../components/WarningNoticeSection.jsx'
+import SunnyAssistantSection from '../components/SunnyAssistantSection.jsx'
+import NewsSection from '../components/NewsSection.jsx'
 import AIAssistantFloating from '../components/AIAssistantFloating.jsx'
 
 export default function Home() {
@@ -51,6 +56,30 @@ export default function Home() {
           })
         }}
       />
+
+      {/* SECTION 4: SALES OF THE MONTH (HALL OF FAME PELAYANAN) */}
+      <SalesOfTheMonthSection
+        onConsultAiWithSales={(sales) => {
+          setSelectedAiService({
+            id: 'sales_consult',
+            title: `Konsultasi Resmi dengan ${sales.name} (${sales.specialization})`,
+          })
+        }}
+      />
+
+      {/* SECTION 5: TIM DEALER (THE TEAM SHOWCASE) */}
+      <DealerTeamSection />
+
+      {/* SECTION 6: PERINGATAN RESMI / ANTI-FRAUD WARNING SECTION */}
+      <WarningNoticeSection />
+
+      {/* SECTION 7: SUNNY VIRTUAL ASSISTANT (SHOWCASE & MASKOT RESMI) */}
+      <SunnyAssistantSection
+        onOpenAiChat={(topic) => setSelectedAiService(topic)}
+      />
+
+      {/* SECTION 8: NEWS & UPDATE (ARTIKEL & PUBLIKASI RESMI DEALER) */}
+      <NewsSection />
 
       {/* FLOATING RETRO AI COMPANION (SUNNY) */}
       <AIAssistantFloating

@@ -1,240 +1,275 @@
-# DESIGN.md: Sistem Desain “Dealer Transparan” (Playful Nostalgia 90-an)
+# DESIGN.md: Sistem Desain & Arsitektur Visual “Dealer Transparan” (Dealer Sunny)
 
 > **Acuan Dokumen:** [`Master_PRD.md`](file:///c:/xampp/htdocs/OldSunny/Master_PRD.md)  
 > **Tagline:** *Dealer Transparan, Layanan Tanpa Henti*  
-> **Tema Visual:** Playful Nostalgia (Retro 90s Arcade / Game Console Warmth × Transparansi Korporat Bersih)  
-> **Target Audiens:** Generasi dewasa / milenial (koleksi nostalgia emosional) & trust verifier (transparansi publik terverifikasi).
+> **Arah Visual:** Modern Editorial Luxury × Radical Corporate Transparency (Swiss Typographic Punch × Authentic Automotive Trust)  
+> **Target Pengguna:** Calon pembeli kendaraan resmi, pelanggan servis purnajual, serta publik yang mengutamakan verifikasi keaslian dan proteksi anti-penipuan.
 
 ---
 
 ## 1. Filosofi & Arah Artistik (Art Direction)
 
-1. **Formal Modern Trust & Clean Precision:**  
-   Menghindari gradasi ungu/pink generik AI dan tidak menggunakan emoticon (emoji). Seluruh ikon antarmuka wajib menggunakan library ikon vektor profesional (**`lucide-react`**).
-2. **Professional Dealership Typography:**  
-   Menggunakan font korporat yang formal, tegas, dan mudah dibaca: **`Plus Jakarta Sans`** untuk judul/heading dan **`Inter`** untuk teks body, data harga, dan tabel. Tidak menggunakan font pixel retro yang berlebihan pada antarmuka utama.
-3. **Tactile & Responsive Feedback:**  
-   Elemen interaktif menggunakan bayangan berlapis modern (`box-shadow: var(--shadow-sm)` ke `var(--shadow-md)`), border halus 1px yang rapi, dan feedback hover/focus yang jelas bagi pengguna.
-3. **Dual Atmosphere:**
-   - **Mode Standar (Cozy Retro):** Antarmuka modern yang nyaman dibaca, ramah bagi pembeli mobil dan verifikator institusional, dengan sentuhan pixel-art pada maskot, badge, dan aksen navigasi.
-   - **Mode Konami (Full 8-Bit Easter Egg):** Aktif melalui cheat code klasik (↑↑↓↓←→←→BA) dengan font bitmap, scanlines CRT halus, dan palet warna 8-bit yang nostalgik.
-4. **Transparansi Tanpa Kompromi:**  
-   Elemen bukti kredibilitas (Struktur Organisasi & Warning Notice mantan karyawan) didesain dengan hierarki visual tegas: hijau verifikasi untuk staf aktif dan merah peringatan protektif untuk mantan karyawan.
+1. **Editorial Modern Luxury & Clean Light Aesthetic:**  
+   Menghindari gradasi ungu/pink generik AI dan tidak menggunakan emoji berlebihan. Desain mengusung tema terang (*light theme*) yang bersih, berwibawa, dan elegan, dipadukan dengan aksen warna primer dealer resmi: Slate Gelap, Emas/Kuning Kehormatan, dan Merah Presisi.
+2. **Swiss Poster Display & Typographic Authority:**  
+   Pemanfaatan tipografi berskala raksasa (*giant typography*) yang tegas dan berani (*ultra-bold 900+*), seperti running loop marquee pada section peringatan dan headline editorial pada showcase tim.
+3. **Tactile Authenticity & Micro-Interactions:**  
+   Setiap kartu dan elemen interaktif memiliki umpan balik visual nyata: sapuan kilau hologram (*hologram sheen foil*) pada kartu trading sales, bukaan shutter kamera mekanik (*GSAP slide shutter*), hingga pop-up kursor melayang (*interactive cursor HUD*).
+4. **Transparansi Tanpa Kompromi (Anti-Fraud First):**  
+   Kredibilitas diperlakukan sebagai fitur utama. Verifikasi staf aktif disajikan dengan badge kehormatan dan data terukur (NPS, CSI, dan ulasan riil), sementara edukasi anti-oknum dan direktori personel nonaktif disajikan dengan visibilitas tinggi demi keamanan finansial konsumen.
 
 ---
 
 ## 2. Palet Warna & Token Desain (Color Tokens)
 
-### 2.1 Palet Utama (Mode Standar)
-Sistem warna dioptimalkan untuk kontras teks minimal 4.5:1 (WCAG AA).
+Sistem warna dikalibrasi untuk kontras tinggi (memenuhi standar WCAG AA minimal 4.5:1 untuk teks biasa dan 3:1 untuk teks display).
 
 ```css
 :root {
-  /* Surface & Canvas */
-  --bg-canvas: #FAF7F2;          /* Warm Cream / Kertas Nostalgia */
-  --bg-surface: #FFFFFF;         /* Pure Card White */
-  --bg-surface-subtle: #F3EFE6;  /* Soft Warm Gray */
-  --bg-surface-dark: #1E1B2E;    /* Deep Arcade Slate (Footer & Header Dark) */
+  /* Surface & Backgrounds */
+  --bg-page: #F8F9FA;            /* Kanvas Dasar Bersih */
+  --bg-surface: #FFFFFF;         /* Kartu Putih Bersih */
+  --bg-cream-hero: #FAF5EE;      /* Warm Cream Eksklusif (Kartu Champion Rank 1) */
+  --bg-dark-card: #111827;       /* Dark Obsidian Slate (Kartu Inverted Rank 2) */
+  --bg-subtle: #F1F5F9;          /* Slate Lembut untuk Container/Input */
 
-  /* Primary Brand (Arcade Gold / Warm Amber) */
-  --primary-400: #FBBF24;
-  --primary-500: #F59E0B;        /* Warna Aksen Emas Game 90-an */
-  --primary-600: #D97706;
-  --primary-subtle: #FEF3C7;
+  /* Primary Brand & Typography */
+  --text-primary: #0F172A;       /* Deep Slate Black (Keterbacaan Maksimal) */
+  --text-secondary: #475569;     /* Slate Netral untuk Copy dan Deskripsi */
+  --text-muted: #94A3B8;         /* Muted Slate untuk Label dan Metadata */
+  --text-inverse: #FFFFFF;       /* Teks Putih Kontras */
 
-  /* Secondary Brand (Vintage Teal / Gameboy Mint) */
-  --secondary-400: #2DD4BF;
-  --secondary-500: #0D9488;        /* Teal Seimbang & Ramah */
-  --secondary-600: #0F766E;
-  --secondary-subtle: #CCFBF1;
+  /* Dealership Core Accents */
+  --accent-red: #E3000C;         /* Merah Presisi Dealer & Security Warning */
+  --accent-red-hover: #C5000A;
+  --accent-red-subtle: rgba(227, 0, 12, 0.12);
 
-  /* Nostalgic Pastel Accents */
-  --pastel-coral: #FCA5A5;       /* Pink Peach Lembut */
-  --pastel-lavender: #DDD6FE;    /* Ungu Lilac Gameboy */
-  --pastel-sky: #BAE6FD;         /* Langit Siang 16-bit */
-  --pastel-sage: #D1FAE5;        /* Daun Segar */
+  --accent-yellow: #FDC700;      /* Kuning Emas Kehormatan (NPS & Rank 1) */
+  --accent-yellow-gold: #F59E0B;
+  --accent-yellow-subtle: rgba(253, 199, 0, 0.18);
 
-  /* Status & Transparansi */
-  --status-verified: #059669;    /* Hijau Trust / Staf Aktif */
-  --status-verified-bg: #ECFDF5;
-  --status-warning: #DC2626;     /* Merah Warning Notice / Resigned */
-  --status-warning-bg: #FEF2F2;
-  --status-info: #0284C7;
-  --status-info-bg: #E0F2FE;
+  /* Status & Verification */
+  --status-verified: #10B981;    /* Hijau Emerald Staf Aktif & Rekening Resmi */
+  --status-verified-subtle: rgba(16, 185, 129, 0.12);
+  --status-inactive: #E3000C;    /* Merah Personel Nonaktif / Resign */
 
-  /* Teks & Garis */
-  --text-main: #1F2937;          /* Charcoal Gelap (Readable) */
-  --text-muted: #4B5563;         /* Abu Netral (Contrast 5.2:1) */
-  --text-dim: #9CA3AF;
-  --text-inverse: #FFFFFF;
-  --border-main: #E5E0D8;        /* Garis Kartu Hangat */
-  --border-strong: #1F2937;      /* Garis Retro Hitam/Charcoal */
+  /* Border & Elevation */
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-medium: rgba(0, 0, 0, 0.12);
+  --border-dark: #0F172A;
+  --border-glass: rgba(255, 255, 255, 0.16);
 
-  /* Retro Hard Shadows */
-  --shadow-retro-sm: 2px 2px 0px var(--border-strong);
-  --shadow-retro-md: 4px 4px 0px var(--border-strong);
-  --shadow-retro-lg: 6px 6px 0px var(--border-strong);
-  --shadow-hover: 1px 1px 0px var(--border-strong);
-}
-```
-
-### 2.2 Token Konami Mode (8-Bit Retro CRT)
-Diaktifkan saat class `.konami-mode` disematkan pada tag `<body>`.
-
-```css
-body.konami-mode {
-  --bg-canvas: #0F380F;          /* Palette Classic Handheld Hijau Monokrom / Dark Arcade */
-  --bg-surface: #306230;
-  --bg-surface-subtle: #0F380F;
-  --text-main: #9BBC0F;
-  --text-muted: #8BAC0F;
-  --border-main: #0F380F;
-  --border-strong: #9BBC0F;
-  --primary-500: #8BAC0F;
-  --shadow-retro-md: 3px 3px 0px #0F380F;
+  /* Shadows */
+  --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 28px 60px -12px rgba(15, 23, 42, 0.22);
+  --shadow-glass: 0 24px 50px -12px rgba(0, 0, 0, 0.55);
 }
 ```
 
 ---
 
-## 3. Tipografi (Typography Hierarchy)
+## 3. Sistem Tipografi (Typography Hierarchy)
 
-Kombinasi antara kemudahan membaca teks panjang dan identitas display retro:
+Kombinasi font sans-serif modern berbobot tinggi untuk headline display korporat dan font netral bergeometri rapi untuk data teknis:
 
-| Kategori | Font Family | Fungsi |
-|---|---|---|
-| **Body & UI Utama** | `Plus Jakarta Sans`, `Inter`, sans-serif | Teks deskripsi, harga mobil, tabel spesifikasi, formulir |
-| **Headline Display** | `Outfit`, `Space Grotesk`, sans-serif (800 Weight) | Judul hero, nama section, banner promo |
-| **Retro & Pixel Touch** | `'Press Start 2P'`, `'Silkscreen'`, monospace | Kode voucher, level ekspresi AI, badge "8-Bit", Konami mode |
-| **Angka & Monospace** | `JetBrains Mono`, `Consolas`, monospace | Simulasi kredit, nomor plat/inventaris, tanggal resign |
+| Kategori | Font Family | Bobot (*Weight*) | Karakter & Kegunaan |
+|---|---|---|---|
+| **Display & Headline Utama** | `Plus Jakarta Sans`, `Outfit`, sans-serif | 800, 900, 950 | Teks masif marquee WARNING, judul Hero, The Team, dan nama varian |
+| **Body & Konten Naratif** | `Inter`, `Plus Jakarta Sans`, sans-serif | 400, 500, 600 | Deskripsi layanan, klausul perlindungan, manifesto, dan body copy |
+| **Identitas & Angka Metrik** | `Plus Jakarta Sans`, monospace | 700, 800 | Skor NPS (`+96`), Indeks CSI (`99.4`), Peringkat (`01`, `02`), tahun |
+| **Data Teknis & Kode Staf** | `JetBrains Mono`, `Consolas`, monospace | 600, 700 | NIK resmi karyawan (`SNY-SLS-0412`), kode rekening BCA, kode metadata |
 
-### Skala Tipografi:
-- **Hero Title (`h1`):** `clamp(2rem, 5vw, 3.25rem)` / Line-height: `1.15` / Weight: `800`
-- **Section Title (`h2`):** `clamp(1.5rem, 3.5vw, 2.25rem)` / Line-height: `1.25` / Weight: `700`
-- **Card Title (`h3`):** `1.25rem` / Line-height: `1.3` / Weight: `700`
-- **Body Large (`p.lead`):** `1.125rem` / Line-height: `1.6` / Weight: `400`
-- **Body Standard:** `1rem` (16px) / Line-height: `1.6` / Weight: `400`
-- **Badge / Micro-label:** `0.75rem` (12px) / Line-height: `1` / Letter-spacing: `0.06em` / Uppercase
-
----
-
-## 4. Bentuk, Border, & Elevasi (Geometry & Elevation)
-
-- **Border Radius:**
-  - `var(--radius-sm)`: `4px` (Tombol retro, tag badge, input field)
-  - `var(--radius-md)`: `8px` (Kartu kendaraan, promo card)
-  - `var(--radius-lg)`: `14px` (Container section besar, modal chat)
-  - `var(--radius-pill)`: `9999px` (Status indicators, chip filter)
-- **Border Style:** Solid `1.5px` atau `2px` tegas (`var(--border-strong)` atau `var(--border-main)`).
-- **Tactile Click Animation:**
-  ```css
-  .retro-btn {
-    border: 2px solid var(--border-strong);
-    box-shadow: var(--shadow-retro-md);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
-  }
-  .retro-btn:active {
-    transform: translate(3px, 3px);
-    box-shadow: 1px 1px 0px var(--border-strong);
-  }
-  ```
+### Skala Ukuran Tipografi:
+- **Giant Marquee Text:** `clamp(4.5rem, 14vw, 12rem)` / Line-height: `0.8` / Tracking: `-0.04em`
+- **Hero Title (`h1`):** `clamp(2.5rem, 5.5vw, 4.25rem)` / Line-height: `1.08` / Weight: `850`
+- **Section Heading (`h2`):** `clamp(2rem, 4vw, 3.25rem)` / Line-height: `1.15` / Weight: `800`
+- **Card Heading (`h3`):** `clamp(1.25rem, 2vw, 1.75rem)` / Line-height: `1.2` / Weight: `700`
+- **Body Large / Lead:** `1.125rem` (18px) / Line-height: `1.6` / Weight: `400`
+- **Body Standard:** `0.95rem` – `1rem` (15–16px) / Line-height: `1.6`
+- **Badge / Micro-label:** `0.72rem` – `0.78rem` (11–12px) / Tracking: `0.06em` / Uppercase
 
 ---
 
-## 5. Blueprint Spesifikasi Komponen (Component Specs)
+## 4. Arsitektur Struktur Halaman (Landing Page Experience Flow)
 
-### 5.1 Floating AI Assistant ("Sunny" Pixel Companion)
-- **Posisi:** `fixed` di pojok kanan bawah (`bottom: 1.5rem; right: 1.5rem; z-index: 100`).
-- **Avatar Sprite:** Karakter pixel-art (resolusi render 48×48px atau 64×64px).
-- **Ekspresi Reaktif Berdasarkan Section (GSAP Observer):**
-  - Di *Hero*: Sprite melambai hangat (`wave`), bubble teks pembuka.
-  - Di *Kendaraan & Kredit*: Sprite memegang kalkulator / kaca pembesar (`inspect`).
-  - Di *Warning Notice*: Sprite waspada (`alert`), mata membelalak lucu mengingatkan verifikasi rekening resmi dealer.
-  - Di *Best Sales*: Sprite membawa trofi bintang (`cheer`).
-- **Chat Drawer:** Slide-in dari kanan bawah dengan bubble chat dua arah (warna peach untuk user, putih ber-border hitam untuk AI).
+Halaman utama ([Home.jsx](file:///c:/xampp/htdocs/OldSunny/src/pages/Home.jsx)) disusun secara linear dengan alur narasi konversi dan pembuktian kredibilitas:
 
-### 5.2 Hero Section dengan 3 Tombol Quick-Action Persona
-- **Persona 1: Pelanggan Existing**  
-  Tombol: `[ 🚨 Butuh Servis / Darurat ]` (Aksen Merah/Coral, membuka langsung trigger darurat/booking).
-- **Persona 2: Calon Pembeli**  
-  Tombol: `[ 🚗 Eksplor Mobil Baru ]` (Aksen Emas/Amber, scroll halus ke katalog kendaraan).
-- **Persona 3: Trust Verifier**  
-  Tombol: `[ 🛡️ Cek Siapa di Balik Dealer ]` (Aksen Teal/Sage, jump ke struktur organisasi & warning notice).
+```mermaid
+graph TD
+    A[Navbar H.O.M.E. Sticky Minimalist] --> B[Section 1: Hero Section Split Editorial]
+    B --> C[Section 2: Services Section Pinning Scroll]
+    C --> D[Section 3: FeaturedVehiclesSection Video Ambient]
+    D --> E[Section 4: SalesOfTheMonthSection Hall of Fame]
+    E --> F[Section 5: DealerTeamSection The Team Showcase]
+    F --> G[Section 6: WarningNoticeSection Anti-Fraud Marquee]
+    G --> H[Section 7: SunnyAssistantSection Maskot & Showcase]
+    H --> I[Section 8: NewsSection News & Update]
+    I --> J[Footer Transparansi & Rekening Sah]
+    
+    subgraph Global Companions
+        AI[AIAssistantFloating Sunny]
+    end
+```
 
-### 5.3 Kartu Katalog Kendaraan & Filter
-- **Tampilan:** Grid 3 kolom (desktop) dan 1 kolom scroll snap (mobile).
-- **Detail Kartu:**
-  - Badge Kategori (SUV / MPV / Sedan / EV).
-  - Foto kendaraan dengan rasio 16:9 berbingkai retro.
-  - Harga OTR dengan font tegas + estimasi cicilan per bulan.
-  - Dua tombol aksi: *"Detail & Simulasi"* dan *"Tanya AI Stok"* (membuka chat otomatis).
+### 4.1 Section 1: Hero Section & Navbar H.O.M.E.
+- **Navbar Minimalis:** Desain ramping menempel di bagian atas (*sticky*) dengan navigasi empat pilar **H.O.M.E.** (*History, Operations, Models, Ethics*), status layanan aktif, dan tombol panggilan darurat.
+- **Split Hero Layout:**
+  - Sisi kiri: Tipografi judul editorial, pernyataan komitmen transparansi tanpa mark-up tersembunyi.
+  - Tiga tombol aksi instan persona:
+    1. *Booking Servis / Darurat Purnajual* (Aksen Merah Cepat)
+    2. *Eksplorasi Varian Mobil* (Aksen Gelap)
+    3. *Verifikasi Legalitas & Struktur Dealer* (Aksen Netral)
+  - Sisi kanan: Visual unit hero dinamis dengan micro-card jaminan garansi resmi.
 
-### 5.4 Struktur Organisasi Interaktif
-- **Tampilan:** Bagan pohon vertikal-horizontal yang dapat di-expand/collapse.
-- **Card Profil Staf Aktif:**
-  - Foto resmi staf, nama lengkap, jabatan, dan nomor ID karyawan.
-  - Badge hijau menyala: `● AKTIF TERVERIFIKASI`.
+### 4.2 Section 2: Services Section (Jelajah Layanan)
+- **Mekanika GSAP ScrollTrigger Pinning:** Section melakukan *pinning* horizontal/vertikal bertahap saat digulir (*scrub scroll*).
+- **Layanan Inti:** Perawatan Berkala Standar Pabrikan, Suku Cadang Orisinal Bersertifikat, Perbaikan Bodi & Cat Presisi, serta Layanan Derek Darurat 24/7 (SOS).
 
-### 5.5 Warning Notice (Daftar Karyawan Non-Aktif / Resign)
-- **Tujuan:** Perlindungan konsumen dari transaksi liar/oknum mantan sales.
-- **Visual:** Frame kotak peringatan tegas dengan garis tepi diagonal kuning-hitam retro atau merah protektif.
-- **Data:** Nama eks-karyawan, jabatan terakhir, tanggal resmi non-aktif, dan maklumat: *"Dealer tidak bertanggung jawab atas transaksi di luar rekening resmi atas nama PT Dealer Transparan."*
+### 4.3 Section 3: FeaturedVehiclesSection (3 Varian Utama)
+- **Latar Belakang Video Ambient:** Mengintegrasikan video latar belakang bersuara bisu (*muted autoplay video* `url_6acb321e18d7d3.92845255.mp4`) berulang halus (*loop*) dengan lapisan gradasi transparan gelap untuk menjaga keterbacaan teks.
+- **Tiga Varian Unggulan:**
+  1. *NEW XFORCE* (Rp 388.000.000)
+  2. *DESTINATOR* (Rp 402.000.000)
+  3. *PAJERO SPORT PRO* (Rp 612.000.000)
+- **Fitur Interaktif:** Modal formulir uji jalan (*test drive booking*) lengkap dengan pemilihan tanggal, syarat uji kemudi, dan spesifikasi unit resmi.
 
-### 5.6 Kartu Dealer Koleksi (TCG Viral Loop)
-- **Format:** Kartu digital bergaya Trading Card Game era 90-an (efek hologram foil CSS `linear-gradient` berputar tipis saat kursor bergerak).
-- **Konten:**
-  - Header: Nama dealer & lencana transparansi.
-  - Badan: Top sales bulan ini + status verifikasi dealer.
-  - Footer: QR Code unik untuk validasi keaslian.
-  - Fitur: Tombol `[ Simpan Gambar ]` atau `[ Share Kartu ]` yang men-trigger efek confetti 8-bit.
+### 4.4 Section 4: SalesOfTheMonthSection (Hall of Fame Pelayanan)
+- **Filosofi Ranking Kepuasan:** Peringkat konsultan penjualan disusun murni berdasarkan skor Net Promoter Score (NPS), indeks kepuasan CSI, dan lama pengabdian (*tenure*), bukan sekadar angka penjualan unit.
+- **Tata Letak Kartu Trading (Kiri ke Kanan):**
+  - **Peringkat 1 (Paling Kiri):** Rian Ardiansyah (Senior Sales Executive) – Palet Warm Cream Hero (`#FAF5EE`), lencana emas `01`, `Since 2020`, `+96 NPS`. Foto di atas, teks di bawah.
+  - **Peringkat 2 (Tengah - Inverted Card):** Dewi Sartika (Sales Specialist) – Palet Dark Obsidian (`#111827`), lencana perak `02`, `Since 2022`, `+92 NPS`. Teks di atas, foto di bawah (*layout terbalik asimetris*).
+  - **Peringkat 3 (Kanan):** Bambang Prakoso (Junior Sales Advisor) – Palet Aksen Merah (`#E3000C`), lencana merah/perunggu `03`, `Since 2023`, `+89 NPS`. Foto di atas, teks di bawah.
+- **Efek Buka Slide Shutter:** Animasi GSAP membuka tirai penutup foto dari atas (*slideDirection: top*) pada nomor 1 dan 3, serta dari bawah (*slideDirection: bottom*) pada nomor 2.
+- **Tombol Terapung Icon-Only:**
+  - Kartu 1 & 3: Tombol WhatsApp & Profil terapung di pojok **kanan atas** foto.
+  - Kartu 2: Tombol WhatsApp & Profil terapung di pojok **kanan bawah** foto.
+- **Interactive Cursor Pop HUD (`.sales-cursor-pop`):**
+  - Saat kursor diarahkan ke kartu konsultan, kartu data melayang (*dark frosted glassmorphism*) muncul mengikuti pergerakan kursor secara real-time via GSAP interpolasi.
+  - Menampilkan data sekunder yang tidak tercantum di muka kartu:
+    - NIK resmi staf (`SNY-SLS-0412`) & status verifikasi aktif
+    - Spesialisasi tipe mobil (SUV & Hybrid, MPV Keluarga, Pembiayaan Syariah)
+    - Lokasi cabang showroom penempatan
+    - Skor Indeks CSI (`99.4 dari 100`) dan rating bintang konsumen (`★ 4.9`)
+  - Dilengkapi *smart edge collision detection* (otomatis pindah posisi jika mendekati tepi layar) dan dinonaktifkan pada perangkat sentuh (*touchscreen*).
+- **Modal Direktori Seluruh Sales:** Drawer komprehensif berisi seluruh staf dealer terverifikasi dengan filter kategori (SUV, MPV, Fleet, Niaga) dan pencarian instan.
+
+### 4.5 Section 5: DealerTeamSection (The Team Showcase)
+- **Latar Belakang Bersuasana:** Menggunakan citra latar belakang bertekstur atmosferik dengan blur mendalam (`filter: blur(14px) brightness(0.85)` dari `url_6acf1a837771d8.78886143.jpeg`) dan overlay gelap transparan.
+- **Kartu Putih Mengambang (*Floating White Card*):**
+  - **Sisi Kiri:** Label `dealer resmi sunny®`, headline masif `The team. (50+)`, crosshairs tipis `+`, manifesto kerja sama lintas divisi, serta tombol tautan menuju halaman struktur organisasi (`/about`).
+  - **Sisi Kanan:** Dua kartu foto lanskap bertumpuk horizontal dengan rasio aspek 2:3 horizontal:
+    1. *DKT Tim* (Divisi Komersial & Teknis)
+    2. *Frontliner Tim* (Pelayanan & Customer Relations)
+  - Masing-masing foto dilengkapi tag peran di atas dan badge nama tim di bagian bawah dengan gradasi pelindung keterbacaan.
+
+### 4.6 Section 6: WarningNoticeSection (Anti-Fraud Marquee & Verifikasi Personel)
+- **Running Marquee Text Loop:**
+  - Teks **WARNING** raksasa (`clamp(4.5rem, 14vw, 12rem)`) bergerak secara horizontal dalam loop tak terhingga (*infinite smooth marquee* 28s).
+  - Menggunakan animasi transform CSS terakselerasi GPU (`translate3d`), menghasilkan pergerakan 60–120fps tanpa patah.
+  - Dihiasi aksen pemisah titik bulat merah (`•` / `#E3000C`) khas Sunny dan fitur jeda interaktif saat di-hover (*pause on hover*).
+  - Menyelesaikan masalah pemotongan teks secara permanen pada semua resolusi layar (tidak ada huruf yang hilang atau terpotong).
+- **Bar Peringatan Bawah (3 Kolom Seimbang):**
+  - Sisi Kiri: Maklumat ringkas dan padat:
+    > *"Waspada penipuan mengatasnamakan sales/karyawan kami. Seluruh transaksi wajib ke rekening resmi **PT Dealer Transparan**."*
+  - Sisi Tengah: Ticker metadata waktu nyata: `SEC // ANTI-FRAUD VERIFICATION {new Date().getFullYear()}`.
+  - Sisi Kanan: Tombol pill gelap interaktif: **`[ Lihat Sales/Karyawan Nonaktif ]`** dengan ikon panah.
+- **Modal Dialog Direktori Karyawan Nonaktif:**
+  - Membuka daftar resmi mantan staf yang telah mengundurkan diri (*resigned*) atau habis masa kontrak.
+  - Fitur pencarian instan berdasarkan nama, mantan NIK, atau cabang.
+  - Kotak verifikasi rekening bank resmi PT Dealer Transparan (BCA 012-345-6789) demi mencegah transfer ke rekening pribadi perorangan.
+  - Tautan tombol hotline WhatsApp pelaporan penipuan 24/7.
+
+### 4.7 Section 7: SunnyAssistantSection (Sunny Virtual Assistant & Maskot Resmi)
+- **Komposisi Visual Terinspirasi Referensi (Gaya Poki dengan Aksen Merah & Kuning Dealer):**
+  - Mengadopsi tata letak kartu horizontal besar dengan palet luxury dark obsidian beraksen Merah Presisi (`#E3000C`) dan Kuning Emas (`#FDC700`).
+  - Sisi Kiri: Maskot resmi Sunny dengan 3 garis kecepatan (*horizontal speed lines*) berwarna kuning cerah di sisi kiri luar yang merefleksikan karakter lincah dan responsif.
+  - Sisi Kanan: Tipografi raksasa `SUNNY` bertipe rounded bold masif dengan teks naratif resmi.
+  - Dihiasi garis aksen gradasi merah ke kuning di bagian atas kartu serta pendar ambient lembut (*red and yellow glow*).
+- **UX Rotasi Otomatis 3 Detik & Slider Interaktif:**
+  - Maskot, kutipan speech bubble, dan lencana status berganti otomatis setiap 3 detik secara berkesinambungan.
+  - Indikator slider menampilkan informasi ekspresi aktif (`Ekspresi {label} • {title}`) secara kontekstual, bukan informasi sistem teknis.
+  - Indikasi status rotasi/jeda diwakili oleh warna lampu dot: **Kuning Berpendar** saat rotasi aktif, dan **Merah Tetap** saat dijeda (*hover*).
+  - Dilengkapi 4 bilah progres slider (*segmented progress bar*) dengan indikator pengisian waktu riil (animasi CSS 3 detik berwarna kuning emas).
+  - Konsumen dapat mengklik segmen manapun (`01 Konsultasi`, `02 Hitung Kredit`, `03 Anti-Penipuan`, `04 Darurat 24/7`) atau tombol navigasi panah kiri/kanan.
+- **Direct Integration ke Chat AI:** Tombol utama berlatar merah "Mulai Chat dengan Sunny" dan opsi aksi cepat langsung menghubungkan pengguna ke modul percakapan virtual `AIAssistantFloating`.
+
+### 4.8 Section 8: NewsSection (News & Update)
+- **Komposisi Editorial Simple & Clean:**
+  - Desain bersih bertema terang (*crisp white background*) dengan tipografi display tebal dan spasi proporsional.
+  - Tiga artikel terbaru dari beragam kategori esensial dealer:
+    1. *Rilis Unit Baru:* Peluncuran New XForce Hybrid 2026 (Teknologi pintar & efisiensi).
+    2. *Tips & Perawatan:* Panduan Servis Berkala 10.000 KM (35 Titik inspeksi purnajual).
+    3. *Edukasi & Keamanan:* Aturan Rekening Virtual Sah PT Dealer Transparan (Anti-Fraud).
+  - Mengikuti aksen warna resmi: Badge kategori merah (`#E3000C`) dan kuning emas (`#FDC700`).
+  - Kartu foto lanskap 16:10 dengan efek micro-zoom dan ikon sudut atas saat diarahkan kursor.
+- **CTA Terintegrasi "Lihat Lebih Banyak":**
+  - Tautan tombol pill di pojok kanan atas header (`Lihat lebih banyak →`).
+  - Tombol CTA utama di bawah grid yang menautkan langsung ke rute arsip berita penuh ([/news](file:///c:/xampp/htdocs/OldSunny/src/pages/News.jsx)).
+- **Modal Pembaca Cepat (Quick Reader Dialog):**
+  - Pengguna dapat mengklik kartu artikel manapun untuk membuka jendela modal dialog artikel penuh tanpa meninggalkan halaman beranda.
+
+### 4.9 Komponen Mengambang: AIAssistantFloating (Sunny)
+- Widget asisten cerdas yang standby di pojok kanan bawah dengan *prefilled action* cerdas:
+  - Otomatis membuka konteks simulasi saat memilih unit kendaraan.
+  - Otomatis membuka opsi darurat saat tombol SOS di-klik.
+  - Otomatis memuat nama konsultan terpilih saat opsi konsultasi diaktifkan.
 
 ---
 
-## 6. Animasi & Interaksi (Motion & GSAP Standards)
+## 5. Standar Animasi & Gerakan (Motion & GSAP Standards)
 
-1. **Entrance Motion (GSAP ScrollTrigger):**
-   - Kartu muncul dengan efek pop-in retro: `scale: 0.95 -> 1.0`, `opacity: 0 -> 1`, durasi `0.35s`, ease `back.out(1.5)`.
-   - Hindari animasi mengambang lambat tak terarah yang terasa memberatkan performa.
-2. **8-Bit Confetti:**
-   - Bentuk kotak-kotak kecil pixelated (bukan lingkaran modern bulat halus) yang melompat saat transaksi simulasi atau booking selesai.
-3. **Sound Effects (Opsional / Audio Toggle):**
-   - Toggle suara mini di pojok layar (default: *Muted*).
-   - Efek 8-bit blip lembut saat klik tombol dan coin sound saat menekan Konami Code.
-
----
-
-## 7. Responsivitas & Aksesibilitas (Responsive & A11y)
-
-| Breakpoint | Kolom Grid | Navigasi & Drawer |
-|---|---|---|
-| **< 640px (Mobile)** | 1 Kolom penuh | Bottom sticky bar / floating action badge |
-| **640px – 1024px (Tablet)** | 2 Kolom | Grid fleksibel dengan padding 1.5rem |
-| **> 1024px (Desktop)** | 3 Kolom | Full tree org-chart & floating AI expand |
-
-- **Minimum Touch Target:** `44px × 44px` untuk seluruh tombol interaktif dan link.
-- **Visible Focus States:** `:focus-visible` memiliki ring tebal 2px warna kontras (`var(--border-strong)`) dengan offset 2px.
-- **Motion Reduction:** Mendukung query `@media (prefers-reduced-motion: reduce)` yang mematikan parallax dan transisi pop-in.
+1. **Hardware-Accelerated Performance:**  
+   Seluruh animasi pergerakan kontinu (seperti marquee dan rotasi kilau foil) menggunakan properti `transform: translate3d()` atau `will-change: transform` untuk menghindari *layout reflow/repaint*.
+2. **ScrollTrigger Entrances:**  
+   Elemen visual muncul secara bertahap saat memasuki viewport (trigger `top 80%` hingga `top 85%`) dengan kurva pelunakan elastis alami (`power2.out` atau `power3.out`).
+3. **Shutter Reveal Animation:**  
+   Tirai foto bergeser membuka (`height: 0` atau `y: -100% / +100%`) berdurasi 0.85s untuk menciptakan kesan eksklusif seperti membuka kartu kolektor fisik.
+4. **Interactive Hover Dynamics:**  
+   - Elevasi kartu naik tipis: `transform: translateY(-8px)` hingga `-12px`.
+   - Foil sweep hologram bergerak dari `left: -160%` menuju `left: 200%`.
+   - Cursor Pop bergerak dengan interpolasi halus berdurasi 0.16s via GSAP.
 
 ---
 
-## 8. Panduan Implementasi Komponen (File Mapping)
+## 6. Responsivitas & Aksesibilitas (Responsive & Accessibility Standards)
+
+| Breakpoint | Tata Letak Kartu Sales | Tim Showcase | Warning Marquee & Bar | News & Update |
+|---|---|---|---|---|
+| **Desktop (> 990px)** | Grid 3 kolom sejajar (Rank 1, 2, 3) | 2 Kolom (Manifesto Kiri, 2 Foto Kanan) | Marquee font `14vw`, bar 3 kolom horizontal | Grid 3 kolom horizontal, header CTA kanan |
+| **Tablet (641px - 990px)** | Grid 1 kolom bertumpuk rapi | 1 Kolom berurutan | Marquee font `14vw`, bar tersusun vertikal teratur | Grid 1 kolom bertumpuk rapi |
+| **Mobile (≤ 640px)** | Grid 1 kolom (foto 250px) | 1 Kolom (rasio foto 16:10, radius 16px) | Marquee font `clamp(3.2rem, 14vw, 5.5rem)`, tombol lebar penuh | 1 Kolom, tombol lebar penuh |
+
+- **Safe Touch Targets:** Seluruh tombol navigasi, tombol WhatsApp terapung, dan CTA modal memiliki area sentuh minimal `44px × 44px`.
+- **Keyboard Navigation & Dialog Trapping:**  
+  Setiap modal dialog (Profil Sales, Direktori Semua Sales, Formulir Test Drive, Direktori Nonaktif, Quick Article Reader) dapat ditutup secara instan menggunakan tombol keyboard `Escape`, serta dilengkapi atribut semantik ARIA (`role="dialog"`, `aria-modal="true"`).
+- **Reduced Motion Support:**  
+  Sistem menghormati preferensi pengguna `@media (prefers-reduced-motion: reduce)` dengan menghentikan animasi kontinu marquee dan menonaktifkan transisi parallax GSAP.
+
+---
+
+## 7. Peta Komponen & File Proyek (Active Project File Mapping)
 
 ```
 src/
 ├── components/
-│   ├── Navbar.jsx                # Navigasi sticky dengan retro badge & Konami indicator
-│   ├── AIAssistantFloating.jsx   # Maskot pixel-art reaktif & drawer dialog chat
-│   ├── VehicleCard.jsx           # Kartu kendaraan dengan harga & quick simulation
-│   ├── OrgChartTree.jsx          # Bagan interaktif jajaran pimpinan & staf
-│   ├── WarningNoticeBox.jsx      # Panel edukasi & verifikasi eks-karyawan
-│   ├── BestSalesCard.jsx         # Highlight profil sales bintang bulan ini
-│   ├── DealerTradingCard.jsx     # Kartu TCG holografik siap download
-│   └── Footer.jsx                # Keterangan legal, rekening resmi, & copyright
+│   ├── Navbar.jsx                # Navigasi sticky minimalis dengan tautan empat pilar H.O.M.E.
+│   ├── HeroSection.jsx           # Section 1: Hero editorial dengan 3 tombol aksi persona
+│   ├── ServicesSection.jsx       # Section 2: Pinning horizontal/stacked scroll showcase layanan
+│   ├── FeaturedVehiclesSection.jsx # Section 3: Katalog 3 varian utama dengan video ambient & modal test drive
+│   ├── SalesOfTheMonthSection.jsx # Section 4: Hall of Fame sales (trading cards, shutter reveal, & cursor pop HUD)
+│   ├── DealerTeamSection.jsx     # Section 5: The Team Showcase dengan foto horizontal 2:3 & manifesto
+│   ├── WarningNoticeSection.jsx  # Section 6: Running text marquee loop WARNING & modal direktori nonaktif
+│   ├── SunnyAssistantSection.jsx # Section 7: Showcase maskot Sunny gaya Poki dengan 4 mood & quick actions
+│   ├── NewsSection.jsx           # Section 8: News & Update 3 artikel editorial dealer & CTA arsip
+│   └── AIAssistantFloating.jsx   # Asisten virtual mengambang reaktif dengan integrasi prefilled action
 ├── pages/
-│   └── Home.jsx                  # Single-page landing page menyusun seluruh section
-├── styles/
-│   ├── retro-tokens.css          # CSS Variables (Standar & Konami mode)
-│   └── scanline-effects.css      # Scanline CRT & font bitmap Konami
-└── utils/
-    └── konamiCode.js             # Listener urutan tombol keyboard klasik
+│   ├── Home.jsx                  # Halaman utama merangkai alur Section 1 hingga 8
+│   ├── About.jsx                 # Halaman struktur organisasi & sejarah pimpinan dealer
+│   ├── Contact.jsx               # Halaman kontak, lokasi showroom, & formulir resmi
+│   └── News.jsx                  # Berita otomotif, rilis unit baru, & edukasi konsumen
+├── App.jsx                       # Routing aplikasi & layout wrapper
+├── App.css                       # Design tokens, utility classes, komponen styling, & media queries
+├── index.css                     # Reset CSS dasar & import font web Google Fonts
+└── main.jsx                      # Entry point React 19 + Vite
 ```

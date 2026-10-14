@@ -60,6 +60,24 @@ export default function FeaturedVehiclesSection({ onSelectTestDrive }) {
 
   return (
     <section className="featured-vehicles-section" id="kendaraan">
+      {/* Background Ambient Video (Muted, Autoplay, Loop, PlaysInline) */}
+      <div className="featured-video-bg-wrap" aria-hidden="true">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          className="featured-video-bg-media"
+        >
+          <source
+            src="https://bewhy.id/wp-content/uploads/url_6acb321e18d7d3.92845255.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div className="featured-video-overlay" />
+      </div>
+
       <div className="featured-vehicles-container">
         {/* Section Header */}
         <div className="featured-vehicles-header">
