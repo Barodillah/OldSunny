@@ -23,7 +23,7 @@ const INACTIVE_STAFF_LIST = [
     formerBranch: 'Showroom BSD City',
     formerNik: 'SNY-SLS-0199',
     inactiveDate: '15 Januari 2024',
-    reason: 'Resigned / Tidak lagi bekerja di Dealer Sunny',
+    reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Bekasi',
   },
   {
     id: 'inact-2',
@@ -32,7 +32,7 @@ const INACTIVE_STAFF_LIST = [
     formerBranch: 'Showroom Pusat Sudirman',
     formerNik: 'SNY-SLS-0284',
     inactiveDate: '10 Agustus 2023',
-    reason: 'Resigned / Tidak lagi bekerja di Dealer Sunny',
+    reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Bekasi',
   },
   {
     id: 'inact-3',
@@ -172,7 +172,7 @@ export default function WarningNoticeSection() {
           {/* Bottom Left: Keterangan Hati-Hati Sales/Karyawan */}
           <div className="warning-left-col">
             <p className="warning-desc-text">
-              Waspada penipuan mengatasnamakan sales/karyawan kami. Seluruh transaksi wajib ke rekening resmi <strong>PT Dealer Transparan</strong>.
+              Waspada penipuan mengatasnamakan sales/karyawan kami. Seluruh transaksi wajib ke rekening resmi <strong>PT Sun Star Prima Motor</strong>.
             </p>
           </div>
 
@@ -223,7 +223,7 @@ export default function WarningNoticeSection() {
                   Daftar Sales & Karyawan Nonaktif
                 </h3>
                 <p className="warning-modal-sub">
-                  Pihak di bawah ini sudah tidak lagi terafiliasi dengan Dealer Sunny dan tidak memiliki wewenang untuk transaksi, janji unit, maupun penerimaan dana.
+                  Pihak di bawah ini sudah tidak lagi terafiliasi dengan Mitsubishi Sun Bekasi dan tidak memiliki wewenang untuk transaksi, janji unit, maupun penerimaan dana.
                 </p>
               </div>
               <button
@@ -293,13 +293,13 @@ export default function WarningNoticeSection() {
             <div className="warning-security-box">
               <div className="security-box-header">
                 <HiOutlineShieldCheck size={20} className="text-emerald" />
-                <h4>Rekening Resmi PT Dealer Transparan</h4>
+                <h4>Rekening Resmi PT Sun Star Prima Motor</h4>
               </div>
               <p className="security-box-text">
-                Dealer Sunny tidak pernah mengizinkan transaksi tunai di luar kasir showroom maupun transfer ke rekening pribadi atas nama perorangan. Seluruh pembayaran wajib ke rekening resmi:
+                Mitsubishi Sun Bekasi tidak pernah mengizinkan transaksi tunai di luar kasir showroom maupun transfer ke rekening pribadi atas nama perorangan. Seluruh pembayaran wajib ke rekening resmi:
               </p>
               <div className="security-bank-pill">
-                <strong>Bank BCA • No. Rek: 012-345-6789</strong> a.n. <strong>PT Dealer Transparan</strong>
+                <strong>Bank BCA • No. Rek: 3425419999</strong> a.n. <strong>PT Sun Star Prima Motor</strong>
               </div>
             </div>
 
@@ -309,7 +309,7 @@ export default function WarningNoticeSection() {
                 Menemukan penawaran mencurigakan?
               </span>
               <a
-                href="https://wa.me/6281289001234?text=Halo%20Tim%20Keamanan%20Dealer%20Sunny,%20saya%20ingin%20verifikasi%20keaslian%20sales/transaksi%20kendaraan."
+                href="https://wa.me/6281289001234?text=Halo%20Tim%20Keamanan%20Mitsubishi%20Sun%20Bekasi,%20saya%20ingin%20verifikasi%20keaslian%20sales/transaksi%20kendaraan."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-report-fraud"

@@ -10,11 +10,43 @@ import {
   HiOutlineArrowsPointingOut,
   HiOutlineArrowsPointingIn
 } from 'react-icons/hi2'
-import { RiCustomerService2Line } from 'react-icons/ri'
+
+const MASCOT_EXPRESSIONS = [
+  {
+    id: 'senang',
+    label: 'Konsultasi Ramah',
+    imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad09424ada3f7.54954850.png',
+    bubbleNote: 'Halo! Ada yang bisa Sunny bantu seputar unit atau servis hari ini?',
+    badge: 'Konsultasi 24 Jam'
+  },
+  {
+    id: 'berfikir',
+    label: 'Hitung Kredit',
+    imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad09424acedb0.44157863.png',
+    bubbleNote: 'Mau hitung simulasi DP & angsuran bulanan yang transparan? Tanya di sini!',
+    badge: 'Kalkulator Kredit'
+  },
+  {
+    id: 'kaget',
+    label: 'Proteksi Transaksi',
+    imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad09424ad6a97.03373791.png',
+    bubbleNote: 'Ingat ya, transfer resmi HANYA ke PT Sun Star Prima Motor (BCA: 3425419999)!',
+    badge: 'Anti-Penipuan'
+  },
+  {
+    id: 'berempati',
+    label: 'Bantuan Darurat',
+    imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad09424ad3533.63395686.png',
+    bubbleNote: 'Mobil ada kendala di jalan? Tim derek & montir SOS kami siap meluncur 24/7!',
+    badge: 'Darurat SOS 24/7'
+  }
+]
 
 export default function AIAssistantFloating({ prefilledAction, onClosePrefill }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isFullScreen, setIsFullScreen] = useState(false)
+  const [expressionIndex, setExpressionIndex] = useState(0)
+  const [isBubbleVisible, setIsBubbleVisible] = useState(true)
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
@@ -22,9 +54,27 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
     },
   ])
   const [inputText, setInputText] = useState('')
-  const [bubbleNote, setBubbleNote] = useState('Butuh bantuan? Tanyakan asisten 24/7 kami')
   const streamEndRef = useRef(null)
   const inputRef = useRef(null)
+
+  // Preload all mascot avatar images for smooth switching
+  useEffect(() => {
+    MASCOT_EXPRESSIONS.forEach((expr) => {
+      const img = new Image()
+      img.src = expr.imageUrl
+    })
+  }, [])
+
+  // Rotate mascot expression & bubble note every 3 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setExpressionIndex((prev) => (prev + 1) % MASCOT_EXPRESSIONS.length)
+    }, 3000)
+
+    return () => clearInterval(timer)
+  }, [])
+
+  const currentMascot = MASCOT_EXPRESSIONS[expressionIndex]
 
   // Auto-scroll to bottom of chat when new message arrives
   useEffect(() => {
@@ -48,22 +98,6 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isFullScreen, isOpen])
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPos = window.scrollY
-      if (scrollPos < 350) {
-        setBubbleNote('Pilih menu cepat atau ajukan pertanyaan')
-      } else if (scrollPos >= 350 && scrollPos < 1100) {
-        setBubbleNote('Siap bantu kalkulasi cicilan atau booking servis')
-      } else {
-        setBubbleNote('Layanan konsultasi online 24 jam siap siaga')
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   const handleOpenChat = () => {
     if (typeof window !== 'undefined' && window.innerWidth <= 768) {
       setIsFullScreen(true)
@@ -80,7 +114,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
       }
       setIsOpen(true)
       const userMsg = `Saya ingin konsultasi mengenai: ${prefilledAction.title || prefilledAction}`
-      let aiReply = `Baik, mengenai ${prefilledAction.title || prefilledAction}, sistem kami terintegrasi langsung dengan database bengkel dan inventaris dealer Sunny. Anda ingin kami bantu periksa jadwal terdekat atau estimasi biayanya?`
+      let aiReply = `Baik, mengenai ${prefilledAction.title || prefilledAction}, sistem kami terintegrasi langsung dengan database bengkel dan inventaris Mitsubishi Sun Bekasi. Anda ingin kami bantu periksa jadwal terdekat atau estimasi biayanya?`
 
       if (prefilledAction.id === 'emergency') {
         aiReply = `PERINGATAN LAYANAN DARURAT: Tim teknisi darurat dan armada derek kami siaga 24 jam. Pastikan kendaraan Anda berada di area aman. Silakan ketik lokasi terkini Anda atau hubungi nomor darurat kami segera.`
@@ -106,7 +140,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
     setMessages((prev) => [...prev, { sender: 'user', text: query }])
 
     setTimeout(() => {
-      let reply = `Terima kasih telah menanyakan tentang "${query}". Tim Sunny siap melayani kebutuhan Anda secara transparan.`
+      let reply = `Terima kasih telah menanyakan tentang "${query}". Tim Mitsubishi Sun Bekasi siap melayani kebutuhan Anda secara transparan.`
       const lower = query.toLowerCase()
       if (
         lower.includes('servis') ||
@@ -114,7 +148,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
         lower.includes('booking') ||
         lower.includes('jadwal')
       ) {
-        reply = `Jadwal servis terdekat yang tersedia hari ini di Bengkel Resmi Sunny berada pada pukul 13:30 dan 15:00 WIB. Mekanik bersertifikasi kami siap melayani servis berkala, ganti oli resmi, dan tune-up tanpa antre.`
+        reply = `Jadwal servis terdekat yang tersedia hari ini di Bengkel Resmi Mitsubishi Sun Bekasi berada pada pukul 13:30 dan 15:00 WIB. Mekanik bersertifikasi kami siap melayani servis berkala, ganti oli resmi, dan tune-up tanpa antre.`
       } else if (
         lower.includes('kredit') ||
         lower.includes('cicilan') ||
@@ -122,27 +156,27 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
         lower.includes('harga') ||
         lower.includes('simulasi')
       ) {
-        reply = `Simulasi kredit di Sunny 100% transparan: suku bunga resmi lembaga pembiayaan terdaftar OJK tanpa mark-up provisi tersembunyi. DP mulai 15% dengan tenor hingga 60 bulan. Silakan sebutkan model mobil yang ingin Anda simulasikan.`
+        reply = `Simulasi kredit di Mitsubishi Sun Bekasi 100% transparan: suku bunga resmi lembaga pembiayaan terdaftar OJK tanpa mark-up provisi tersembunyi. DP mulai 15% dengan tenor hingga 60 bulan. Silakan sebutkan model mobil yang ingin Anda simulasikan.`
       } else if (
         lower.includes('darurat') ||
         lower.includes('derek') ||
         lower.includes('mogok') ||
         lower.includes('bantuan')
       ) {
-        reply = `PERINGATAN SIAGA DARURAT 24 JAM: Armada derek towing dan teknisi darurat kami langsung diterjunkan ke lokasi Anda. Hubungi Hotline Darurat di (021) 8899-SUNNY atau cantumkan nomor telepon & titik lokasi Anda saat ini.`
+        reply = `PERINGATAN SIAGA DARURAT 24 JAM: Armada derek towing dan teknisi darurat kami langsung diterjunkan ke lokasi Anda. Hubungi Hotline Darurat di (021) 8834 7777 atau cantumkan nomor telepon & titik lokasi Anda saat ini.`
       } else if (
         lower.includes('suku cadang') ||
         lower.includes('sparepart') ||
         lower.includes('oli')
       ) {
-        reply = `Semua suku cadang dan pelumas di Bengkel Sunny dijamin 100% Original Equipment Manufacturer (OEM) berbarcode resmi dengan garansi penggantian hingga 1 tahun.`
+        reply = `Semua suku cadang dan pelumas di Bengkel Mitsubishi Sun Bekasi dijamin 100% Original Equipment Manufacturer (OEM) berbarcode resmi dengan garansi penggantian hingga 1 tahun.`
       } else if (
         lower.includes('rekening') ||
         lower.includes('legalitas') ||
         lower.includes('oknum') ||
         lower.includes('transparansi')
       ) {
-        reply = `Jaminan Bebas Oknum: Seluruh transaksi pembayaran Sunny HANYA sah jika ditujukan ke Rekening Escrow / Virtual Account Resmi atas nama PT Dealer Sunny Indonesia. Dilarang keras mentransfer ke rekening pribadi staf manapun.`
+        reply = `Jaminan Bebas Oknum: Seluruh transaksi pembayaran HANYA sah jika ditransfer ke Rekening Resmi Bank BCA 3425419999 atas nama PT Sun Star Prima Motor. Dilarang keras mentransfer ke rekening pribadi staf manapun.`
       }
 
       setMessages((prev) => [...prev, { sender: 'ai', text: reply }])
@@ -157,35 +191,73 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
 
   return (
     <div className={`floating-assistant-container ${isFullScreen ? 'container-fullscreen' : ''}`}>
-      {/* Speech Hint Bubble */}
-      {!isOpen && (
-        <div className="assistant-bubble" onClick={handleOpenChat}>
-          <span className="bubble-text">{bubbleNote}</span>
+      {/* Speech Hint Bubble with Mascot Expression & Close Button */}
+      {!isOpen && isBubbleVisible && (
+        <div
+          className="assistant-bubble"
+          onClick={handleOpenChat}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') handleOpenChat()
+          }}
+        >
+          <button
+            type="button"
+            className="bubble-close-btn"
+            aria-label="Sembunyikan pesan bantuan"
+            title="Sembunyikan pesan"
+            onClick={(e) => {
+              e.stopPropagation()
+              setIsBubbleVisible(false)
+            }}
+          >
+            <HiOutlineXMark size={14} />
+          </button>
+          <span className="bubble-text" key={currentMascot.id}>
+            {currentMascot.bubbleNote}
+          </span>
           <span className="bubble-arrow"></span>
         </div>
       )}
 
-      {/* Floating Trigger Button */}
+      {/* Floating Trigger Button with Mascot Avatar Style */}
       {!isOpen && (
         <button
           type="button"
-          className="assistant-trigger-btn"
+          className="assistant-trigger-btn assistant-trigger-avatar"
           aria-label="Buka Asisten Virtual Sunny"
           onClick={handleOpenChat}
         >
-          <RiCustomerService2Line size={24} className="assistant-trigger-icon" />
-          <span className="assistant-beacon"></span>
+          <div className="assistant-avatar-inner">
+            <img
+              src={currentMascot.imageUrl}
+              alt={`Asisten Sunny - ${currentMascot.label}`}
+              className="assistant-avatar-img"
+              onError={(e) => {
+                e.currentTarget.src = 'https://bewhy.id/wp-content/uploads/asset_6ad09424ada3f7.54954850.png'
+              }}
+            />
+          </div>
+          <span className="assistant-beacon" title="Online 24 Jam Siaga"></span>
         </button>
       )}
 
       {/* Chat Window: Floating Popover or Fullscreen */}
       {isOpen && (
         <div className={`chat-flyout ${isFullScreen ? 'is-fullscreen' : ''}`}>
-          {/* Header */}
+          {/* Header with Mascot Avatar Style */}
           <div className="chat-header">
             <div className="chat-header-profile">
-              <div className="chat-avatar">
-                <RiCustomerService2Line size={20} />
+              <div className="chat-avatar chat-avatar-mascot">
+                <img
+                  src={currentMascot.imageUrl}
+                  alt={`Sunny Asisten - ${currentMascot.label}`}
+                  className="chat-avatar-mascot-img"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://bewhy.id/wp-content/uploads/asset_6ad09424ada3f7.54954850.png'
+                  }}
+                />
               </div>
               <div className="chat-info-col">
                 <h4 className="chat-name">Sunny AI Assistant</h4>

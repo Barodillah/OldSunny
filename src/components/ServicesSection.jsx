@@ -141,13 +141,13 @@ export default function ServicesSection({ onOpenAiWithService }) {
       title: 'Legalitas & Bebas Oknum',
       category: 'Transparansi Dealer',
       badge: 'ESCROW RESMI',
-      statusNote: 'Rekening Escrow PT Dealer Sunny',
+      statusNote: 'Rekening Resmi PT Sun Star Prima Motor',
       icon: HiOutlineShieldCheck,
       accent: 'sunset',
       imageUrl: 'https://bewhy.id/wp-content/uploads/url_6aca3f0eba26a5.94130516.webp',
       summary: 'Sistem perlindungan transaksi konsumen dengan rekening Virtual Account resmi atas nama badan hukum dealer.',
       details: [
-        'Pembayaran HANYA sah ke Rekening Escrow PT Dealer Sunny Indonesia',
+        'Pembayaran HANYA sah ke Rekening Resmi PT Sun Star Prima Motor (BCA: 3425419999)',
         'Larangan keras transfer dana transaksi ke rekening pribadi staf atau salesman',
         'Verifikasi keaslian faktur, BPKB, dan surat serah terima kendaraan resmi',
       ],
@@ -633,7 +633,7 @@ export default function ServicesSection({ onOpenAiWithService }) {
                   <p>
                     Seluruh estimasi biaya, waktu pengerjaan, dan suku cadang untuk{' '}
                     <strong>{activeModal.title}</strong> dicatat secara resmi ke dalam sistem
-                    dealer tanpa pungutan liar di luar tagihan resmi PT Sunny.
+                    dealer tanpa pungutan liar di luar tagihan resmi PT Sun Star Prima Motor.
                   </p>
                 </div>
               </div>

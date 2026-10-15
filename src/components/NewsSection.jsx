@@ -24,9 +24,9 @@ const LATEST_NEWS_ARTICLES = [
     date: '14 Oktober 2026',
     readTime: '3 mnt baca',
     imageUrl: 'https://bewhy.id/wp-content/uploads/url_6ab0a0771891e7.52336063.webp',
-    summary: 'Dealer Sunny secara resmi membuka pemesanan New XForce Hybrid 2026 dengan teknologi pintar 4 mode berkendara adaptif dan konsumsi bahan bakar hingga 24,5 km/liter.',
+    summary: 'Mitsubishi Sun Bekasi secara resmi membuka pemesanan New XForce Hybrid 2026 dengan teknologi pintar 4 mode berkendara adaptif dan konsumsi bahan bakar hingga 24,5 km/liter.',
     author: 'Divisi Produk & Komersial',
-    fullContent: 'New XForce Hybrid 2026 resmi diperkenalkan sebagai jawaban atas kebutuhan mobilitas perkotaan yang tangguh, hemat bahan bakar, dan sarat fitur keselamatan mutakhir. Dilengkapi mesin hybrid generasi terbaru, sistem audio premium, serta interior mewah yang lapang, unit ini siap memberikan pengalaman berkendara kelas atas bagi keluarga Indonesia. Seluruh pemesanan unit di Dealer Sunny mendapatkan prioritas alokasi unit, garansi baterai hybrid hingga 8 tahun, dan gratis biaya jasa perawatan berkala hingga 50.000 KM.',
+    fullContent: 'New XForce Hybrid 2026 resmi diperkenalkan sebagai jawaban atas kebutuhan mobilitas perkotaan yang tangguh, hemat bahan bakar, dan sarat fitur keselamatan mutakhir. Dilengkapi mesin hybrid generasi terbaru, sistem audio premium, serta interior mewah yang lapang, unit ini siap memberikan pengalaman berkendara kelas atas bagi keluarga Indonesia. Seluruh pemesanan unit di Mitsubishi Sun Bekasi mendapatkan prioritas alokasi unit, garansi baterai hybrid hingga 8 tahun, dan gratis biaya jasa perawatan berkala hingga 50.000 KM.',
     highlights: [
       'Konsumsi bahan bakar efisien hingga 24,5 km/liter',
       '4 Mode berkendara: Normal, Wet, Gravel, dan Mud',
@@ -43,7 +43,7 @@ const LATEST_NEWS_ARTICLES = [
     imageUrl: 'https://bewhy.id/wp-content/uploads/url_6acf19882a3111.91793750.jpg',
     summary: 'Ketahui titik-titik krusial yang wajib diperiksa teknisi bersertifikat mulai dari kampas rem, rotasi ban presisi, hingga verifikasi oli berbarcode resmi pabrik.',
     author: 'Tim Bengkel & Purnajual',
-    fullContent: 'Servis berkala pada interval 10.000 KM merupakan tahapan fundamental dalam menjaga keandalan kendaraan Anda. Tim mekanik resmi Dealer Sunny menerapkan protokol 35 titik inspeksi standar internasional: pembersihan sistem pengereman, rotasi ban, pengecekan komputer diagnosa OBD-II, dan pengisian pelumas asli bergaransi pabrik. Riwayat servis resmi yang tercatat rapi di sistem kami memastikan seluruh hak klaim garansi Anda tetap terlindungi tanpa risiko penolakan.',
+    fullContent: 'Servis berkala pada interval 10.000 KM merupakan tahapan fundamental dalam menjaga keandalan kendaraan Anda. Tim mekanik resmi Mitsubishi Sun Bekasi menerapkan protokol 35 titik inspeksi standar internasional: pembersihan sistem pengereman, rotasi ban, pengecekan komputer diagnosa OBD-II, dan pengisian pelumas asli bergaransi pabrik. Riwayat servis resmi yang tercatat rapi di sistem kami memastikan seluruh hak klaim garansi Anda tetap terlindungi tanpa risiko penolakan.',
     highlights: [
       'Protokol 35 titik inspeksi keselamatan mekanik',
       'Jaminan 100% suku cadang asli berbarcode pabrikan',
@@ -54,15 +54,15 @@ const LATEST_NEWS_ARTICLES = [
     id: 3,
     category: 'Edukasi & Keamanan',
     categoryTheme: 'red',
-    title: 'Waspada Penipuan Pembayaran: 4 Standar Rekening Virtual Sah PT Dealer Transparan',
+    title: 'Waspada Penipuan Pembayaran: 4 Standar Rekening Virtual Sah PT Sun Star Prima Motor',
     date: '03 Oktober 2026',
     readTime: '5 mnt baca',
     imageUrl: 'https://bewhy.id/wp-content/uploads/url_6acf48c9b8f122.20055577.webp',
     summary: 'Pelajari aturan keamanan transaksi resmi agar terhindar dari modus transfer ke rekening pribadi perorangan. Kenali nama rekening sah atas nama perusahaan.',
     author: 'Divisi Kepatuhan & Anti-Fraud',
-    fullContent: 'Komitmen transparansi Dealer Sunny mewajibkan seluruh pembayaran transaksi unit baru, uang muka (DP), maupun perbaikan servis disalurkan hanya melalui Virtual Account atau Rekening Bank Resmi atas nama PT Dealer Transparan (BCA 012-345-6789). Staf dan konsultan penjualan kami dilarang keras menerima transfer rekening pribadi maupun pembayaran tunai tanpa kwitansi resmi bercap basah kantor. Verifikasi selalu status staf dan rekening sah sebelum melakukan transaksi.',
+    fullContent: 'Komitmen transparansi Mitsubishi Sun Bekasi mewajibkan seluruh pembayaran transaksi unit baru, uang muka (DP), maupun perbaikan servis disalurkan hanya melalui Virtual Account atau Rekening Bank Resmi atas nama PT Sun Star Prima Motor (BCA 3425419999). Staf dan konsultan penjualan kami dilarang keras menerima transfer rekening pribadi maupun pembayaran tunai tanpa kwitansi resmi bercap basah kantor. Verifikasi selalu status staf dan rekening sah sebelum melakukan transaksi.',
     highlights: [
-      'Rekening sah hanya atas nama PT Dealer Transparan',
+      'Rekening sah hanya atas nama PT Sun Star Prima Motor',
       'Dilarang mentransfer ke rekening pribadi perorangan',
       'Hotline verifikasi 24 jam via WhatsApp resmi dealer'
     ]
@@ -138,7 +138,7 @@ export default function NewsSection() {
               News & Update
             </h2>
             <p className="news-section-desc">
-              Informasi terkini seputar rilis varian baru, edukasi transparansi transaksi, serta panduan perawatan berkala resmi dari Dealer Sunny.
+              Informasi terkini seputar rilis varian baru, edukasi transparansi transaksi, serta panduan perawatan berkala resmi dari Mitsubishi Sun Bekasi.
             </p>
           </div>
 
@@ -229,9 +229,6 @@ export default function NewsSection() {
             <span>Lihat Lebih Banyak Artikel</span>
             <HiOutlineArrowRight size={18} className="btn-arrow" />
           </Link>
-          <p className="news-bottom-hint">
-            Arsip lengkap panduan kepemilikan mobil, tips pembiayaan, dan transparansi dealer resmi.
-          </p>
         </div>
       </div>
 

@@ -44,7 +44,7 @@ const TOP_SALES_TRADING_CARDS = [
     themeStyle: 'card-cream-hero',
     whatsappNumber: '6281289001234',
     whatsappMessage:
-      'Halo Bpk Rian Ardiansyah, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Dealer Sunny.',
+      'Halo Bpk Rian Ardiansyah, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Mitsubishi Sun Bekasi.',
   },
   {
     id: 'rank-2',
@@ -67,7 +67,7 @@ const TOP_SALES_TRADING_CARDS = [
     themeStyle: 'card-dark',
     whatsappNumber: '6281377889900',
     whatsappMessage:
-      'Halo Ibu Dewi Sartika, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Dealer Sunny.',
+      'Halo Ibu Dewi Sartika, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Mitsubishi Sun Bekasi.',
   },
   {
     id: 'rank-3',
@@ -90,7 +90,7 @@ const TOP_SALES_TRADING_CARDS = [
     themeStyle: 'card-accent-red',
     whatsappNumber: '6281544332211',
     whatsappMessage:
-      'Halo Bpk Bambang Prakoso, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Dealer Sunny.',
+      'Halo Bpk Bambang Prakoso, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Mitsubishi Sun Bekasi.',
   },
 ]
 
@@ -115,7 +115,7 @@ const ALL_SALES_DIRECTORY = [
     customerVoiceScore: '4.8 / 5.0 (65 Ulasan)',
     whatsappNumber: '6281122334455',
     whatsappMessage:
-      'Halo Ibu Siti Rahmawati, saya ingin konsultasi pengadaan unit fleet dari Dealer Sunny.',
+      'Halo Ibu Siti Rahmawati, saya ingin konsultasi pengadaan unit fleet dari Mitsubishi Sun Bekasi.',
   },
   {
     id: 'sales-5',
@@ -136,7 +136,7 @@ const ALL_SALES_DIRECTORY = [
     customerVoiceScore: '4.8 / 5.0 (52 Ulasan)',
     whatsappNumber: '6281233445566',
     whatsappMessage:
-      'Halo Bpk Dimas Nugroho, saya ingin konsultasi unit kendaraan listrik dari Dealer Sunny.',
+      'Halo Bpk Dimas Nugroho, saya ingin konsultasi unit kendaraan listrik dari Mitsubishi Sun Bekasi.',
   },
   {
     id: 'sales-6',
@@ -157,7 +157,7 @@ const ALL_SALES_DIRECTORY = [
     customerVoiceScore: '4.7 / 5.0 (48 Ulasan)',
     whatsappNumber: '6281355667788',
     whatsappMessage:
-      'Halo Ibu Anisa Permata, saya ingin konsultasi mobil pertama melalui Dealer Sunny.',
+      'Halo Ibu Anisa Permata, saya ingin konsultasi mobil pertama melalui Mitsubishi Sun Bekasi.',
   },
   {
     id: 'sales-7',
@@ -178,7 +178,7 @@ const ALL_SALES_DIRECTORY = [
     customerVoiceScore: '4.7 / 5.0 (59 Ulasan)',
     whatsappNumber: '6281466778899',
     whatsappMessage:
-      'Halo Bpk Fajar Maulana, saya ingin konsultasi pembiayaan kendaraan Dealer Sunny.',
+      'Halo Bpk Fajar Maulana, saya ingin konsultasi pembiayaan kendaraan Mitsubishi Sun Bekasi.',
   },
   {
     id: 'sales-8',
@@ -199,7 +199,7 @@ const ALL_SALES_DIRECTORY = [
     customerVoiceScore: '4.7 / 5.0 (44 Ulasan)',
     whatsappNumber: '6281577889900',
     whatsappMessage:
-      'Halo Bpk Hendra Wijaya, saya ingin konsultasi tukar tambah kendaraan di Dealer Sunny.',
+      'Halo Bpk Hendra Wijaya, saya ingin konsultasi tukar tambah kendaraan di Mitsubishi Sun Bekasi.',
   },
 ]
 
@@ -408,7 +408,7 @@ export default function SalesOfTheMonthSection() {
   const openWhatsApp = (consultant) => {
     const text = encodeURIComponent(
       consultant.whatsappMessage ||
-      `Halo Bpk/Ibu ${consultant.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Dealer Sunny.`
+      `Halo Bpk/Ibu ${consultant.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Mitsubishi Sun Bekasi.`
     )
     window.open(`https://wa.me/${consultant.whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer')
   }
@@ -682,7 +682,7 @@ export default function SalesOfTheMonthSection() {
           <p className="trading-footer-disclaimer">
             <RiShieldCheckLine size={18} className="text-accent-red" />
             <span>
-              Seluruh transaksi uang muka (DP) dan pelunasan wajib disalurkan langsung ke rekening bank resmi <strong>PT Dealer Transparan</strong>.
+              Seluruh transaksi uang muka (DP) dan pelunasan wajib disalurkan langsung ke rekening bank resmi <strong>PT Sun Star Prima Motor (BCA: 3425419999)</strong>.
             </span>
           </p>
         </div>
@@ -780,7 +780,7 @@ export default function SalesOfTheMonthSection() {
                 <div className="modal-safety-alert">
                   <HiOutlineInformationCircle size={18} className="text-accent-red flex-shrink-0" />
                   <span>
-                    Seluruh pembayaran uang muka (DP) dan pelunasan hanya ditransfer ke rekening bank resmi PT Dealer Transparan, bukan rekening pribadi.
+                    Seluruh pembayaran uang muka (DP) dan pelunasan hanya ditransfer ke rekening bank resmi PT Sun Star Prima Motor (BCA: 3425419999), bukan rekening pribadi.
                   </span>
                 </div>
 

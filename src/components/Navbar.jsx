@@ -91,7 +91,7 @@ export default function Navbar({ onOpenEmergency }) {
                 to="/about"
                 className="minimal-nav-link nav-expandable nav-acronym-item"
                 onClick={() => setIsOpen(false)}
-                title="One Service Standard - Transparansi Resmi Dealer Sunny"
+                title="One Service Standard - Transparansi Resmi Mitsubishi Sun Bekasi"
               >
                 <span className="nav-main-part">
                   <span className="acronym-letter">O</span>
@@ -143,7 +143,7 @@ export default function Navbar({ onOpenEmergency }) {
             <HiOutlinePhone size={17} />
           </button>
 
-          <Link to="/about" className="minimal-action-btn user-avatar-btn" title="Profil Dealer Sunny">
+          <Link to="/about" className="minimal-action-btn user-avatar-btn" title="Profil Mitsubishi Sun Bekasi">
             <HiOutlineUser size={18} />
           </Link>
 

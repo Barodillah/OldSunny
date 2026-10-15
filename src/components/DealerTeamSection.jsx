@@ -10,14 +10,14 @@ const TEAM_SHOWCASE = [
     id: 'dkt-tim',
     title: 'DKT Tim',
     role: 'Divisi Komersial & Teknis',
-    company: 'at Dealer Sunny®',
+    company: 'at Mitsubishi Sun Bekasi®',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acfe735e51235.21441135.jpeg',
   },
   {
     id: 'frontliner-tim',
     title: 'Frontliner Tim',
     role: 'Pelayanan & Customer Relations',
-    company: 'at Dealer Sunny®',
+    company: 'at Mitsubishi Sun Bekasi®',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acfe735e4a127.45708367.jpeg',
   },
 ]
@@ -126,7 +126,7 @@ export default function DealerTeamSection() {
           {/* LEFT SIDE: EDITORIAL & BRAND MANIFESTO */}
           <div className="dealer-team-left">
             {/* Top Brand Tag */}
-            <div className="team-brand-tag">dealer resmi sunny®</div>
+            <div className="team-brand-tag">Mitsubishi Sun Bekasi®</div>
 
             {/* Giant Title */}
             <h2 id="dealer-team-title" className="team-main-heading">

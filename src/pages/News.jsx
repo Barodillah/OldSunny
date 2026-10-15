@@ -9,7 +9,7 @@ export default function News() {
       category: 'Standar Layanan',
       date: '14 Oktober 2026',
       readTime: '3 mnt baca',
-      summary: 'Dealer Sunny secara resmi mengadopsi filosofi H.O.M.E (Hospitality, One Service Standard, Memorable Experience, dan Empathy) demi menjamin keterbukaan transaksi dan kepuasan pemilik kendaraan.',
+      summary: 'Mitsubishi Sun Bekasi secara resmi mengadopsi filosofi H.O.M.E (Hospitality, One Service Standard, Memorable Experience, dan Empathy) demi menjamin keterbukaan transaksi dan kepuasan pemilik kendaraan.',
       tag: 'Pengumuman Resmi',
     },
     {

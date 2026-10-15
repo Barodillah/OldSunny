@@ -26,7 +26,7 @@ const SUNNY_EXPRESSIONS = [
     shortTitle: 'Konsultasi',
     title: 'Sambutan & Konsultasi Ramah',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acffcd78c6424.40233068.png',
-    quote: 'Halo! Saya Sunny, asisten virtual resmi Dealer Sunny. Siap bantu temukan kendaraan idaman Anda kapan saja!',
+    quote: 'Halo! Saya Sunny, asisten virtual resmi Mitsubishi Sun Bekasi. Siap bantu temukan kendaraan idaman Anda kapan saja!',
     badge: 'Aktif Siaga 24 Jam',
     icon: RiEmotionHappyLine,
     topicAction: {
@@ -54,7 +54,7 @@ const SUNNY_EXPRESSIONS = [
     shortTitle: 'Anti-Penipuan',
     title: 'Proteksi Anti-Penipuan',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acffcd78c0434.75758336.png',
-    quote: 'Peringatan penting! Jangan pernah transfer ke rekening perorangan ya. Semua pembayaran resmi hanya via PT Dealer Transparan.',
+    quote: 'Peringatan penting! Jangan pernah transfer ke rekening perorangan ya. Semua pembayaran resmi hanya via PT Sun Star Prima Motor (BCA: 3425419999).',
     badge: 'Keamanan Transaksi',
     icon: RiAlertLine,
     topicAction: {
@@ -126,15 +126,17 @@ export default function SunnyAssistantSection({ onOpenAiChat }) {
     return () => clearInterval(timer)
   }, [isPaused, handleNextSlide])
 
-  // GSAP ScrollTrigger Entrance Animation
+  // GSAP ScrollTrigger Entrance Animation (Responsive: vertikal pada mobile untuk mencegah pergeseran horizontal)
   useEffect(() => {
     if (!sectionRef.current || !cardContainerRef.current) return
 
     const ctx = gsap.context(() => {
+      const isMobile = window.innerWidth <= 768
+
       gsap.fromTo(
         cardContainerRef.current,
         {
-          y: 45,
+          y: isMobile ? 30 : 45,
           opacity: 0,
           scale: 0.98,
         },
@@ -156,11 +158,13 @@ export default function SunnyAssistantSection({ onOpenAiChat }) {
         gsap.fromTo(
           mascotImgRef.current,
           {
-            x: -35,
+            x: isMobile ? 0 : -35,
+            y: isMobile ? 25 : 0,
             opacity: 0,
           },
           {
             x: 0,
+            y: 0,
             opacity: 1,
             duration: 0.9,
             delay: 0.15,
@@ -178,11 +182,13 @@ export default function SunnyAssistantSection({ onOpenAiChat }) {
         gsap.fromTo(
           contentColRef.current,
           {
-            x: 25,
+            x: isMobile ? 0 : 25,
+            y: isMobile ? 25 : 0,
             opacity: 0,
           },
           {
             x: 0,
+            y: 0,
             opacity: 1,
             duration: 0.8,
             delay: 0.2,
@@ -267,21 +273,21 @@ export default function SunnyAssistantSection({ onOpenAiChat }) {
           {/* Top Decorative Gradient Accent Bar (Merah ke Kuning) */}
           <div className="sunny-card-top-accent" aria-hidden="true" />
 
-          {/* Ambient Glows: Red & Yellow */}
-          <div className="sunny-card-glow glow-red" aria-hidden="true" />
+          {/* Ambient Glows: Bright Mascot Light & Yellow */}
+          <div className="sunny-card-glow glow-mascot-light" aria-hidden="true" />
           <div className="sunny-card-glow glow-yellow" aria-hidden="true" />
 
           {/* LEFT SIDE: MASCOT CHARACTER & SPEED LINES (GAYA POKI REFERENSI) */}
           <div className="sunny-mascot-col">
-            {/* Speed Lines Behind Mascot (Vivid Yellow Accent) */}
-            <div ref={speedLinesRef} className="mascot-speed-lines" aria-hidden="true">
-              <span className="speed-bar bar-1" />
-              <span className="speed-bar bar-2" />
-              <span className="speed-bar bar-3" />
-            </div>
-
             {/* Mascot Image Display with Halo Lighting */}
             <div className={`sunny-character-wrap ${isHovered ? 'is-hovered' : ''}`}>
+              {/* Speed Lines Behind Mascot (Vivid Yellow Accent) */}
+              <div ref={speedLinesRef} className="mascot-speed-lines" aria-hidden="true">
+                <span className="speed-bar bar-1" />
+                <span className="speed-bar bar-2" />
+                <span className="speed-bar bar-3" />
+              </div>
+
               <div className="mascot-warm-halo" aria-hidden="true" />
               <img
                 ref={mascotImgRef}
@@ -320,7 +326,7 @@ export default function SunnyAssistantSection({ onOpenAiChat }) {
 
             {/* Narrative Description Paragraph */}
             <p className="sunny-narrative-copy">
-              Kenalkan <strong>Sunny</strong>, asisten virtual resmi Dealer Sunny. Siap mendampingi dan menjawab seluruh kebutuhan otomotif Anda 24 jam penuh: mulai dari konsultasi unit mobil, kalkulasi kredit terbuka tanpa biaya siluman, jadwal test drive, hingga proteksi keamanan transaksi dari oknum.
+              Kenalkan <strong>Sunny</strong>, asisten virtual resmi Mitsubishi Sun Bekasi. Siap mendampingi dan menjawab seluruh kebutuhan otomotif Anda 24 jam penuh: mulai dari konsultasi unit mobil, kalkulasi kredit terbuka tanpa biaya siluman, jadwal test drive, hingga proteksi keamanan transaksi dari oknum.
             </p>
 
             {/* UX SLIDER DENGAN ROTASI OTOMATIS SETIAP 3 DETIK */}

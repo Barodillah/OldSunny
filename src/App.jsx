@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
+import Footer from './components/Footer.jsx'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
 import Services from './pages/Services.jsx'
@@ -7,8 +8,6 @@ import Contact from './pages/Contact.jsx'
 import News from './pages/News.jsx'
 import NotFound from './pages/NotFound.jsx'
 import './App.css'
-
-const currentYear = new Date().getFullYear()
 
 function App() {
   return (
@@ -24,11 +23,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
-      <footer className="app-footer">
-        <div className="footer-inner">
-          <p>© {currentYear} OldSunny. React + React Router DOM Starter.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
