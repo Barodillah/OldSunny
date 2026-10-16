@@ -197,9 +197,12 @@ export default function NewsSection() {
                       <span>{article.date}</span>
                     </span>
                     <span className="news-meta-divider">•</span>
-                    <span className="news-meta-item">
+                    <span className="news-meta-item news-desktop-read-time">
                       <HiOutlineClock size={14} className="news-meta-icon" />
                       <span>{article.readTime}</span>
+                    </span>
+                    <span className={`news-mobile-category-tag ${isYellow ? 'tag-yellow' : 'tag-red'}`}>
+                      {article.category}
                     </span>
                   </div>
 
@@ -213,8 +216,12 @@ export default function NewsSection() {
 
                   <div className="news-card-footer">
                     <span className="news-read-more-text">
-                      <span>Baca Selengkapnya</span>
+                      <span>Lihat Selengkapnya</span>
                       <HiOutlineArrowRight size={15} className="footer-arrow" />
+                    </span>
+                    <span className="news-mobile-read-time">
+                      <HiOutlineClock size={12} className="read-time-icon" />
+                      <span>{article.readTime}</span>
                     </span>
                   </div>
                 </div>

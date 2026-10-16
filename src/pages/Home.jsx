@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import HeroSection from '../components/HeroSection.jsx'
 import ServicesSection from '../components/ServicesSection.jsx'
 import FeaturedVehiclesSection from '../components/FeaturedVehiclesSection.jsx'
@@ -7,10 +7,20 @@ import DealerTeamSection from '../components/DealerTeamSection.jsx'
 import WarningNoticeSection from '../components/WarningNoticeSection.jsx'
 import SunnyAssistantSection from '../components/SunnyAssistantSection.jsx'
 import NewsSection from '../components/NewsSection.jsx'
-import AIAssistantFloating from '../components/AIAssistantFloating.jsx'
 
-export default function Home() {
-  const [selectedAiService, setSelectedAiService] = useState(null)
+export default function Home({ onOpenAiChat }) {
+  useEffect(() => {
+    if (window.location.hash) {
+      const id = window.location.hash.replace('#', '')
+      const timer = setTimeout(() => {
+        const elem = document.getElementById(id)
+        if (elem) {
+          elem.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 200)
+      return () => clearTimeout(timer)
+    }
+  }, [])
 
   const handleSelectService = () => {
     const elem = document.getElementById('layanan')
@@ -20,17 +30,21 @@ export default function Home() {
   }
 
   const handleSelectEmergency = () => {
-    setSelectedAiService({
-      id: 'emergency',
-      title: 'Bantuan Darurat 24/7 (SOS)',
-    })
+    if (onOpenAiChat) {
+      onOpenAiChat({
+        id: 'emergency',
+        title: 'Bantuan Darurat 24/7 (SOS)',
+      })
+    }
   }
 
   const handleSelectTrust = () => {
-    setSelectedAiService({
-      id: 'trust',
-      title: 'Verifikasi Struktur Organisasi & Anti-Oknum',
-    })
+    if (onOpenAiChat) {
+      onOpenAiChat({
+        id: 'trust',
+        title: 'Verifikasi Struktur Organisasi & Anti-Oknum',
+      })
+    }
   }
 
   return (
@@ -44,26 +58,32 @@ export default function Home() {
 
       {/* SECTION 2: JELAJAH LAYANAN */}
       <ServicesSection
-        onOpenAiWithService={(service) => setSelectedAiService(service)}
+        onOpenAiWithService={(service) => {
+          if (onOpenAiChat) onOpenAiChat(service)
+        }}
       />
 
       {/* SECTION 3: 3 UNIT VARIAN UTAMA (KENDARAAN & PRICELIST) */}
       <FeaturedVehiclesSection
         onSelectTestDrive={(vehicle) => {
-          setSelectedAiService({
-            id: 'test_drive',
-            title: `Jadwal Test Drive: ${vehicle.name} (${vehicle.priceFormatted})`,
-          })
+          if (onOpenAiChat) {
+            onOpenAiChat({
+              id: 'test_drive',
+              title: `Jadwal Test Drive: ${vehicle.name} (${vehicle.priceFormatted})`,
+            })
+          }
         }}
       />
 
       {/* SECTION 4: SALES OF THE MONTH (HALL OF FAME PELAYANAN) */}
       <SalesOfTheMonthSection
         onConsultAiWithSales={(sales) => {
-          setSelectedAiService({
-            id: 'sales_consult',
-            title: `Konsultasi Resmi dengan ${sales.name} (${sales.specialization})`,
-          })
+          if (onOpenAiChat) {
+            onOpenAiChat({
+              id: 'sales_consult',
+              title: `Konsultasi Resmi dengan ${sales.name} (${sales.specialization})`,
+            })
+          }
         }}
       />
 
@@ -75,17 +95,14 @@ export default function Home() {
 
       {/* SECTION 7: SUNNY VIRTUAL ASSISTANT (SHOWCASE & MASKOT RESMI) */}
       <SunnyAssistantSection
-        onOpenAiChat={(topic) => setSelectedAiService(topic)}
+        onOpenAiChat={(topic) => {
+          if (onOpenAiChat) onOpenAiChat(topic)
+        }}
       />
 
       {/* SECTION 8: NEWS & UPDATE (ARTIKEL & PUBLIKASI RESMI DEALER) */}
       <NewsSection />
-
-      {/* FLOATING RETRO AI COMPANION (SUNNY) */}
-      <AIAssistantFloating
-        prefilledAction={selectedAiService}
-        onClosePrefill={() => setSelectedAiService(null)}
-      />
     </div>
   )
 }
+

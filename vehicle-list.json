@@ -1,0 +1,403 @@
+{
+    "meta": {
+        "brand": "Mitsubishi",
+        "periode": "Oktober 2026",
+        "currency": "IDR"
+    },
+    "commercial_car": {
+        "canter": {
+            "image": "https://csdwindo.com/media/ktb/CANTER-FE-73.webp",
+            "categories": {
+                "economical": [
+                    {
+                        "type": "FE 71 N",
+                        "spec": "108 PS 4 Ban",
+                        "price": 455000000
+                    },
+                    {
+                        "type": "FE 73 N",
+                        "spec": "108 PS 6 Ban",
+                        "price": 510000000
+                    }
+                ],
+                "capacity": [
+                    {
+                        "type": "FE 71L N",
+                        "spec": "108 PS 4 Ban",
+                        "price": 460000000
+                    },
+                    {
+                        "type": "FE 74 L N",
+                        "spec": "136 PS 6 Ban",
+                        "price": 555000000
+                    },
+                    {
+                        "type": "FE 84 G N",
+                        "spec": "136 PS 6 Ban",
+                        "price": 565000000
+                    }
+                ],
+                "bus": [
+                    {
+                        "type": "FE 71L BC N",
+                        "spec": "108 PS 4 Ban",
+                        "price": 425000000
+                    },
+                    {
+                        "type": "FE 71L BCL N",
+                        "spec": "108 PS 4 Ban",
+                        "price": 435000000
+                    },
+                    {
+                        "type": "FE 71 BC N (Canter Bus)",
+                        "spec": "108 PS 4 Ban",
+                        "price": 745000000
+                    },
+                    {
+                        "type": "FE 71 BC N",
+                        "spec": "108 PS 4 Ban",
+                        "price": 432500000
+                    },
+                    {
+                        "type": "FE 84 G BC N",
+                        "spec": "136 PS 6 Ban",
+                        "price": 546000000
+                    }
+                ],
+                "speed": [
+                    {
+                        "type": "FE 74 N",
+                        "spec": "136 PS 6 Ban",
+                        "price": 520000000
+                    },
+                    {
+                        "type": "FE 74 HD S N (4x2)",
+                        "spec": "136 PS 6 Ban",
+                        "price": 525000000
+                    }
+                ],
+                "power": [
+                    {
+                        "type": "FE 74 HD N",
+                        "spec": "136 PS 6 Ban",
+                        "price": 540000000
+                    },
+                    {
+                        "type": "FE 75 SHD X N",
+                        "spec": "136 PS 6 Ban",
+                        "price": 535000000
+                    },
+                    {
+                        "type": "FE 75 SHD X N PTO",
+                        "spec": "136 PS 6 Ban",
+                        "price": 545000000
+                    },
+                    {
+                        "type": "FE 84 SHDX N (4x2)",
+                        "spec": "150 PS 6 Ban",
+                        "price": 560000000
+                    },
+                    {
+                        "type": "FE 84 GS N (4x2)",
+                        "spec": "150 PS 6 Ban",
+                        "price": 570000000
+                    }
+                ]
+            }
+        },
+        "fighter_x": {
+            "image": "https://csdwindo.com/media/ktb/fighterX.webp",
+            "categories": {
+                "6x4": [
+                    {
+                        "type": "FN 62 F HDU",
+                        "spec": "270 PS",
+                        "price": 1335000000
+                    },
+                    {
+                        "type": "FN 62 F HDR",
+                        "spec": "270 PS",
+                        "price": 1360000000
+                    },
+                    {
+                        "type": "FN 62 F HDR Mini Package",
+                        "spec": "270 PS",
+                        "price": 1370000000
+                    },
+                    {
+                        "type": "FN 62 FL HD",
+                        "spec": "270 PS",
+                        "price": 1355000000
+                    },
+                    {
+                        "type": "FN 62 FL HD (SLT) TG",
+                        "spec": "270 PS",
+                        "price": 1385000000
+                    },
+                    {
+                        "type": "FN 62 FL HDR",
+                        "spec": "270 PS",
+                        "price": 1375000000
+                    },
+                    {
+                        "type": "FN 62 FL HDR (SLT) TG",
+                        "spec": "270 PS",
+                        "price": 1405000000
+                    }
+                ],
+                "6x2": [
+                    {
+                        "type": "FN 61 FS",
+                        "spec": "240 PS",
+                        "price": 1105000000
+                    },
+                    {
+                        "type": "FN 61 FSL",
+                        "spec": "240 PS",
+                        "price": 1115000000
+                    },
+                    {
+                        "type": "FN 61 FSL (SLT) TG",
+                        "spec": "240 PS",
+                        "price": 1145000000
+                    },
+                    {
+                        "type": "FN 61 FL HD",
+                        "spec": "270 PS",
+                        "price": 1140000000
+                    },
+                    {
+                        "type": "FN 61 FL HD (SLT) TG",
+                        "spec": "270 PS",
+                        "price": 1170000000
+                    },
+                    {
+                        "type": "FN 61 FL HDR",
+                        "spec": "270 PS",
+                        "price": 1135000000
+                    },
+                    {
+                        "type": "FN 61 FL HDR (SLT) TG",
+                        "spec": "270 PS",
+                        "price": 1185000000
+                    }
+                ],
+                "4x2": [
+                    {
+                        "type": "FN 65 FSL",
+                        "spec": "240 PS",
+                        "price": 930000000
+                    },
+                    {
+                        "type": "FN 65 FSL HG",
+                        "spec": "240 PS",
+                        "price": 945000000
+                    },
+                    {
+                        "type": "FN 65 FS HG",
+                        "spec": "240 PS",
+                        "price": 915000000
+                    },
+                    {
+                        "type": "FN 65 FL HG",
+                        "spec": "240 PS",
+                        "price": 945000000
+                    },
+                    {
+                        "type": "FN 65 FM HG",
+                        "spec": "240 PS",
+                        "price": 920000000
+                    }
+                ]
+            }
+        },
+        "tractor_head": {
+            "image": "https://csdwindo.com/media/ktb/tractor-head.webp",
+            "categories": {
+                "head_unit": [
+                    {
+                        "type": "FN 62 F TH",
+                        "spec": "270 PS",
+                        "price": 1415000000
+                    },
+                    {
+                        "type": "FN 65 F TH",
+                        "spec": "270 PS",
+                        "price": 1065000000
+                    }
+                ]
+            }
+        }
+    },
+    "passenger_car": {
+        "destinator": {
+            "image": "https://csdwindo.com/media/mmksi/destinator.png",
+            "items": [
+                {
+                    "type": "1.5L Ultimate Premium (4x2) A/T",
+                    "price": 517000000
+                },
+                {
+                    "type": "1.5L Ultimate (4x2) A/T",
+                    "price": 487000000
+                },
+                {
+                    "type": "1.5L Exceed (4x2) A/T",
+                    "price": 427000000
+                },
+                {
+                    "type": "1.5L GLS (4x2) A/T",
+                    "price": 402000000
+                }
+            ],
+            "additional_cost": {
+                "warna_putih": 2500000
+            }
+        },
+        "new_xforce": {
+            "image": "https://csdwindo.com/wp-content/uploads/newxforcetr.png",
+            "items": [
+                {
+                    "type": "HEV (Hybrid Electric Vehicle)",
+                    "price": 460000000
+                },
+                {
+                    "type": "Ultimate",
+                    "price": 399000000
+                },
+                {
+                    "type": "Exceed",
+                    "price": 388000000
+                }
+            ],
+            "additional_cost": {
+                "premium_package_new_xforce_hev": 30000000,
+                "premium_package": 25000000,
+                "warna_putih": 1500000
+            }
+        },
+        "new_xpander": {
+            "image": "https://csdwindo.com/media/mmksi/xpander.png",
+            "items": [
+                {
+                    "type": "Ultimate CVT (Black Interior)",
+                    "price": 348000000
+                },
+                {
+                    "type": "Ultimate MT (Black Interior)",
+                    "price": 332000000
+                },
+                {
+                    "type": "Exceed Tourer CVT",
+                    "price": 302500000
+                },
+                {
+                    "type": "Exceed Tourer MT",
+                    "price": 293000000
+                },
+                {
+                    "type": "GLS CVT",
+                    "price": 283500000
+                },
+                {
+                    "type": "GLS MT",
+                    "price": 274500000
+                }
+            ],
+            "additional_cost": {
+                "warna_putih": 1500000
+            }
+        },
+        "new_xpander_cross": {
+            "image": "https://csdwindo.com/media/mmksi/xpander_cross.webp",
+            "items": [
+                {
+                    "type": "Cross Premium CVT",
+                    "price": 374000000
+                },
+                {
+                    "type": "Cross MT",
+                    "price": 348000000
+                }
+            ],
+            "additional_cost": {
+                "warna_putih": 1500000,
+                "two_tone": 3500000
+            }
+        },
+        "new_pajero_sport": {
+            "image": "https://csdwindo.com/media/mmksi/pajero.png",
+            "items": [
+                {
+                    "type": "Dakar Ultimate 4x4 AT",
+                    "price": 794000000
+                },
+                {
+                    "type": "Dakar Ultimate 4x2 AT",
+                    "price": 733000000
+                },
+                {
+                    "type": "Dakar 4x2 AT",
+                    "price": 679000000
+                },
+                {
+                    "type": "Exceed 4x2 AT",
+                    "price": 606000000
+                },
+                {
+                    "type": "Exceed 4x2 MT",
+                    "price": 591000000
+                },
+                {
+                    "type": "GLX 4x4 MT",
+                    "price": 620500000
+                }
+            ],
+            "additional_cost": {
+                "warna_putih": 3000000
+            }
+        },
+        "triton": {
+            "image": "https://csdwindo.com/media/mmksi/triton.webp",
+            "items": [
+                {
+                    "type": "DC Ultimate 4x4 AT",
+                    "price": 571500000
+                },
+                {
+                    "type": "DC Exceed 4x4 MT",
+                    "price": 537000000
+                },
+                {
+                    "type": "DC GLS 4x4 MT",
+                    "price": 492500000
+                },
+                {
+                    "type": "DC HDX 4x4 MT",
+                    "price": 473500000
+                },
+                {
+                    "type": "SC HDX 4x4 MT",
+                    "price": 418500000
+                },
+                {
+                    "type": "SC GLX 4x2 MT",
+                    "price": 340000000
+                }
+            ]
+        },
+        "l300": {
+            "image": "https://csdwindo.com/media/mmksi/l300.png",
+            "items": [
+                {
+                    "type": "CC 4x2 MT",
+                    "price": 255000000
+                },
+                {
+                    "type": "PU FB-R 4x2 MT",
+                    "price": 260000000
+                }
+            ]
+        }
+    }
+}

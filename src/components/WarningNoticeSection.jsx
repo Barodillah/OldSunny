@@ -14,7 +14,7 @@ import { RiAlertLine, RiUserUnfollowLine, RiWhatsappLine } from 'react-icons/ri'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Daftar sampel sales & staf yang sudah tidak aktif / nonaktif resmi
+// Daftar sampel sales & staf yang sudah tidak aktif / nonaktif resmi dengan foto
 const INACTIVE_STAFF_LIST = [
   {
     id: 'inact-1',
@@ -24,6 +24,7 @@ const INACTIVE_STAFF_LIST = [
     formerNik: 'SNY-SLS-0199',
     inactiveDate: '15 Januari 2024',
     reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Bekasi',
+    photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'inact-2',
@@ -33,6 +34,7 @@ const INACTIVE_STAFF_LIST = [
     formerNik: 'SNY-SLS-0284',
     inactiveDate: '10 Agustus 2023',
     reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Bekasi',
+    photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'inact-3',
@@ -42,6 +44,7 @@ const INACTIVE_STAFF_LIST = [
     formerNik: 'SNY-SLS-0351',
     inactiveDate: '28 November 2023',
     reason: 'Habis Masa Kontrak Kerja',
+    photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80',
   },
   {
     id: 'inact-4',
@@ -51,6 +54,27 @@ const INACTIVE_STAFF_LIST = [
     formerNik: 'SNY-SLS-0490',
     inactiveDate: '05 Maret 2024',
     reason: 'Nonaktif / Surat Keputusan Direksi',
+    photoUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'inact-5',
+    name: 'Dedi Kurniawan',
+    formerRole: 'Sales Fleet & Commercial',
+    formerBranch: 'Showroom Bekasi Barat',
+    formerNik: 'SNY-SLS-0512',
+    inactiveDate: '20 Mei 2024',
+    reason: 'Resigned / Tidak lagi memiliki lisensi MMKSI',
+    photoUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'inact-6',
+    name: 'Siti Rahmawati',
+    formerRole: 'Counter Sales Staff',
+    formerBranch: 'Showroom Bintaro',
+    formerNik: 'SNY-SLS-0628',
+    inactiveDate: '12 September 2024',
+    reason: 'Mutasi Luar Kota / Nonaktif dari Dealer',
+    photoUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&auto=format&fit=crop&q=80',
   },
 ]
 
@@ -113,15 +137,25 @@ export default function WarningNoticeSection() {
     return () => ctx.revert()
   }, [])
 
-  // Keyboard Escape listener for modal
+  // Keyboard Escape listener for drawer & body scroll lock
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isModalOpen) {
         setIsModalOpen(false)
       }
     }
+
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKeyDown)
+    }
   }, [isModalOpen])
 
   const filteredInactiveStaff = INACTIVE_STAFF_LIST.filter(
@@ -199,123 +233,131 @@ export default function WarningNoticeSection() {
         </div>
       </div>
 
-      {/* MODAL: DAFTAR SALES & KARYAWAN NONAKTIF */}
+      {/* FULL SCREEN LEFT DRAWER: DAFTAR SALES & KARYAWAN NONAKTIF */}
       {isModalOpen && (
         <div
-          className="warning-modal-backdrop"
+          className="warning-drawer-overlay"
           onClick={() => setIsModalOpen(false)}
           role="dialog"
           aria-modal="true"
-          aria-labelledby="modal-inactive-title"
+          aria-labelledby="drawer-inactive-title"
         >
           <div
-            className="warning-modal-dialog"
+            className="warning-drawer-panel"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
-            <div className="warning-modal-header">
-              <div className="warning-modal-title-group">
-                <div className="warning-modal-badge">
-                  <RiAlertLine size={16} />
-                  <span>Direktori Pencegahan Penipuan</span>
-                </div>
-                <h3 id="modal-inactive-title" className="warning-modal-heading">
+            {/* Drawer Header */}
+            <div className="warning-drawer-header">
+              <div className="warning-drawer-title-group">
+                <h3 id="drawer-inactive-title" className="warning-drawer-heading">
                   Daftar Sales & Karyawan Nonaktif
                 </h3>
-                <p className="warning-modal-sub">
-                  Pihak di bawah ini sudah tidak lagi terafiliasi dengan Mitsubishi Sun Bekasi dan tidak memiliki wewenang untuk transaksi, janji unit, maupun penerimaan dana.
+                <p className="warning-drawer-sub">
+                  Pihak di bawah ini sudah tidak terafiliasi dengan PT Sun Star Prima Motor Bekasi. Segala bentuk transaksi, janji unit, maupun penerimaan uang di luar kasir resmi adalah <strong>tidak sah</strong>.
                 </p>
               </div>
               <button
                 type="button"
-                className="warning-modal-close"
+                className="warning-drawer-close"
                 onClick={() => setIsModalOpen(false)}
-                aria-label="Tutup Dialog"
+                aria-label="Tutup Drawer"
               >
-                <HiOutlineXMark size={20} />
+                <HiOutlineXMark size={24} />
               </button>
             </div>
 
-            {/* Modal Search & Filter */}
-            <div className="warning-modal-search-box">
-              <HiOutlineMagnifyingGlass size={18} className="search-icon" />
-              <input
-                type="text"
-                placeholder="Cari berdasarkan nama mantan staf, NIK lama, atau cabang..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="warning-modal-input"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  className="search-clear-btn"
-                  onClick={() => setSearchQuery('')}
-                >
-                  Clear
-                </button>
-              )}
+            {/* Drawer Search & Count Bar */}
+            <div className="warning-drawer-search-wrap">
+              <div className="warning-drawer-search-box">
+                <input
+                  type="text"
+                  placeholder="Cari berdasarkan nama mantan staf, eks NIK, atau lokasi cabang..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="warning-drawer-input"
+                  autoFocus
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    className="search-clear-btn"
+                    onClick={() => setSearchQuery('')}
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
             </div>
 
-            {/* Inactive Staff Table / List */}
-            <div className="warning-modal-list-body">
+            {/* Inactive Staff Cards Grid with Photos */}
+            <div className="warning-drawer-body">
               {filteredInactiveStaff.length > 0 ? (
-                <div className="inactive-staff-table">
+                <div className="inactive-staff-grid">
                   {filteredInactiveStaff.map((staff) => (
-                    <div key={staff.id} className="inactive-staff-row">
-                      <div className="inactive-staff-primary">
-                        <div className="inactive-staff-name-wrap">
-                          <span className="inactive-staff-name">{staff.name}</span>
-                          <span className="inactive-status-pill">STATUS: NONAKTIF</span>
-                        </div>
-                        <div className="inactive-staff-meta">
-                          <span>Mantan Posisi: <strong>{staff.formerRole}</strong></span>
-                          <span>•</span>
-                          <span>Cabang Terakhir: <strong>{staff.formerBranch}</strong></span>
+                    <div key={staff.id} className="inactive-staff-card">
+                      <div className="inactive-card-avatar-wrap">
+                        <img
+                          src={staff.photoUrl}
+                          alt={staff.name}
+                          className="inactive-card-avatar"
+                          loading="lazy"
+                        />
+                        <div className="inactive-card-status-badge">
+                          NONAKTIF
                         </div>
                       </div>
 
-                      <div className="inactive-staff-secondary">
-                        <span className="inactive-nik-label">Eks NIK: <strong>{staff.formerNik}</strong></span>
-                        <span className="inactive-date-label">Efektif Sejak: {staff.inactiveDate}</span>
+                      <div className="inactive-card-content">
+                        <div className="inactive-card-header">
+                          <h4 className="inactive-card-name">{staff.name}</h4>
+                          <span className="inactive-card-nik">Eks NIK: <strong>{staff.formerNik}</strong></span>
+                        </div>
+
+                        <div className="inactive-card-meta-list">
+                          <div className="inactive-card-meta-row">
+                            <span className="meta-label">Mantan Posisi:</span>
+                            <span className="meta-value">{staff.formerRole}</span>
+                          </div>
+                          <div className="inactive-card-meta-row">
+                            <span className="meta-label">Cabang Terakhir:</span>
+                            <span className="meta-value">{staff.formerBranch}</span>
+                          </div>
+                          <div className="inactive-card-meta-row">
+                            <span className="meta-label">Efektif Sejak:</span>
+                            <span className="meta-value text-red">{staff.inactiveDate}</span>
+                          </div>
+                          <div className="inactive-card-meta-row">
+                            <span className="meta-label">Status Hubungan:</span>
+                            <span className="meta-value text-muted">{staff.reason}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div className="inactive-empty-state">
-                  <p>Tidak ada personel nonaktif yang sesuai dengan kata kunci pencarian.</p>
+                  <p>Tidak ada personel nonaktif yang sesuai dengan kata kunci "{searchQuery}".</p>
                 </div>
               )}
             </div>
 
-            {/* Bank Security Disclaimer Box */}
-            <div className="warning-security-box">
-              <div className="security-box-header">
-                <HiOutlineShieldCheck size={20} className="text-emerald" />
-                <h4>Rekening Resmi PT Sun Star Prima Motor</h4>
+            {/* Drawer Footer with Compact Official Bank Info & Report Button */}
+            <div className="warning-drawer-footer">
+              <div className="footer-bank-simple">
+                <span className="footer-bank-label">Rekening Resmi Dealer:</span>
+                <span className="footer-bank-account">
+                  <strong>Bank BCA 3425419999</strong> a.n. <strong>PT Sun Star Prima Motor</strong>
+                </span>
               </div>
-              <p className="security-box-text">
-                Mitsubishi Sun Bekasi tidak pernah mengizinkan transaksi tunai di luar kasir showroom maupun transfer ke rekening pribadi atas nama perorangan. Seluruh pembayaran wajib ke rekening resmi:
-              </p>
-              <div className="security-bank-pill">
-                <strong>Bank BCA • No. Rek: 3425419999</strong> a.n. <strong>PT Sun Star Prima Motor</strong>
-              </div>
-            </div>
-
-            {/* Modal Footer Callout */}
-            <div className="warning-modal-footer">
-              <span className="footer-callout-text">
-                Menemukan penawaran mencurigakan?
-              </span>
               <a
                 href="https://wa.me/6281289001234?text=Halo%20Tim%20Keamanan%20Mitsubishi%20Sun%20Bekasi,%20saya%20ingin%20verifikasi%20keaslian%20sales/transaksi%20kendaraan."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-report-fraud"
               >
-                <RiWhatsappLine size={18} />
-                <span>Lapor & Verifikasi ke Hotline Resmi (24/7)</span>
+                <RiWhatsappLine size={19} />
+                <span>Lapor penawaran mencurigakan</span>
               </a>
             </div>
           </div>

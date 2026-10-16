@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -8,32 +8,54 @@ gsap.registerPlugin(ScrollTrigger)
 const TEAM_SHOWCASE = [
   {
     id: 'dkt-tim',
-    title: 'DKT Tim',
+    title: 'Dealer Kaizen Team',
     role: 'Divisi Komersial & Teknis',
     company: 'at Mitsubishi Sun Bekasi®',
-    imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acfe735e51235.21441135.jpeg',
+    imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad20f3f4c1a78.73235556.jpeg',
   },
   {
     id: 'frontliner-tim',
-    title: 'Frontliner Tim',
+    title: 'Frontliner Team',
     role: 'Pelayanan & Customer Relations',
     company: 'at Mitsubishi Sun Bekasi®',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acfe735e4a127.45708367.jpeg',
+  },
+  {
+    id: 'operational-pelayanan',
+    title: 'Operational Pelayanan',
+    role: 'Operasional & Layanan Pelanggan',
+    company: 'at Mitsubishi Sun Bekasi®',
+    imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acd9f987280e1.14368522.jpeg',
   },
 ]
 
 export default function DealerTeamSection() {
   const sectionRef = useRef(null)
   const cardRef = useRef(null)
+  const viewportRef = useRef(null)
+  const trackRef = useRef(null)
+  const [topIndex, setTopIndex] = useState(0)
+  const isHoveredRef = useRef(false)
+  const isAnimatingRef = useRef(false)
 
+  const count = TEAM_SHOWCASE.length
+
+  // Preload all showcase images for instant seamless rendering
+  useEffect(() => {
+    TEAM_SHOWCASE.forEach((team) => {
+      const img = new Image()
+      img.src = team.imageUrl
+    })
+  }, [])
+
+  // Section entrance animation
   useEffect(() => {
     if (!sectionRef.current || !cardRef.current) return
 
-    const photos = cardRef.current.querySelectorAll('.team-photo-card')
     const leftContent = cardRef.current.querySelector('.dealer-team-left')
+    const viewport = viewportRef.current
 
     const ctx = gsap.context(() => {
-      // 1. White container card entrance
       gsap.fromTo(
         cardRef.current,
         {
@@ -55,7 +77,6 @@ export default function DealerTeamSection() {
         }
       )
 
-      // 2. Left content subtle slide-in
       if (leftContent) {
         gsap.fromTo(
           leftContent,
@@ -78,10 +99,9 @@ export default function DealerTeamSection() {
         )
       }
 
-      // 3. Right 2 photos staggered entrance
-      if (photos.length > 0) {
+      if (viewport) {
         gsap.fromTo(
-          photos,
+          viewport,
           {
             y: 40,
             opacity: 0,
@@ -92,7 +112,6 @@ export default function DealerTeamSection() {
             opacity: 1,
             scale: 1,
             duration: 0.85,
-            stagger: 0.2,
             delay: 0.25,
             ease: 'power3.out',
             scrollTrigger: {
@@ -107,6 +126,96 @@ export default function DealerTeamSection() {
 
     return () => ctx.revert()
   }, [])
+
+  // Calculate dynamic step (single item height + gap) to fit exactly 2 visible cards
+  const getStep = () => {
+    if (!viewportRef.current || !trackRef.current) return 0
+    const firstItem = trackRef.current.children[0]
+    if (!firstItem) return 0
+    const gap = parseFloat(window.getComputedStyle(trackRef.current).gap || '20') || 20
+    return firstItem.offsetHeight + gap
+  }
+
+  // Set viewport height dynamically to display exactly 2 cards
+  const updateViewportHeight = () => {
+    if (!viewportRef.current || !trackRef.current) return
+    const items = trackRef.current.children
+    if (items.length < 3) return
+    const cardHeight = items[1].offsetHeight
+    const gap = parseFloat(window.getComputedStyle(trackRef.current).gap || '20') || 20
+    if (cardHeight > 0) {
+      viewportRef.current.style.height = `${cardHeight * 2 + gap}px`
+    }
+  }
+
+  // Align the track at y = -step immediately whenever index updates or resize occurs
+  useLayoutEffect(() => {
+    updateViewportHeight()
+    const step = getStep()
+    if (trackRef.current && step > 0) {
+      gsap.set(trackRef.current, { y: -step })
+    }
+  }, [topIndex])
+
+  // ResizeObserver to keep viewport perfectly scaled across responsive viewports
+  useEffect(() => {
+    const handleResize = () => {
+      updateViewportHeight()
+      const step = getStep()
+      if (trackRef.current && !isAnimatingRef.current && step > 0) {
+        gsap.set(trackRef.current, { y: -step })
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    const ro = new ResizeObserver(handleResize)
+    if (viewportRef.current) {
+      ro.observe(viewportRef.current)
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      ro.disconnect()
+    }
+  }, [])
+
+  // Auto-slide every 2 seconds: Slide top-to-bottom (y moves from -step to 0)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (isHoveredRef.current || isAnimatingRef.current) return
+
+      const step = getStep()
+      if (!step || !trackRef.current) return
+
+      isAnimatingRef.current = true
+
+      // Animate track down from -step to 0
+      gsap.to(trackRef.current, {
+        y: 0,
+        duration: 0.65,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          // Shift active index backward so items move down in loop
+          setTopIndex((prev) => (prev - 1 + count) % count)
+          isAnimatingRef.current = false
+        },
+      })
+    }, 2000)
+
+    return () => clearInterval(timer)
+  }, [count])
+
+  // Generate 4 items for the track:
+  // Item 0: Prepared off-screen above viewport (incoming from top)
+  // Item 1: Visible top card
+  // Item 2: Visible bottom card
+  // Item 3: Prepared off-screen below viewport (outgoing at bottom)
+  const trackItems = [
+    TEAM_SHOWCASE[(topIndex - 1 + count) % count],
+    TEAM_SHOWCASE[topIndex],
+    TEAM_SHOWCASE[(topIndex + 1) % count],
+    TEAM_SHOWCASE[(topIndex + 2) % count],
+  ]
 
   return (
     <section ref={sectionRef} className="dealer-team-section" id="tim-dealer" aria-labelledby="dealer-team-title">
@@ -146,7 +255,7 @@ export default function DealerTeamSection() {
                 <p className="team-mission-desc">
                   Pelajari dedikasi, divisi, serta struktur kepemimpinan resmi kami.
                 </p>
-                <Link to="/about" className="team-cta-pill-btn" title="Buka Halaman Struktur Organisasi">
+                <Link to="/organization" className="team-cta-pill-btn" title="Buka Halaman Struktur Organisasi">
                   <span>Struktur Organisasi</span>
                   <span className="cta-dot">•</span>
                 </Link>
@@ -160,31 +269,43 @@ export default function DealerTeamSection() {
             </div>
           </div>
 
-          {/* RIGHT SIDE: 2 HORIZONTAL PHOTOS (ATAS & BAWAH, RATIO 2:3 HORIZONTAL) */}
-          <div className="dealer-team-right">
-            {TEAM_SHOWCASE.map((team) => (
-              <div key={team.id} className="team-photo-card">
-                <img
-                  src={team.imageUrl}
-                  alt={team.title}
-                  className="team-photo-img"
-                  loading="lazy"
-                />
-                <div className="team-photo-gradient" />
+          {/* RIGHT SIDE: 2 HORIZONTAL PHOTOS (TOP-TO-BOTTOM CONTINUOUS LOOP SLIDER) */}
+          <div
+            className="dealer-team-right"
+            onMouseEnter={() => {
+              isHoveredRef.current = true
+            }}
+            onMouseLeave={() => {
+              isHoveredRef.current = false
+            }}
+          >
+            <div ref={viewportRef} className="dealer-team-slider-viewport">
+              <div ref={trackRef} className="dealer-team-slider-track">
+                {trackItems.map((team, idx) => (
+                  <div key={`${team.id}-${idx}`} className="team-photo-card">
+                    <img
+                      src={team.imageUrl}
+                      alt={team.title}
+                      className="team-photo-img"
+                      loading="eager"
+                    />
+                    <div className="team-photo-gradient" />
 
-                {/* Top Overlay Bar */}
-                <div className="team-photo-top-bar">
-                  <span className="team-badge-icon" aria-hidden="true">+</span>
-                  <span className="team-role-tag">{team.role}</span>
-                </div>
+                    {/* Top Overlay Bar */}
+                    <div className="team-photo-top-bar">
+                      <span className="team-badge-icon" aria-hidden="true">+</span>
+                      <span className="team-role-tag">{team.role}</span>
+                    </div>
 
-                {/* Bottom Overlay Bar */}
-                <div className="team-photo-bottom-bar">
-                  <h3 className="team-member-name">{team.title}</h3>
-                  <span className="team-member-company">{team.company}</span>
-                </div>
+                    {/* Bottom Overlay Bar */}
+                    <div className="team-photo-bottom-bar">
+                      <h3 className="team-member-name">{team.title}</h3>
+                      <span className="team-member-company">{team.company}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>

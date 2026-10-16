@@ -1,0 +1,1062 @@
+/* ==========================================================================
+   STRUKTUR ORGANISASI PAGE - MITSUBISHI SUN BEKASI
+   Theme: Executive Corporate Directory (Center-Aligned Leadership Tree)
+   Feature: Direct Advisory Branch to the Right for CSM
+   ========================================================================== */
+
+.org-page {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f8fafc;
+  color: #0f172a;
+  overflow-x: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   HERO / HEADER SECTION
+   -------------------------------------------------------------------------- */
+.org-hero-header {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  padding: 4.5rem 1.5rem 3.75rem;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Atmospheric Dynamic Background Images matching visible slide (Light & Visible) */
+.org-hero-bg-container {
+  position: absolute;
+  inset: -10px;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.org-hero-bg-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: blur(2px) saturate(1.1);
+  transform: scale(1.02);
+  opacity: 0;
+  transition: opacity 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+.org-hero-bg-layer.active {
+  opacity: 1;
+}
+
+.org-hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(255, 255, 255, 0.88) 45%,
+    rgba(255, 255, 255, 0.65) 75%,
+    rgba(255, 255, 255, 0.45) 100%
+  );
+  z-index: 2;
+}
+
+.org-hero-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 2.75rem;
+  align-items: center;
+}
+
+.org-hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   HERO RIGHT: 1-PHOTO SLIDER (TOP-TO-BOTTOM CONTINUOUS LOOP)
+   -------------------------------------------------------------------------- */
+.org-hero-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+}
+
+.org-hero-slider-viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.45);
+}
+
+.org-hero-slider-track {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  will-change: transform;
+}
+
+.org-hero-photo-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  background: #0f172a;
+}
+
+.org-hero-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.org-hero-photo-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.45) 0%,
+    rgba(15, 23, 42, 0.05) 45%,
+    rgba(15, 23, 42, 0.8) 100%
+  );
+  pointer-events: none;
+}
+
+.org-hero-photo-top-bar {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.org-hero-badge-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.org-hero-role-tag {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.org-hero-photo-bottom-bar {
+  position: absolute;
+  bottom: 16px;
+  left: 18px;
+  right: 18px;
+  z-index: 2;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.org-hero-member-name {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.15;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.org-hero-member-company {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.org-breadcrumb-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.org-breadcrumb-nav a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.org-breadcrumb-nav a:hover {
+  color: var(--accent-yellow, #FDC700);
+}
+
+.org-breadcrumb-nav .current-crumb {
+  color: var(--accent-yellow, #FDC700);
+  font-weight: 600;
+}
+
+.org-header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.95rem;
+  background: rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f172a;
+  align-self: flex-start;
+}
+
+.org-header-tag .red-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--accent-red, #E3000C);
+  box-shadow: 0 0 8px rgba(227, 0, 12, 0.4);
+}
+
+.org-hero-title {
+  font-family: var(--font-heading, sans-serif);
+  font-size: clamp(2.1rem, 4vw, 3.25rem);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+  margin: 0;
+}
+
+.org-hero-desc {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #475569;
+  max-width: 780px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.org-guarantee-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+}
+
+.org-guarantee-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+}
+
+.org-guarantee-pill .pill-icon {
+  color: #b45309;
+}
+
+/* --------------------------------------------------------------------------
+   ORGANIZATION MAIN SECTION & CONTAINER
+   -------------------------------------------------------------------------- */
+.org-main-section {
+  padding: 4.5rem 1.5rem 6.5rem;
+  position: relative;
+}
+
+.org-container {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* --------------------------------------------------------------------------
+   TIER SECTIONS (CENTER-ALIGNED)
+   -------------------------------------------------------------------------- */
+.org-tier-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.org-tier-header {
+  width: 100%;
+  max-width: 860px;
+  text-align: center;
+  margin-bottom: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.org-tier-title {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem 0;
+}
+
+.org-tier-line {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #cbd5e1 30%, #cbd5e1 70%, transparent 100%);
+  margin-top: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   PROFILE CARDS GRID (CENTER ALIGNED)
+   -------------------------------------------------------------------------- */
+.org-tier-cards-grid {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  width: 100%;
+}
+
+.grid-direksi {
+  justify-content: center;
+}
+
+.grid-managerial {
+  justify-content: center;
+  max-width: 960px;
+}
+
+.grid-supervisor {
+  justify-content: center;
+  max-width: 680px;
+}
+
+/* --------------------------------------------------------------------------
+   INDIVIDUAL PROFILE CARD (REFERENCE DESIGN: ROUNDED RECTANGLE + CENTER TEXT)
+   -------------------------------------------------------------------------- */
+.org-profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 220px;
+  outline: none;
+}
+
+.org-profile-card:hover {
+  transform: translateY(-8px);
+}
+
+.org-photo-wrapper {
+  width: 220px;
+  height: 275px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  background: #e2e8f0;
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  border: 1px solid #e2e8f0;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.org-profile-card:hover .org-photo-wrapper {
+  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.18);
+  border-color: #cbd5e1;
+}
+
+.org-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.org-profile-card:hover .org-photo-img {
+  transform: scale(1.05);
+}
+
+/* Corner badge over photo */
+.org-photo-overlay-tag {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.org-photo-overlay-tag.tag-csm {
+  background: #0f172a;
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  color: #ffffff;
+}
+
+/* Card Meta (Role above in grey, Name below in blue - EXACT TO REFERENCE) */
+.org-card-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.95rem;
+  width: 100%;
+}
+
+.org-role-label {
+  font-size: 0.92rem;
+  color: #64748b;
+  font-weight: 500;
+  line-height: 1.35;
+  transition: color 0.2s ease;
+}
+
+.org-name-label {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #2563eb;
+  line-height: 1.35;
+  margin: 0.2rem 0 0 0;
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+}
+
+.org-profile-card:hover .org-name-label {
+  color: #1d4ed8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.org-role-subtext {
+  font-size: 0.75rem;
+  color: #475569;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.card-direksi .org-photo-wrapper {
+  border: 2px solid #0f172a;
+  box-shadow: 0 12px 34px -4px rgba(15, 23, 42, 0.22);
+}
+
+.card-csm .org-photo-wrapper {
+  border: 2px solid #2563eb;
+  box-shadow: 0 12px 32px -4px rgba(37, 99, 235, 0.18);
+}
+
+/* --------------------------------------------------------------------------
+   TREE SPINAL SECTION: WITH RIGHT-HAND ADVISORY BRANCH FOR CSM
+   Matches User's Reference Diagram (Cabang ke Kanan & Align Kanan)
+   -------------------------------------------------------------------------- */
+.org-spine-wrapper {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin: 0.5rem 0 0 0;
+}
+
+/* Central vertical trunk lines */
+.spine-stem-top {
+  width: 2px;
+  height: 40px;
+  background-color: #0f172a;
+}
+
+.spine-stem-bottom {
+  width: 2px;
+  height: 40px;
+  background-color: #0f172a;
+}
+
+/* Horizontal Row for the Right Advisory Branch */
+.advisory-branch-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  align-items: center;
+  position: relative;
+  min-height: 290px;
+}
+
+/* Left side note/pill */
+.advisory-left-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  padding-right: 1.75rem;
+}
+
+.advisory-label-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.95rem;
+  border-radius: 9999px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.advisory-desc {
+  font-size: 0.84rem;
+  color: #64748b;
+  max-width: 280px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Center junction node */
+.advisory-spine-node {
+  width: 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Through vertical line */
+.advisory-spine-node::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background-color: #0f172a;
+}
+
+/* Center node circle */
+.spine-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+  position: relative;
+  z-index: 3;
+}
+
+/* Single clean horizontal branch line extending from center spine to the card */
+.spine-branch-arm {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(20px + 2.5rem);
+  height: 0;
+  border-top: 2px dashed #64748b;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Right side: Customer Satisfaction Manager (Align Kanan) */
+.advisory-right-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 2.5rem;
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   ORGANIZATIONAL TREE DISTRIBUTOR BARS
+   -------------------------------------------------------------------------- */
+.org-distributor-tree {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.distributor-cross-bar {
+  width: 100%;
+  height: 2px;
+  background-color: #0f172a;
+  position: relative;
+}
+
+.distributor-drops {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.distributor-drops.drops-3 {
+  justify-content: space-between;
+  padding: 0 110px;
+}
+
+.distributor-drops.drops-2 {
+  justify-content: space-between;
+  padding: 0 110px;
+}
+
+.drop-stem {
+  width: 2px;
+  height: 30px;
+  background-color: #0f172a;
+}
+
+/* Supervisor Distributor Bar */
+.org-distributor-tree.distributor-supervisor {
+  max-width: 460px;
+}
+
+.distributor-cross-bar.bar-2 {
+  width: 100%;
+}
+
+/* Org connector vertical */
+.org-connector-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1.5rem 0 0 0;
+  position: relative;
+}
+
+.connector-stem {
+  width: 2px;
+  height: 35px;
+  background-color: #0f172a;
+}
+
+.connector-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #0f172a;
+}
+
+/* --------------------------------------------------------------------------
+   LEADER DETAIL MODAL DIALOG
+   -------------------------------------------------------------------------- */
+.org-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.org-modal-dialog {
+  background: #ffffff;
+  border-radius: 24px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px -12px rgba(15, 23, 42, 0.35);
+  border: 1px solid #e2e8f0;
+}
+
+.org-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.org-modal-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #059669;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.org-modal-close {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.org-modal-close:hover {
+  background: #e2e8f0;
+  color: var(--accent-red, #E3000C);
+}
+
+.org-modal-body {
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.org-modal-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.org-modal-avatar {
+  width: 110px;
+  height: 135px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 2px solid var(--accent-yellow, #FDC700);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  flex-shrink: 0;
+}
+
+.org-modal-hero-text {
+  flex: 1;
+}
+
+.org-modal-badge {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  margin-bottom: 0.45rem;
+  border: 1px solid #e2e8f0;
+}
+
+.org-modal-name {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.org-modal-role {
+  font-size: 0.95rem;
+  color: #2563eb;
+  font-weight: 700;
+  margin: 0.25rem 0 0.5rem 0;
+}
+
+.org-modal-submeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.org-modal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.detail-box {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 1rem 1.15rem;
+  border: 1px solid #f1f5f9;
+}
+
+.detail-box-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  margin: 0 0 0.35rem 0;
+}
+
+.detail-box-content {
+  font-size: 0.9rem;
+  color: #0f172a;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.detail-box.advisory-alert {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.detail-box.advisory-alert p {
+  font-size: 0.88rem;
+  color: #1e40af;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.advisory-icon {
+  color: #2563eb;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.org-modal-security-notice {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 14px;
+  padding: 1rem 1.15rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.notice-icon {
+  color: #16a34a;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.org-modal-security-notice p {
+  font-size: 0.85rem;
+  color: #166534;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.org-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.org-modal-btn-close {
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.org-modal-btn-close:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .org-hero-container {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .org-hero-header {
+    padding: 3.5rem 1.25rem 2.75rem;
+  }
+
+  .org-hero-title {
+    font-size: 2rem;
+  }
+
+  .org-main-section {
+    padding: 3rem 1.25rem 5rem;
+  }
+
+  .org-tier-header {
+    margin-bottom: 1.75rem;
+  }
+
+  .org-tier-title {
+    font-size: 1.5rem;
+  }
+
+  .org-tier-cards-grid {
+    gap: 1.5rem;
+  }
+
+  .org-profile-card {
+    width: 165px;
+  }
+
+  .org-photo-wrapper {
+    width: 165px;
+    height: 215px;
+    border-radius: 16px;
+  }
+
+  .org-role-label {
+    font-size: 0.82rem;
+  }
+
+  .org-name-label {
+    font-size: 1rem;
+  }
+
+  .org-photo-overlay-tag {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.55rem;
+    bottom: 8px;
+  }
+
+  /* Reflow advisory branch on mobile */
+  .advisory-branch-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    min-height: auto;
+  }
+
+  .advisory-left-box {
+    align-items: center;
+    text-align: center;
+    padding-right: 0;
+  }
+
+  .advisory-spine-node {
+    display: none;
+  }
+
+  .advisory-right-box {
+    padding-left: 0;
+  }
+
+  .distributor-drops.drops-3 {
+    padding: 0 40px;
+  }
+
+  .distributor-drops.drops-2 {
+    padding: 0 40px;
+  }
+
+  .org-modal-hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .org-modal-submeta {
+    justify-content: center;
+  }
+
+  .org-modal-avatar {
+    width: 100px;
+    height: 125px;
+  }
+}
+
+@media (max-width: 480px) {
+  .org-tier-cards-grid {
+    gap: 1.15rem;
+  }
+
+  .org-profile-card {
+    width: 145px;
+  }
+
+  .org-photo-wrapper {
+    width: 145px;
+    height: 190px;
+    border-radius: 14px;
+  }
+
+  .org-name-label {
+    font-size: 0.95rem;
+  }
+
+  .org-role-label {
+    font-size: 0.78rem;
+  }
+
+  .org-distributor-tree {
+    display: none;
+  }
+}

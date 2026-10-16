@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
@@ -7,7 +8,6 @@ import {
   HiOutlineXMark,
   HiOutlineUser,
   HiOutlineMapPin,
-  HiOutlineMagnifyingGlass,
   HiOutlineCheckBadge,
   HiOutlineInformationCircle,
   HiOutlineSparkles,
@@ -19,195 +19,12 @@ import {
   RiShieldCheckLine,
   RiStarFill
 } from 'react-icons/ri'
+import { TOP_SALES_TRADING_CARDS, ALL_SALES_DIRECTORY } from '../data/salesData.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const TOP_SALES_TRADING_CARDS = [
-  {
-    id: 'champion',
-    rank: '01',
-    rankNumber: 1,
-    isInverted: false,
-    slideDirection: 'top',
-    name: 'Rian Ardiansyah',
-    title: 'Senior Sales Executive',
-    tenure: '6 Tahun',
-    joinedYear: '2020',
-    npsScore: '+96',
-    nik: 'SNY-SLS-0412',
-    joinedSince: 'Bergabung sejak 2020',
-    branch: 'Showroom Pusat Sudirman',
-    specialization: 'SUV & Varian Hybrid',
-    photoUrl: '/sales/sales_champion_rian.jpg',
-    csiScore: '99.4 / 100',
-    customerVoiceScore: '4.9 / 5.0 (128 Ulasan)',
-    themeStyle: 'card-cream-hero',
-    whatsappNumber: '6281289001234',
-    whatsappMessage:
-      'Halo Bpk Rian Ardiansyah, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Mitsubishi Sun Bekasi.',
-  },
-  {
-    id: 'rank-2',
-    rank: '02',
-    rankNumber: 2,
-    isInverted: true,
-    slideDirection: 'bottom',
-    name: 'Dewi Sartika',
-    title: 'Sales Specialist',
-    tenure: '4 Tahun',
-    joinedYear: '2022',
-    npsScore: '+92',
-    nik: 'SNY-SLS-0588',
-    joinedSince: 'Bergabung sejak 2022',
-    branch: 'Showroom BSD City',
-    specialization: 'Family MPV & Crossover',
-    photoUrl: '/sales/sales_silver_dewi.jpg',
-    csiScore: '98.8 / 100',
-    customerVoiceScore: '4.9 / 5.0 (94 Ulasan)',
-    themeStyle: 'card-dark',
-    whatsappNumber: '6281377889900',
-    whatsappMessage:
-      'Halo Ibu Dewi Sartika, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Mitsubishi Sun Bekasi.',
-  },
-  {
-    id: 'rank-3',
-    rank: '03',
-    rankNumber: 3,
-    isInverted: false,
-    slideDirection: 'top',
-    name: 'Bambang Prakoso',
-    title: 'Junior Sales Advisor',
-    tenure: '2.5 Tahun',
-    joinedYear: '2023',
-    npsScore: '+89',
-    nik: 'SNY-SLS-0721',
-    joinedSince: 'Bergabung sejak 2023',
-    branch: 'Showroom Kelapa Gading',
-    specialization: 'Uji Jalan & Pembiayaan Syariah',
-    photoUrl: '/sales/sales_bronze_bambang.jpg',
-    csiScore: '98.2 / 100',
-    customerVoiceScore: '4.8 / 5.0 (76 Ulasan)',
-    themeStyle: 'card-accent-red',
-    whatsappNumber: '6281544332211',
-    whatsappMessage:
-      'Halo Bpk Bambang Prakoso, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Mitsubishi Sun Bekasi.',
-  },
-]
-
-const ALL_SALES_DIRECTORY = [
-  ...TOP_SALES_TRADING_CARDS,
-  {
-    id: 'sales-4',
-    rank: '04',
-    rankNumber: 4,
-    name: 'Siti Rahmawati',
-    title: 'Corporate Fleet Consultant',
-    nik: 'SNY-SLS-0335',
-    joinedSince: 'Bergabung sejak 2019',
-    joinedYear: '2019',
-    tenure: '7 Tahun',
-    branch: 'Showroom Pusat Sudirman',
-    specialization: 'Fleet Niaga & Komersial (L300 & Triton)',
-    photoUrl: null,
-    initials: 'SR',
-    npsScore: '+88',
-    csiScore: '97.9 / 100',
-    customerVoiceScore: '4.8 / 5.0 (65 Ulasan)',
-    whatsappNumber: '6281122334455',
-    whatsappMessage:
-      'Halo Ibu Siti Rahmawati, saya ingin konsultasi pengadaan unit fleet dari Mitsubishi Sun Bekasi.',
-  },
-  {
-    id: 'sales-5',
-    rank: '05',
-    rankNumber: 5,
-    name: 'Dimas Nugroho',
-    title: 'Electric Vehicle (EV) Advisor',
-    nik: 'SNY-SLS-0649',
-    joinedSince: 'Bergabung sejak 2023',
-    joinedYear: '2023',
-    tenure: '3 Tahun',
-    branch: 'Showroom BSD City',
-    specialization: 'Mobil Listrik & Ekosistem Pengisian Daya',
-    photoUrl: null,
-    initials: 'DN',
-    npsScore: '+87',
-    csiScore: '97.6 / 100',
-    customerVoiceScore: '4.8 / 5.0 (52 Ulasan)',
-    whatsappNumber: '6281233445566',
-    whatsappMessage:
-      'Halo Bpk Dimas Nugroho, saya ingin konsultasi unit kendaraan listrik dari Mitsubishi Sun Bekasi.',
-  },
-  {
-    id: 'sales-6',
-    rank: '06',
-    rankNumber: 6,
-    name: 'Anisa Permata',
-    title: 'Customer Relationship Consultant',
-    nik: 'SNY-SLS-0810',
-    joinedSince: 'Bergabung sejak 2024',
-    joinedYear: '2024',
-    tenure: '2 Tahun',
-    branch: 'Showroom TB Simatupang',
-    specialization: 'Compact Crossover & First-Time Buyers',
-    photoUrl: null,
-    initials: 'AP',
-    npsScore: '+86',
-    csiScore: '97.4 / 100',
-    customerVoiceScore: '4.7 / 5.0 (48 Ulasan)',
-    whatsappNumber: '6281355667788',
-    whatsappMessage:
-      'Halo Ibu Anisa Permata, saya ingin konsultasi mobil pertama melalui Mitsubishi Sun Bekasi.',
-  },
-  {
-    id: 'sales-7',
-    rank: '07',
-    rankNumber: 7,
-    name: 'Fajar Maulana',
-    title: 'Senior Financing Advisor',
-    nik: 'SNY-SLS-0482',
-    joinedSince: 'Bergabung sejak 2021',
-    joinedYear: '2021',
-    tenure: '5 Tahun',
-    branch: 'Showroom Kelapa Gading',
-    specialization: 'Simulasi Bunga Rendah & Tenor Fleksibel',
-    photoUrl: null,
-    initials: 'FM',
-    npsScore: '+86',
-    csiScore: '97.2 / 100',
-    customerVoiceScore: '4.7 / 5.0 (59 Ulasan)',
-    whatsappNumber: '6281466778899',
-    whatsappMessage:
-      'Halo Bpk Fajar Maulana, saya ingin konsultasi pembiayaan kendaraan Mitsubishi Sun Bekasi.',
-  },
-  {
-    id: 'sales-8',
-    rank: '08',
-    rankNumber: 8,
-    name: 'Hendra Wijaya',
-    title: 'Trade-In & Valuation Specialist',
-    nik: 'SNY-SLS-0520',
-    joinedSince: 'Bergabung sejak 2022',
-    joinedYear: '2022',
-    tenure: '4 Tahun',
-    branch: 'Showroom Puri Indah',
-    specialization: 'Tukar Tambah Semua Merk (Fair Price)',
-    photoUrl: null,
-    initials: 'HW',
-    npsScore: '+85',
-    csiScore: '97.0 / 100',
-    customerVoiceScore: '4.7 / 5.0 (44 Ulasan)',
-    whatsappNumber: '6281577889900',
-    whatsappMessage:
-      'Halo Bpk Hendra Wijaya, saya ingin konsultasi tukar tambah kendaraan di Mitsubishi Sun Bekasi.',
-  },
-]
-
 export default function SalesOfTheMonthSection() {
   const [selectedConsultantModal, setSelectedConsultantModal] = useState(null)
-  const [isAllSalesDrawerOpen, setIsAllSalesDrawerOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedFilterCategory, setSelectedFilterCategory] = useState('all')
   const [hoveredConsultant, setHoveredConsultant] = useState(TOP_SALES_TRADING_CARDS[0])
 
   const sectionRef = useRef(null)
@@ -396,14 +213,12 @@ export default function SalesOfTheMonthSection() {
       if (e.key === 'Escape') {
         if (selectedConsultantModal) {
           setSelectedConsultantModal(null)
-        } else if (isAllSalesDrawerOpen) {
-          setIsAllSalesDrawerOpen(false)
         }
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedConsultantModal, isAllSalesDrawerOpen])
+  }, [selectedConsultantModal])
 
   const openWhatsApp = (consultant) => {
     const text = encodeURIComponent(
@@ -412,20 +227,6 @@ export default function SalesOfTheMonthSection() {
     )
     window.open(`https://wa.me/${consultant.whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer')
   }
-
-  const filteredDirectory = ALL_SALES_DIRECTORY.filter((item) => {
-    const matchQuery =
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.branch.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.nik.toLowerCase().includes(searchQuery.toLowerCase())
-
-    if (selectedFilterCategory === 'all') return matchQuery
-    if (selectedFilterCategory === 'suv') return matchQuery && item.specialization.toLowerCase().includes('suv')
-    if (selectedFilterCategory === 'mpv') return matchQuery && item.specialization.toLowerCase().includes('mpv')
-    if (selectedFilterCategory === 'fleet') return matchQuery && (item.specialization.toLowerCase().includes('fleet') || item.specialization.toLowerCase().includes('niaga') || item.specialization.toLowerCase().includes('tukar'))
-    return matchQuery
-  })
 
   return (
     <section ref={sectionRef} className="hall-of-fame-section" id="hall-of-fame" aria-labelledby="hall-of-fame-title">
@@ -442,16 +243,15 @@ export default function SalesOfTheMonthSection() {
           </div>
 
           <div className="hall-header-action">
-            <button
-              type="button"
+            <Link
+              to="/sales"
               className="hall-btn-view-all"
-              onClick={() => setIsAllSalesDrawerOpen(true)}
-              aria-haspopup="dialog"
+              title="Lihat Direktori Seluruh Sales Resmi"
             >
               <HiOutlineUserGroup size={18} />
               <span>Lihat Semua Sales Resmi ({ALL_SALES_DIRECTORY.length} Staf)</span>
               <HiOutlineArrowRight size={16} />
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -803,221 +603,6 @@ export default function SalesOfTheMonthSection() {
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL 2: DIREKTORI LENGKAP SELURUH SALES RESMI */}
-      {isAllSalesDrawerOpen && (
-        <div
-          className="hall-modal-backdrop"
-          onClick={() => setIsAllSalesDrawerOpen(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="all-sales-title"
-        >
-          <div
-            className="hall-directory-dialog"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Directory Header */}
-            <div className="hall-directory-header">
-              <div>
-                <div className="directory-tag">
-                  <HiOutlineUserGroup size={16} />
-                  <span>DIREKTORI RESMI DEALER</span>
-                </div>
-                <h3 id="all-sales-title" className="directory-heading">
-                  Daftar Seluruh Konsultan Sales Aktif
-                </h3>
-                <p className="directory-desc">
-                  Seluruh staf penjualan resmi terdaftar dengan kepatuhan anti-rekening pribadi dan transparansi penuh.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="hall-modal-close"
-                onClick={() => setIsAllSalesDrawerOpen(false)}
-                aria-label="Tutup Direktori"
-              >
-                <HiOutlineXMark size={22} />
-              </button>
-            </div>
-
-            {/* Filter & Search Controls */}
-            <div className="directory-controls-row">
-              <div className="directory-search-box">
-                <HiOutlineMagnifyingGlass size={18} className="search-icon" />
-                <input
-                  type="text"
-                  placeholder="Cari nama, NIK, cabang, atau unit spesialisasi..."
-                  className="directory-search-input"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    className="clear-search-btn"
-                    onClick={() => setSearchQuery('')}
-                    aria-label="Hapus kata kunci pencarian"
-                  >
-                    <HiOutlineXMark size={16} />
-                  </button>
-                )}
-              </div>
-
-              <div className="directory-category-chips">
-                <button
-                  type="button"
-                  className={`category-chip ${selectedFilterCategory === 'all' ? 'active' : ''}`}
-                  onClick={() => setSelectedFilterCategory('all')}
-                >
-                  Semua ({ALL_SALES_DIRECTORY.length})
-                </button>
-                <button
-                  type="button"
-                  className={`category-chip ${selectedFilterCategory === 'suv' ? 'active' : ''}`}
-                  onClick={() => setSelectedFilterCategory('suv')}
-                >
-                  Spesialis SUV
-                </button>
-                <button
-                  type="button"
-                  className={`category-chip ${selectedFilterCategory === 'mpv' ? 'active' : ''}`}
-                  onClick={() => setSelectedFilterCategory('mpv')}
-                >
-                  Spesialis MPV
-                </button>
-                <button
-                  type="button"
-                  className={`category-chip ${selectedFilterCategory === 'fleet' ? 'active' : ''}`}
-                  onClick={() => setSelectedFilterCategory('fleet')}
-                >
-                  Fleet & Niaga
-                </button>
-              </div>
-            </div>
-
-            {/* Directory Cards Grid */}
-            <div className="directory-list-container">
-              {filteredDirectory.length === 0 ? (
-                <div className="directory-empty-state">
-                  <p className="empty-title">Tidak ada konsultan yang cocok</p>
-                  <p className="empty-desc">
-                    Silakan gunakan kata kunci lain atau pilih kategori 'Semua' untuk melihat seluruh personel.
-                  </p>
-                  <button
-                    type="button"
-                    className="btn-reset-filters"
-                    onClick={() => {
-                      setSearchQuery('')
-                      setSelectedFilterCategory('all')
-                    }}
-                  >
-                    Reset Filter Pencarian
-                  </button>
-                </div>
-              ) : (
-                <div className="directory-grid">
-                  {filteredDirectory.map((staff) => (
-                    <article key={staff.id} className="directory-staff-card">
-                      <div className="staff-card-top">
-                        {staff.photoUrl ? (
-                          <img
-                            src={staff.photoUrl}
-                            alt={staff.name}
-                            className="staff-avatar-img"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="staff-avatar-initials">
-                            {staff.initials || 'ST'}
-                          </div>
-                        )}
-
-                        <div className="staff-main-info">
-                          <div className="staff-rank-row">
-                            {staff.rankNumber && staff.rankNumber <= 3 ? (
-                              <span className={`staff-trophy-badge rank-${staff.rankNumber}`}>
-                                #{staff.rankNumber} Top Satisfaction
-                              </span>
-                            ) : (
-                              <span className="staff-status-active">
-                                ● Aktif Terverifikasi
-                              </span>
-                            )}
-                            <span className="staff-nik">NIK: {staff.nik}</span>
-                          </div>
-                          <h4 className="staff-card-name">{staff.name}</h4>
-                          <p className="staff-card-title">{staff.title}</p>
-                          <div className="staff-card-meta">
-                            <span>{staff.tenure} Pengalaman</span>
-                            <span>•</span>
-                            <span>{staff.branch}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="staff-specialty-box">
-                        <span className="spec-label">Spesialisasi:</span>
-                        <span className="spec-value">{staff.specialization}</span>
-                      </div>
-
-                      <div className="staff-metrics-strip">
-                        <span className="staff-metric-item">
-                          NPS: <strong>{staff.npsScore}</strong>
-                        </span>
-                        <span className="staff-metric-item">
-                          CSI: <strong>{staff.csiScore}</strong>
-                        </span>
-                        <span className="staff-metric-item">
-                          ★ <strong>{staff.customerVoiceScore}</strong>
-                        </span>
-                      </div>
-
-                      <div className="staff-card-actions">
-                        <button
-                          type="button"
-                          className="btn-staff-wa"
-                          onClick={() => openWhatsApp(staff)}
-                          title={`WhatsApp ${staff.name}`}
-                        >
-                          <RiWhatsappLine size={16} />
-                          <span>WhatsApp</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="btn-staff-detail"
-                          onClick={() => {
-                            setIsAllSalesDrawerOpen(false)
-                            setSelectedConsultantModal(staff)
-                          }}
-                          title={`Profil ${staff.name}`}
-                        >
-                          <HiOutlineUser size={15} />
-                          <span>Profil</span>
-                        </button>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Directory Footer */}
-            <div className="directory-modal-footer">
-              <p className="directory-footer-note">
-                Pertanyaan atau verifikasi staf konsultan resmi? Hubungi layanan hotline resmi kantor kami.
-              </p>
-              <button
-                type="button"
-                className="btn-close-directory"
-                onClick={() => setIsAllSalesDrawerOpen(false)}
-              >
-                Tutup Direktori
-              </button>
             </div>
           </div>
         </div>

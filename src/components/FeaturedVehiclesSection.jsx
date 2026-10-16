@@ -91,7 +91,7 @@ export default function FeaturedVehiclesSection({ onSelectTestDrive }) {
           </div>
 
           <div className="featured-header-right">
-            <Link to="/services" className="explore-all-link" title="Jelajahi Semua Model">
+            <Link to="/vehicles" className="explore-all-link" title="Jelajahi Semua Model">
               <span>Explore All</span>
               <HiOutlineArrowRight size={18} />
             </Link>
