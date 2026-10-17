@@ -2,17 +2,14 @@ import { useState, useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
-  HiOutlineExclamationTriangle,
-  HiOutlineShieldCheck,
-  HiOutlineShieldExclamation,
   HiOutlineXMark,
-  HiOutlineMagnifyingGlass,
-  HiOutlineArrowRight,
-  HiOutlinePhone
+  HiOutlineArrowRight
 } from 'react-icons/hi2'
-import { RiAlertLine, RiUserUnfollowLine, RiWhatsappLine } from 'react-icons/ri'
+import { RiUserUnfollowLine, RiWhatsappLine } from 'react-icons/ri'
 
 gsap.registerPlugin(ScrollTrigger)
+
+const CURRENT_YEAR = new Date().getFullYear()
 
 // Daftar sampel sales & staf yang sudah tidak aktif / nonaktif resmi dengan foto
 const INACTIVE_STAFF_LIST = [
@@ -213,7 +210,7 @@ export default function WarningNoticeSection() {
           {/* Bottom Center: Secondary Metadata Code */}
           <div className="warning-center-col" aria-hidden="true">
             <span className="warning-meta-dot">•</span>
-            <span className="warning-meta-code">SEC // ANTI-FRAUD VERIFICATION {new Date().getFullYear()}</span>
+            <span className="warning-meta-code">SEC // ANTI-FRAUD VERIFICATION {CURRENT_YEAR}</span>
             <span className="warning-meta-dot">•</span>
           </div>
 

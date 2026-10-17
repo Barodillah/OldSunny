@@ -116,7 +116,9 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
       const userMsg = `Saya ingin konsultasi mengenai: ${prefilledAction.title || prefilledAction}`
       let aiReply = `Baik, mengenai ${prefilledAction.title || prefilledAction}, sistem kami terintegrasi langsung dengan database bengkel dan inventaris Mitsubishi Sun Bekasi. Anda ingin kami bantu periksa jadwal terdekat atau estimasi biayanya?`
 
-      if (prefilledAction.id === 'emergency') {
+      if (prefilledAction.id === 'service_on_road') {
+        aiReply = `LAYANAN SERVICE ON ROAD: Teknisi mekanik resmi kami siap meluncur ke lokasi khusus untuk kendaraan yang tidak bisa menyala atau tidak dapat dikendarai. Layanan ini beroperasi sesuai jam kerja resmi bengkel (Senin - Sabtu 08.00 - 16.30 WIB). Silakan sebutkan model mobil dan titik lokasi Anda.`
+      } else if (prefilledAction.id === 'emergency') {
         aiReply = `PERINGATAN LAYANAN DARURAT: Tim teknisi darurat dan armada derek kami siaga 24 jam. Pastikan kendaraan Anda berada di area aman. Silakan ketik lokasi terkini Anda atau hubungi nomor darurat kami segera.`
       }
 

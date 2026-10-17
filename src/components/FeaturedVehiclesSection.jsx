@@ -146,7 +146,7 @@ export default function FeaturedVehiclesSection({ onSelectTestDrive }) {
         <div className="featured-mobile-explore-wrap">
           <Link to="/services" className="explore-all-btn-mobile">
             <RiCarLine size={18} />
-            <span>Lihat Semua Katalog Kendaraan (Explore All)</span>
+            <span>Lihat Semua</span>
             <HiOutlineArrowRight size={16} />
           </Link>
         </div>

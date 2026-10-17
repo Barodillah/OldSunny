@@ -1,15 +1,13 @@
 import { useState, useEffect, useRef, useLayoutEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import {
-  HiOutlineChevronRight,
-  HiOutlineShieldCheck,
   HiOutlineCheckBadge,
   HiOutlineSparkles,
-  HiOutlineXMark,
-  HiOutlineMapPin
+  HiOutlineXMark
 } from 'react-icons/hi2'
-import { RiAwardLine, RiShieldCheckLine } from 'react-icons/ri'
+import { RiShieldCheckLine } from 'react-icons/ri'
+import WarningNoticeSection from '../components/WarningNoticeSection.jsx'
 import './Organization.css'
 
 // Organizational Hierarchy Data based on Official Dealer Structure
@@ -564,6 +562,9 @@ export default function Organization() {
 
         </div>
       </main>
+
+      {/* WARNING NOTICE SECTION (CRITICAL: SALES NONAKTIF & ANTI-PENIPUAN REKENING) */}
+      <WarningNoticeSection />
 
       {/* ====================================================================
           LEADER DETAIL MODAL DIALOG

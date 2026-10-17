@@ -78,7 +78,7 @@ const SUNNY_EXPRESSIONS = [
   },
 ]
 
-export default function SunnyAssistantSection({ onOpenAiChat }) {
+export default function SunnyAssistantSection({ onOpenAiChat, isHeader = false, customBadge = null }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
@@ -252,7 +252,7 @@ export default function SunnyAssistantSection({ onOpenAiChat }) {
   return (
     <section
       ref={sectionRef}
-      className="sunny-assistant-section"
+      className={`sunny-assistant-section ${isHeader ? 'is-page-header' : ''}`}
       id="sunny-assistant"
       aria-labelledby="sunny-main-title"
     >
@@ -319,10 +319,23 @@ export default function SunnyAssistantSection({ onOpenAiChat }) {
           {/* RIGHT SIDE: EDITORIAL TITLE, COPY & 3-SECOND SLIDER UX */}
           <div ref={contentColRef} className="sunny-content-col">
 
+            {isHeader && (
+              <div className="sunny-header-kicker">
+                <span className="sunny-kicker-dot" />
+                <span>{customBadge || 'PUSAT KONTAK RESMI & ASISTEN VIRTUAL DEALER'}</span>
+              </div>
+            )}
+
             {/* Giant Title (Matching Reference 'POKI') */}
-            <h2 id="sunny-main-title" className="sunny-giant-title">
-              SUNNY
-            </h2>
+            {isHeader ? (
+              <h1 id="sunny-main-title" className="sunny-giant-title">
+                SUNNY
+              </h1>
+            ) : (
+              <h2 id="sunny-main-title" className="sunny-giant-title">
+                SUNNY
+              </h2>
+            )}
 
             {/* Narrative Description Paragraph */}
             <p className="sunny-narrative-copy">

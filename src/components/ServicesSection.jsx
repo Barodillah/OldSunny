@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { createPortal } from 'react-dom'
+import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
   HiOutlineWrenchScrewdriver,
-  HiOutlinePhone,
   HiOutlineCalculator,
   HiOutlinePaintBrush,
   HiOutlineSparkles,
@@ -22,7 +22,7 @@ import {
   HiOutlineKey,
   HiOutlineTicket
 } from 'react-icons/hi2'
-import { RiCarLine, RiCupLine } from 'react-icons/ri'
+import { RiCarLine } from 'react-icons/ri'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -34,30 +34,29 @@ export default function ServicesSection({ onOpenAiWithService }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [activeModal, setActiveModal] = useState(null)
-  const [isDealerDrawerOpen, setIsDealerDrawerOpen] = useState(false)
   const [activeTooltip, setActiveTooltip] = useState(null)
   const [cursorPos, setCursorPos] = useState({ x: -400, y: -400 })
 
   // 9 Complete Services in Fullscreen Horizontal Scroll
   const services = [
     {
-      id: 'emergency',
+      id: 'service_on_road',
       number: '01',
-      title: 'Bantuan Darurat 24 Jam',
-      category: 'Siaga Darurat',
-      badge: 'SOS 24/7',
-      statusNote: 'Armada Siaga & Dispatch Terdekat',
-      icon: HiOutlinePhone,
+      title: 'Service On Road',
+      category: 'Bantuan Lapangan',
+      badge: 'EMERGENCY',
+      statusNote: 'Siap Datang Servis di Lokasi Anda',
+      icon: HiOutlineWrenchScrewdriver,
       accent: 'red',
       imageUrl: 'https://bewhy.id/wp-content/uploads/url_6ab0a0771891e7.52336063.webp',
-      summary: 'Dukungan armada derek towing hidrolik dan montir darurat 24 jam siap merapat ke lokasi Anda dalam hitungan menit.',
+      summary: 'Layanan kunjungan teknisi resmi ke lokasi Anda khusus untuk unit yang mengalami mogok, tidak bisa menyala, atau tidak dapat dikendarai ke bengkel.',
       details: [
-        'Respon cepat armada mobil derek hidrolik terdekat ke titik lokasi',
-        'Pertolongan teknis di tempat: jumper aki, ganti ban cadangan, dan darurat kelistrikan',
-        'Hotline darurat terverifikasi langsung dengan tim dispatcher pusat tanpa perantara',
+        'Syarat utama: Kendaraan mengalami mati total/tidak bisa dinyalakan atau tidak dapat dikendarai',
+        'Waktu layanan: Beroperasi sesuai jam kerja resmi bengkel (Senin - Sabtu 08.00 - 16.30 WIB)',
+        'Mekanik tersertifikasi dengan peralatan diagnosis mobile dan suku cadang orisinal Mitsubishi',
       ],
-      tooltipNote: 'Respon cepat < 20 menit • Derek hidrolik resmi',
-      aiAction: 'Panggilan Darurat',
+      tooltipNote: 'Sesuai jam kerja bengkel • Khusus unit tidak bisa jalan',
+      aiAction: 'Panggil Service On Road',
     },
     {
       id: 'vehicles',
@@ -102,7 +101,7 @@ export default function ServicesSection({ onOpenAiWithService }) {
       number: '04',
       title: 'Simulasi Kredit Terbuka',
       category: 'Pembiayaan Resmi',
-      badge: 'TERDAFTAR OJK',
+      badge: 'SELALU TRANSPARAN',
       statusNote: 'Suku Bunga & DP Transparan',
       icon: HiOutlineCalculator,
       accent: 'sunset',
@@ -217,10 +216,10 @@ export default function ServicesSection({ onOpenAiWithService }) {
       title: 'Promo & Event Spesial',
       category: 'Program Penjualan',
       badge: 'PENAWARAN TERBATAS',
-      statusNote: 'Program Bunga 0% & Subsidi Trade-In',
+      statusNote: 'Program Bunga 0% & DP Ringan',
       icon: HiOutlineTicket,
       accent: 'red',
-      imageUrl: 'https://bewhy.id/wp-content/uploads/url_6acf1a837771d8.78886143.jpeg',
+      imageUrl: 'https://bewhy.id/wp-content/uploads/url_6ad36ecc0b0961.94264127.webp',
       summary: 'Penawaran promo musiman, paket DP ringan, bunga 0%, subsidi tukar-tambah (trade-in), serta gathering komunitas eksklusif.',
       details: [
         'Paket uang muka (DP) rendah, bunga 0% tenor tertentu, dan cicilan ringan resmi leasing rekanan',
@@ -249,62 +248,6 @@ export default function ServicesSection({ onOpenAiWithService }) {
       tooltipNote: 'Buka drawer fullscreen untuk melihat Shuttle, Noah Coffee, Playground & Snack!',
       aiAction: 'Tanya Fasilitas Eksklusif',
       isDealerMasaKini: true,
-    },
-  ]
-
-  // Exclusive Perks for Dealer Masa Kini
-  const dealerPerks = [
-    {
-      id: 'shuttle',
-      title: 'Shuttle Service',
-      badge: 'ANTAR JEMPUT GRATIS',
-      icon: RiCarLine,
-      imageUrl: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=900&q=80',
-      description: 'Armada antar-jemput eksekutif gratis untuk mengantar Anda ke kantor, pusat perbelanjaan, atau kediaman selagi kendaraan diservis di bengkel Sunny.',
-      points: [
-        'Radius jangkauan antar-jemput hingga 15 km dari lokasi dealer',
-        'Pengemudi terlatih dengan standar keramahan hospitality resmi',
-        'Penjemputan kembali tepat waktu begitu mobil Anda selesai diservis',
-      ],
-    },
-    {
-      id: 'coffee',
-      title: 'Voucher Noah Coffee',
-      badge: 'SPECIALTY COFFEE',
-      icon: RiCupLine,
-      imageUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=900&q=80',
-      description: 'Voucher seduhan kopi spesialti & pastry artisan gratis dari Noah Coffee untuk menemani waktu santai Anda di executive lounge kami.',
-      points: [
-        '100% biji kopi arabika pilihan kurasi barista tersertifikasi',
-        'Pilihan signature: Espresso, Cafe Latte, Cold Brew, dan Artisan Tea',
-        'Voucher ditukarkan langsung di outlet Noah Coffee dalam dealer',
-      ],
-    },
-    {
-      id: 'playground',
-      title: 'Playground & Cafe',
-      badge: 'FAMILY & WORK FRIENDLY',
-      icon: HiOutlineSparkles,
-      imageUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=900&q=80',
-      description: 'Area ramah keluarga dengan arena bermain anak yang higienis, serta ruang kerja produktif berkecepatan internet tinggi (Wi-Fi 6).',
-      points: [
-        'Lantai pelindung empuk dan mainan edukatif terdisinfeksi berkala',
-        'Meja kerja ergonomis dengan colokan listrik universal & Type-C di setiap kursi',
-        'Layar monitor live streaming status pengerjaan mobil dari meja cafe',
-      ],
-    },
-    {
-      id: 'snack',
-      title: 'Snack Corner',
-      badge: 'FREE FLOW REFRESHMENT',
-      icon: HiOutlineBuildingStorefront,
-      imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=80',
-      description: 'Kudapan roti hangat, biskuit renyah, buah segar, dan aneka minuman segar yang dapat Anda nikmati sepuasnya tanpa biaya tambahan.',
-      points: [
-        'Diisi ulang segar setiap pagi oleh staf hospitality Sunny',
-        'Pilihan infused water sehat, teh herbal, cokelat hangat, dan jus segar',
-        'Self-service counter yang bersih, tertata rapi, dan higienis',
-      ],
     },
   ]
 
@@ -349,11 +292,10 @@ export default function ServicesSection({ onOpenAiWithService }) {
     return () => ctx.revert()
   }, [services.length])
 
-  // ESC key listener to close drawer or modal
+  // ESC key listener to close modal
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        setIsDealerDrawerOpen(false)
         setActiveModal(null)
       }
     }
@@ -361,9 +303,9 @@ export default function ServicesSection({ onOpenAiWithService }) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  // Lock background scroll when modal or drawer is open
+  // Lock background scroll when modal is open
   useEffect(() => {
-    if (activeModal || isDealerDrawerOpen) {
+    if (activeModal) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
@@ -371,7 +313,7 @@ export default function ServicesSection({ onOpenAiWithService }) {
     return () => {
       document.body.style.overflow = ''
     }
-  }, [activeModal, isDealerDrawerOpen])
+  }, [activeModal])
 
   // Mouse move handler for floating interactive cursor tooltip
   const handleMouseMove = useCallback((e) => {
@@ -522,14 +464,123 @@ export default function ServicesSection({ onOpenAiWithService }) {
                   {/* Card Bottom Actions */}
                   <div className="panel-actions-row">
                     {isSpecialDealer ? (
-                      <button
-                        type="button"
+                      <Link
+                        to="/facilities"
                         className="btn-flagship-dealer-trigger"
-                        onClick={() => setIsDealerDrawerOpen(true)}
                       >
                         <HiOutlineEye size={18} />
                         <span>Buka Fasilitas Eksklusif</span>
-                      </button>
+                      </Link>
+                    ) : item.id === 'accessories' ? (
+                      <div className="panel-standard-btn-group">
+                        <button
+                          type="button"
+                          className="btn-panel-primary"
+                          onClick={() => {
+                            if (onOpenAiWithService) onOpenAiWithService(item)
+                            else setActiveModal(item)
+                          }}
+                        >
+                          <HiOutlineChatBubbleLeftRight size={17} />
+                          <span>{item.aiAction}</span>
+                        </button>
+
+                        <Link
+                          to="/accessories"
+                          className="btn-panel-secondary"
+                        >
+                          <span>Katalog Aksesoris</span>
+                          <HiOutlineArrowRight size={14} />
+                        </Link>
+                      </div>
+                    ) : item.id === 'promo_event' ? (
+                      <div className="panel-standard-btn-group">
+                        <button
+                          type="button"
+                          className="btn-panel-primary"
+                          onClick={() => {
+                            if (onOpenAiWithService) onOpenAiWithService(item)
+                            else setActiveModal(item)
+                          }}
+                        >
+                          <HiOutlineChatBubbleLeftRight size={17} />
+                          <span>{item.aiAction}</span>
+                        </button>
+
+                        <Link
+                          to="/promo"
+                          className="btn-panel-secondary"
+                        >
+                          <span>Lihat Promo &amp; Event</span>
+                          <HiOutlineArrowRight size={14} />
+                        </Link>
+                      </div>
+                    ) : item.id === 'service_on_road' ? (
+                      <div className="panel-standard-btn-group">
+                        <button
+                          type="button"
+                          className="btn-panel-primary"
+                          onClick={() => {
+                            if (onOpenAiWithService) onOpenAiWithService(item)
+                            else setActiveModal(item)
+                          }}
+                        >
+                          <HiOutlineChatBubbleLeftRight size={17} />
+                          <span>{item.aiAction}</span>
+                        </button>
+
+                        <Link
+                          to="/service-on-road"
+                          className="btn-panel-secondary"
+                        >
+                          <span>Panggil</span>
+                          <HiOutlineArrowRight size={14} />
+                        </Link>
+                      </div>
+                    ) : item.id === 'vehicles' ? (
+                      <div className="panel-standard-btn-group">
+                        <button
+                          type="button"
+                          className="btn-panel-primary"
+                          onClick={() => {
+                            if (onOpenAiWithService) onOpenAiWithService(item)
+                            else setActiveModal(item)
+                          }}
+                        >
+                          <HiOutlineChatBubbleLeftRight size={17} />
+                          <span>{item.aiAction}</span>
+                        </button>
+
+                        <Link
+                          to="/vehicles"
+                          className="btn-panel-secondary"
+                        >
+                          <span>Pilih Unit</span>
+                          <HiOutlineArrowRight size={14} />
+                        </Link>
+                      </div>
+                    ) : item.id === 'trust' ? (
+                      <div className="panel-standard-btn-group">
+                        <button
+                          type="button"
+                          className="btn-panel-primary"
+                          onClick={() => {
+                            if (onOpenAiWithService) onOpenAiWithService(item)
+                            else setActiveModal(item)
+                          }}
+                        >
+                          <HiOutlineChatBubbleLeftRight size={17} />
+                          <span>{item.aiAction}</span>
+                        </button>
+
+                        <Link
+                          to="/organization"
+                          className="btn-panel-secondary"
+                        >
+                          <span>Struktur Organisasi</span>
+                          <HiOutlineArrowRight size={14} />
+                        </Link>
+                      </div>
                     ) : (
                       <div className="panel-standard-btn-group">
                         <button
@@ -662,105 +713,6 @@ export default function ServicesSection({ onOpenAiWithService }) {
           </div>,
           document.body
         )}
-
-      {/* 5. FULLSCREEN RIGHT DRAWER: FASILITAS EKSKLUSIF DEALER MASA KINI (Mounted directly to document.body) */}
-      {createPortal(
-        <div
-          className={`drawer-right-fullscreen-overlay ${isDealerDrawerOpen ? 'is-open' : ''}`}
-          onClick={() => setIsDealerDrawerOpen(false)}
-        >
-          <aside
-            className="drawer-right-fullscreen-panel"
-            onClick={(e) => e.stopPropagation()}
-            aria-label="Fasilitas Eksklusif Dealer Masa Kini"
-          >
-            {/* Drawer Top Bar */}
-            <div className="drawer-fullscreen-header">
-              <div className="drawer-header-left">
-                <span className="drawer-tag">FASILITAS EKSKLUSIF DEALER MASA KINI</span>
-                <h2 className="drawer-title">Hospitalitas Bintang 5 Gratis Untuk Anda</h2>
-                <p className="drawer-desc">
-                  Standar kenyamanan terbaik tanpa biaya tambahan untuk setiap kunjungan
-                  Anda di showroom dan bengkel resmi Sunny.
-                </p>
-              </div>
-              <button
-                type="button"
-                className="drawer-close-btn"
-                aria-label="Tutup drawer fasilitas"
-                onClick={() => setIsDealerDrawerOpen(false)}
-              >
-                <span className="drawer-close-text">Tutup Layar</span>
-                <HiOutlineXMark size={22} />
-              </button>
-            </div>
-
-            {/* Drawer Fullscreen Grid Content: 4 Perks */}
-            <div className="drawer-fullscreen-body">
-              <div className="drawer-fullscreen-grid">
-                {dealerPerks.map((perk, pIdx) => (
-                  <div key={perk.id} className="drawer-perk-fullscreen-card">
-                    <div
-                      className="drawer-perk-photo"
-                      style={{ backgroundImage: `url(${perk.imageUrl})` }}
-                    >
-                      <div className="drawer-perk-gradient" />
-                      <div className="drawer-perk-meta-top">
-                        <span className="drawer-perk-badge">{perk.badge}</span>
-                        <span className="drawer-perk-counter">0{pIdx + 1}</span>
-                      </div>
-                    </div>
-
-                    <div className="drawer-perk-details">
-                      <h3 className="drawer-perk-heading">{perk.title}</h3>
-                      <p className="drawer-perk-text">{perk.description}</p>
-
-                      <div className="drawer-perk-divider" />
-
-                      <ul className="drawer-perk-checklist">
-                        {perk.points.map((pt, idx) => (
-                          <li key={idx}>
-                            <HiOutlineCheck size={15} className="drawer-check" />
-                            <span>{pt}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Drawer Footer Actions */}
-            <div className="drawer-fullscreen-footer">
-              <button
-                type="button"
-                className="btn-drawer-primary"
-                onClick={() => {
-                  if (onOpenAiWithService) {
-                    onOpenAiWithService({
-                      id: 'dealer_experience',
-                      title: 'Fasilitas Dealer Masa Kini (Shuttle, Noah Coffee, Playground & Snack)',
-                    })
-                  }
-                  setIsDealerDrawerOpen(false)
-                }}
-              >
-                <HiOutlineChatBubbleLeftRight size={18} />
-                <span>Tanya Ketersediaan Fasilitas via Asisten AI 24/7</span>
-              </button>
-              <button
-                type="button"
-                className="btn-drawer-close"
-                onClick={() => setIsDealerDrawerOpen(false)}
-              >
-                Kembali ke Jelajah Layanan
-              </button>
-            </div>
-          </aside>
-        </div>,
-        document.body
-      )}
     </section>
   )
 }

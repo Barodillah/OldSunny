@@ -1,25 +1,39 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import HeroSection from '../components/HeroSection.jsx'
 import ServicesSection from '../components/ServicesSection.jsx'
 import FeaturedVehiclesSection from '../components/FeaturedVehiclesSection.jsx'
 import SalesOfTheMonthSection from '../components/SalesOfTheMonthSection.jsx'
 import DealerTeamSection from '../components/DealerTeamSection.jsx'
 import WarningNoticeSection from '../components/WarningNoticeSection.jsx'
+import GoogleReviewsEmbed from '../components/GoogleReviewsEmbed.jsx'
 import SunnyAssistantSection from '../components/SunnyAssistantSection.jsx'
 import NewsSection from '../components/NewsSection.jsx'
 
 export default function Home({ onOpenAiChat }) {
+  const navigate = useNavigate()
   useEffect(() => {
-    if (window.location.hash) {
-      const id = window.location.hash.replace('#', '')
-      const timer = setTimeout(() => {
+    const scrollToHash = () => {
+      if (window.location.hash) {
+        const id = window.location.hash.replace('#', '')
         const elem = document.getElementById(id)
         if (elem) {
           elem.scrollIntoView({ behavior: 'smooth' })
         }
-      }, 200)
-      return () => clearTimeout(timer)
+      }
     }
+
+    if (window.location.hash) {
+      const timer = setTimeout(scrollToHash, 250)
+      window.addEventListener('hashchange', scrollToHash)
+      return () => {
+        clearTimeout(timer)
+        window.removeEventListener('hashchange', scrollToHash)
+      }
+    }
+
+    window.addEventListener('hashchange', scrollToHash)
+    return () => window.removeEventListener('hashchange', scrollToHash)
   }, [])
 
   const handleSelectService = () => {
@@ -39,10 +53,17 @@ export default function Home({ onOpenAiChat }) {
   }
 
   const handleSelectTrust = () => {
-    if (onOpenAiChat) {
+    navigate('/organization')
+  }
+
+  const handleSelectSunny = () => {
+    const elem = document.getElementById('sunny-assistant')
+    if (elem) {
+      elem.scrollIntoView({ behavior: 'smooth' })
+    } else if (onOpenAiChat) {
       onOpenAiChat({
-        id: 'trust',
-        title: 'Verifikasi Struktur Organisasi & Anti-Oknum',
+        id: 'sunny_consult',
+        title: 'Konsultasi Asisten Sunny 24 Jam',
       })
     }
   }
@@ -54,6 +75,7 @@ export default function Home({ onOpenAiChat }) {
         onSelectService={handleSelectService}
         onSelectEmergency={handleSelectEmergency}
         onSelectTrust={handleSelectTrust}
+        onSelectSunny={handleSelectSunny}
       />
 
       {/* SECTION 2: JELAJAH LAYANAN */}
@@ -92,6 +114,9 @@ export default function Home({ onOpenAiChat }) {
 
       {/* SECTION 6: PERINGATAN RESMI / ANTI-FRAUD WARNING SECTION */}
       <WarningNoticeSection />
+
+      {/* GOOGLE REVIEWS EMBED SECTION */}
+      <GoogleReviewsEmbed />
 
       {/* SECTION 7: SUNNY VIRTUAL ASSISTANT (SHOWCASE & MASKOT RESMI) */}
       <SunnyAssistantSection

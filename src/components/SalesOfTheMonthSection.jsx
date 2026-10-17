@@ -249,7 +249,7 @@ export default function SalesOfTheMonthSection() {
               title="Lihat Direktori Seluruh Sales Resmi"
             >
               <HiOutlineUserGroup size={18} />
-              <span>Lihat Semua Sales Resmi ({ALL_SALES_DIRECTORY.length} Staf)</span>
+              <span>Lihat Semua ({ALL_SALES_DIRECTORY.length} Sales)</span>
               <HiOutlineArrowRight size={16} />
             </Link>
           </div>

@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import {
   HiOutlineWrenchScrewdriver,
   HiOutlineShieldCheck,
-  HiOutlinePhone,
   HiOutlineCalculator,
   HiOutlinePaintBrush,
   HiOutlineArrowRight
 } from 'react-icons/hi2'
-import { RiCarLine } from 'react-icons/ri'
+import { RiCarLine, RiCustomerService2Line } from 'react-icons/ri'
 
-export default function HeroSection({ onSelectService, onSelectEmergency, onSelectTrust }) {
+export default function HeroSection({ onSelectService, onSelectEmergency, onSelectTrust, onSelectSunny }) {
+  const navigate = useNavigate()
   const heroRef = useRef(null)
   const titleRef = useRef(null)
   const fanRef = useRef(null)
@@ -34,15 +35,15 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
   // 6 Fanned-Out Cards with Unsplash Photography & Clean Typography (Up to Legalitas Dealer)
   const fannedCards = [
     {
-      id: 'emergency',
-      title: 'Bantuan Darurat',
-      subtitle: 'Derek & montir 24 jam',
-      icon: HiOutlinePhone,
-      badge: 'DARURAT 24/7',
+      id: 'sunny',
+      title: 'SUNNY',
+      subtitle: 'Asisten virtual dealer 24 jam',
+      icon: RiCustomerService2Line,
+      badge: 'ASISTEN 24/7',
       accentColor: '#E3000C',
-      imageUrl: 'https://bewhy.id/wp-content/uploads/url_6ab0a0771891e7.52336063.webp',
-      angle: -10,
-      yOffset: 12,
+      imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad35b160330c6.97658223.png',
+      angle: -12,
+      yOffset: 46,
     },
     {
       id: 'vehicles',
@@ -52,18 +53,18 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
       badge: 'MOBIL BARU',
       accentColor: '#FDC700',
       imageUrl: 'https://bewhy.id/wp-content/uploads/url_6acf19882a3111.91793750.jpg',
-      angle: -5,
-      yOffset: 2,
+      angle: -6,
+      yOffset: 12,
     },
     {
       id: 'booking',
-      title: 'Servis Berkala',
+      title: 'Booking Servis',
       subtitle: 'Booking slot kalender real-time',
       icon: HiOutlineWrenchScrewdriver,
       badge: 'BENGKEL RESMI',
       accentColor: '#E3000C',
       imageUrl: 'https://bewhy.id/wp-content/uploads/url_6ab0a0870ef816.72351873.webp',
-      angle: -1,
+      angle: -2,
       yOffset: -6,
     },
     {
@@ -86,7 +87,7 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
       accentColor: '#E3000C',
       imageUrl: 'https://bewhy.id/wp-content/uploads/url_6acf19f5415295.43153383.webp',
       angle: 6,
-      yOffset: 4,
+      yOffset: 14,
     },
     {
       id: 'trust',
@@ -96,8 +97,8 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
       badge: 'BEBAS OKNUM',
       accentColor: '#FDC700',
       imageUrl: 'https://bewhy.id/wp-content/uploads/url_6acf1a837771d8.78886143.jpeg',
-      angle: 11,
-      yOffset: 14,
+      angle: 12,
+      yOffset: 48,
     },
   ]
 
@@ -149,8 +150,17 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
                 onMouseEnter={() => setHoveredCard(card.id)}
                 onMouseLeave={() => setHoveredCard(null)}
                 onClick={() => {
-                  if (card.id === 'emergency') onSelectEmergency()
-                  else if (card.id === 'trust') onSelectTrust()
+                  if (card.id === 'sunny') {
+                    if (onSelectSunny) onSelectSunny()
+                    else {
+                      const elem = document.getElementById('sunny-assistant')
+                      if (elem) elem.scrollIntoView({ behavior: 'smooth' })
+                      else if (onSelectEmergency) onSelectEmergency()
+                    }
+                  }
+                  else if (card.id === 'vehicles') navigate('/vehicles')
+                  else if (card.id === 'trust') navigate('/organization')
+                  else if (card.id === 'emergency') onSelectEmergency()
                   else onSelectService()
                 }}
               >

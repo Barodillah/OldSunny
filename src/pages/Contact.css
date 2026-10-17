@@ -1,0 +1,1037 @@
+/* ==========================================================================
+   CONTACT PAGE - MITSUBISHI SUN STAR PRIMA MOTOR BEKASI
+   Theme: High-End Automotive Dealership Contact Hub
+   Highlight: SUNNY Virtual Assistant as Hero Header
+   ========================================================================== */
+
+.contact-page-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-page, #F8FAFC);
+  color: var(--text-main, #0F172A);
+  font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+  overflow-x: hidden;
+  padding-bottom: 5rem;
+}
+
+/* --------------------------------------------------------------------------
+   1. BREADCRUMB & REAL-TIME STATUS BAR
+   -------------------------------------------------------------------------- */
+.contact-status-strip {
+  background: #FFFFFF;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 0.875rem 1.5rem;
+  font-size: 0.875rem;
+}
+
+.contact-status-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.contact-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted, #64748B);
+  font-weight: 500;
+}
+
+.contact-breadcrumbs a {
+  color: var(--text-muted, #64748B);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-breadcrumbs a:hover {
+  color: var(--accent-red, #E3000C);
+}
+
+.breadcrumb-sep {
+  color: #CBD5E1;
+  font-size: 0.75rem;
+}
+
+.breadcrumb-current {
+  color: var(--text-main, #0F172A);
+  font-weight: 600;
+}
+
+.contact-live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #065F46;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+}
+
+.contact-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  animation: contactPulse 2s infinite ease-in-out;
+}
+
+@keyframes contactPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.75;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. CONTACT ACTION CARDS GRID (4 DIRECT CHANNELS)
+   -------------------------------------------------------------------------- */
+.contact-channels-section {
+  max-width: 1280px;
+  margin: -2rem auto 3.5rem;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.contact-channels-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.contact-channel-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  padding: 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 4px 10px rgba(15, 23, 42, 0.02);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-channel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 35px -8px rgba(15, 23, 42, 0.08);
+  border-color: rgba(227, 0, 12, 0.3);
+}
+
+.channel-card-stripe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.stripe-green {
+  background: #25D366;
+}
+
+.stripe-red {
+  background: var(--accent-red, #E3000C);
+}
+
+.stripe-yellow {
+  background: var(--accent-yellow, #FDC700);
+}
+
+.stripe-blue {
+  background: #0284C7;
+}
+
+.channel-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.channel-icon-wrap {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+}
+
+.icon-whatsapp {
+  background: rgba(37, 211, 102, 0.12);
+  color: #128C7E;
+}
+
+.icon-emergency {
+  background: rgba(227, 0, 12, 0.12);
+  color: #E3000C;
+}
+
+.icon-location {
+  background: rgba(253, 199, 0, 0.15);
+  color: #92400E;
+}
+
+.icon-trust {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284C7;
+}
+
+.channel-badge {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.badge-urgent {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+
+.badge-official {
+  background: #E0F2FE;
+  color: #0369A1;
+}
+
+.channel-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-main, #0F172A);
+  margin-bottom: 0.4rem;
+  font-family: var(--font-heading, sans-serif);
+}
+
+.channel-desc {
+  font-size: 0.845rem;
+  line-height: 1.5;
+  color: var(--text-muted, #475569);
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+.channel-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.btn-whatsapp {
+  background: #25D366;
+  color: #FFFFFF;
+  border: none;
+}
+
+.btn-whatsapp:hover {
+  background: #20BA5A;
+  color: #FFFFFF;
+}
+
+.btn-emergency {
+  background: var(--accent-red, #E3000C);
+  color: #FFFFFF;
+  border: none;
+}
+
+.btn-emergency:hover {
+  background: var(--accent-red-hover, #C2000A);
+  color: #FFFFFF;
+}
+
+.btn-location {
+  background: #0F172A;
+  color: #FFFFFF;
+  border: none;
+}
+
+.btn-location:hover {
+  background: #1E293B;
+  color: #FFFFFF;
+}
+
+.btn-trust {
+  background: #F8FAFC;
+  color: #0284C7;
+  border: 1px solid #BAE6FD;
+}
+
+.btn-trust:hover {
+  background: #F0F9FF;
+  border-color: #7DD3FC;
+}
+
+/* --------------------------------------------------------------------------
+   3. ACCORDION / COLLAPSE FORMS SECTION (3 FORM UTAMA)
+   -------------------------------------------------------------------------- */
+.contact-accordion-section {
+  max-width: 1280px;
+  margin: 0 auto 3.5rem;
+  padding: 0 1.5rem;
+}
+
+.accordion-section-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+}
+
+.accordion-section-kicker {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-red, #E3000C);
+  background: rgba(227, 0, 12, 0.08);
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+}
+
+.accordion-section-title {
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: var(--text-main, #0F172A);
+  font-family: var(--font-heading, sans-serif);
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+}
+
+.accordion-section-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted, #475569);
+  line-height: 1.5;
+}
+
+/* ACCORDION WRAPPER */
+.contact-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.contact-accordion-item {
+  background: #FFFFFF;
+  border: 1.5px solid rgba(15, 23, 42, 0.09);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+  transition: all 0.25s ease;
+}
+
+.contact-accordion-item.is-open {
+  border-color: rgba(227, 0, 12, 0.35);
+  box-shadow: 0 12px 35px -8px rgba(15, 23, 42, 0.08);
+}
+
+/* ACCORDION HEADER BUTTON */
+.accordion-header-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.35rem 1.75rem;
+  background: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s ease;
+  min-height: 68px;
+}
+
+.accordion-header-btn:hover {
+  background: #FAFAFA;
+}
+
+.contact-accordion-item.is-open .accordion-header-btn {
+  background: #FDFDFE;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.accordion-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+}
+
+.accordion-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.icon-promo-bg {
+  background: rgba(253, 199, 0, 0.15);
+  color: #B45309;
+}
+
+.icon-hubungi-bg {
+  background: rgba(37, 211, 102, 0.12);
+  color: #15803D;
+}
+
+.icon-keluhan-bg {
+  background: rgba(227, 0, 12, 0.1);
+  color: var(--accent-red, #E3000C);
+}
+
+.accordion-title-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.accordion-item-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-main, #0F172A);
+  font-family: var(--font-heading, sans-serif);
+}
+
+.accordion-item-desc {
+  font-size: 0.845rem;
+  color: var(--text-muted, #64748B);
+}
+
+.accordion-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.accordion-badge-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.badge-promo {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.badge-hubungi {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.badge-keluhan {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.accordion-chevron-icon {
+  font-size: 1.25rem;
+  color: #64748B;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-accordion-item.is-open .accordion-chevron-icon {
+  transform: rotate(180deg);
+  color: var(--accent-red, #E3000C);
+}
+
+/* ACCORDION CONTENT COLLAPSE */
+.accordion-content-collapse {
+  padding: 2rem 2.25rem 2.25rem;
+  background: #FFFFFF;
+  animation: accordionFadeIn 0.25s ease-out;
+}
+
+@keyframes accordionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.accordion-form-inner {
+  width: 100%;
+}
+
+.form-guide-text {
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.promo-input-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.promo-field-flex {
+  flex: 1;
+  min-width: 260px;
+  margin-bottom: 0 !important;
+}
+
+.promo-submit-btn {
+  margin-top: 0 !important;
+  white-space: nowrap;
+}
+
+.promo-guarantee {
+  margin-top: 0.75rem;
+}
+
+/* RADIO PILLS FOR COMPLAINT TYPE */
+.complaint-type-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.type-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  border: 1.5px solid #CBD5E1;
+  background: #F8FAFC;
+  color: #334155;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.type-pill-btn:hover {
+  background: #F1F5F9;
+  border-color: #94A3B8;
+}
+
+.type-pill-btn.is-active {
+  background: var(--accent-red, #E3000C);
+  border-color: var(--accent-red, #E3000C);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(227, 0, 12, 0.2);
+}
+
+/* FORM FIELDS GRID */
+.form-two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.field-label {
+  font-size: 0.845rem;
+  font-weight: 600;
+  color: #1E293B;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.field-optional {
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: #94A3B8;
+}
+
+.field-input,
+.field-select,
+.field-textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: #0F172A;
+  background: #FFFFFF;
+  border: 1.5px solid #CBD5E1;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  min-height: 44px;
+}
+
+.field-input:focus,
+.field-select:focus,
+.field-textarea:focus {
+  border-color: var(--accent-red, #E3000C);
+  box-shadow: 0 0 0 3px rgba(227, 0, 12, 0.15);
+}
+
+.field-input::placeholder,
+.field-textarea::placeholder {
+  color: #94A3B8;
+}
+
+.field-textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.form-submit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #E2E8F0;
+  flex-wrap: wrap;
+}
+
+.form-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--accent-red, #E3000C);
+  color: #FFFFFF;
+  border: none;
+  padding: 0.85rem 1.85rem;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(227, 0, 12, 0.25);
+  min-height: 46px;
+}
+
+.form-submit-btn:hover {
+  background: var(--accent-red-hover, #C2000A);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(227, 0, 12, 0.35);
+}
+
+.form-guarantee-note {
+  font-size: 0.8125rem;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* SUCCESS ALERT */
+.form-success-box {
+  background: #F0FDF4;
+  border: 1.5px solid #86EFAC;
+  border-radius: 20px;
+  padding: 2.25rem 2rem;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.success-icon-wrap {
+  width: 58px;
+  height: 58px;
+  background: #DCFCE7;
+  color: #16A34A;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin: 0 auto 1.25rem;
+}
+
+.success-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #14532D;
+  margin-bottom: 0.5rem;
+}
+
+.success-desc {
+  font-size: 0.95rem;
+  color: #166534;
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0 auto 1.75rem;
+}
+
+.success-actions-wrap {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-success-wa {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #25D366;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 0.75rem 1.4rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  transition: background 0.2s ease;
+  min-height: 44px;
+}
+
+.btn-success-wa:hover {
+  background: #20BA5A;
+}
+
+.btn-success-reset {
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  color: #334155;
+  font-weight: 600;
+  padding: 0.75rem 1.4rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.btn-success-reset:hover {
+  background: #F8FAFC;
+  border-color: #94A3B8;
+}
+
+/* --------------------------------------------------------------------------
+   4. SHOWROOM LOCATION & SCHEDULE SECTION (BERDAMPINGAN DI DESKTOP)
+   -------------------------------------------------------------------------- */
+.contact-location-schedule-section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.location-schedule-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 2rem;
+  align-items: stretch;
+}
+
+/* KARTU JAM OPERASIONAL */
+.location-schedule-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 28px;
+  padding: 2.25rem 2rem;
+  box-shadow: 0 14px 40px -10px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.sidebar-card-title {
+  font-size: 1.1875rem;
+  font-weight: 700;
+  color: var(--text-main, #0F172A);
+  font-family: var(--font-heading, sans-serif);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.sidebar-title-icon {
+  color: var(--accent-red, #E3000C);
+  font-size: 1.25rem;
+}
+
+/* SCHEDULE ROWS */
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.schedule-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.75rem 0.9rem;
+  background: #F8FAFC;
+  border-radius: 12px;
+  border-left: 3px solid var(--accent-red, #E3000C);
+}
+
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.schedule-dept {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.schedule-status-tag {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.schedule-hours {
+  font-size: 0.8125rem;
+  color: #64748B;
+}
+
+.schedule-footer-hint {
+  margin-top: 1.5rem;
+  padding: 1rem 1.15rem;
+  background: #F8FAFC;
+  border-radius: 14px;
+  border: 1px dashed #CBD5E1;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+/* KARTU PETA GOOGLE MAPS */
+.map-card-wrapper {
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 14px 40px -10px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.map-header-bar {
+  padding: 1.75rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  border-bottom: 1px solid #E2E8F0;
+  background: #FAFAFA;
+}
+
+.map-header-left {
+  max-width: 580px;
+}
+
+.map-kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-red, #E3000C);
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.map-dealer-name {
+  font-size: 1.1875rem;
+  font-weight: 800;
+  color: #0F172A;
+  font-family: var(--font-heading, sans-serif);
+  margin-bottom: 0.35rem;
+}
+
+.map-address-text {
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.map-directions-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #0F172A;
+  color: #FFFFFF;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.845rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  min-height: 42px;
+}
+
+.map-directions-btn:hover {
+  background: #1E293B;
+  transform: translateY(-2px);
+  color: #FFFFFF;
+}
+
+.map-iframe-container {
+  width: 100%;
+  flex: 1;
+  min-height: 320px;
+  position: relative;
+  background: #E2E8F0;
+}
+
+.map-iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  border: 0;
+  display: block;
+}
+
+/* MAP BOTTOM AMENITIES STRIP */
+.map-perks-strip {
+  padding: 1.25rem 2rem;
+  background: #FFFFFF;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-top: 1px solid #F1F5F9;
+}
+
+.perks-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.perks-pills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.perk-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: #475569;
+  background: #F1F5F9;
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.perk-pill-icon {
+  color: var(--accent-red, #E3000C);
+}
+
+/* --------------------------------------------------------------------------
+   5. RESPONSIVE MEDIA QUERIES (MOBILE REFLOW & ACCESSIBILITY)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .contact-channels-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .location-schedule-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-channels-section {
+    margin-top: 1rem;
+  }
+
+  .contact-channels-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .contact-form-card {
+    padding: 2rem 1.5rem;
+    border-radius: 20px;
+  }
+
+  .form-two-cols {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .map-header-bar {
+    padding: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .map-iframe-container {
+    height: 300px;
+  }
+
+  .map-perks-strip {
+    padding: 1.25rem 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
