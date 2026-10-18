@@ -58,7 +58,7 @@ export default function PortalLogin() {
         setError(res.message || 'Gagal masuk. Periksa kembali kredensial Anda.')
       }
     } catch {
-      setError('Gagal menghubungi server database. Pastikan koneksi dan server XAMPP aktif.')
+      setError('Gagal menghubungi server database. Pastikan koneksi internet atau server backend aktif.')
     } finally {
       setIsLoading(false)
     }

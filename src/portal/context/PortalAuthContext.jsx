@@ -2,7 +2,8 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 
 const PortalAuthContext = createContext(null)
 
-const API_BASE_URL = 'http://localhost/OldSunny/api/public/api'
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+const API_BASE_URL = rawApiUrl.replace(/\/+$/, '')
 
 export function PortalAuthProvider({ children }) {
   // 1. Data Users Table (Sinkronisasi langsung dengan MySQL Database via Laravel API)
@@ -129,7 +130,7 @@ export function PortalAuthProvider({ children }) {
       console.error('Koneksi ke backend MySQL gagal:', err)
       return {
         success: false,
-        message: 'Tidak dapat terhubung ke server database MySQL. Pastikan service MySQL & Apache di XAMPP aktif.'
+        message: 'Tidak dapat terhubung ke server database MySQL. Pastikan koneksi internet atau server backend aktif.'
       }
     }
   }
