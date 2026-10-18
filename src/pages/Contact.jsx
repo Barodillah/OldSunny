@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   HiOutlinePhone,
   HiOutlineMapPin,
@@ -58,6 +58,20 @@ export default function Contact({ onOpenAiChat }) {
   const [submittedComplaint, setSubmittedComplaint] = useState(false)
 
   const [copiedBank, setCopiedBank] = useState(false)
+
+  // WhatsApp Dropdown state (3 Nomor Utama: CS Manager, CS Sales, Layanan Servis)
+  const [isWaDropdownOpen, setIsWaDropdownOpen] = useState(false)
+  const waDropdownRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (waDropdownRef.current && !waDropdownRef.current.contains(e.target)) {
+        setIsWaDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   // Scroll to top on mount and set page title
   useEffect(() => {
@@ -135,8 +149,8 @@ export default function Contact({ onOpenAiChat }) {
           ==================================================================== */}
       <section className="contact-channels-section" aria-label="Saluran Kontak Cepat">
         <div className="contact-channels-grid">
-          {/* Card 1: WhatsApp CS & Sales */}
-          <article className="contact-channel-card">
+          {/* Card 1: WhatsApp Resmi Dealer (Dropdown 3 Nomor Utama) */}
+          <article className="contact-channel-card contact-channel-whatsapp-card">
             <div className="channel-card-stripe stripe-green" aria-hidden="true" />
             <div className="channel-card-header">
               <div className="channel-icon-wrap icon-whatsapp" aria-hidden="true">
@@ -146,17 +160,85 @@ export default function Contact({ onOpenAiChat }) {
             </div>
             <h2 className="channel-title">WhatsApp Resmi Dealer</h2>
             <p className="channel-desc">
-              Tanya promo harga spesial, diskon bulan ini, simulasi kredit DP terjangkau, atau jadwalkan janji temu.
+              Pilih layanan WhatsApp resmi sesuai kebutuhan Anda: Penjualan Unit Baru, Layanan Servis Bengkel, atau CS Manager.
             </p>
-            <a
-              href="https://wa.me/6281288347777?text=Halo%20Sunny%20Mitsubishi%2C%20saya%20ingin%20konsultasi%20kendaraan%20baru"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="channel-action-btn btn-whatsapp"
-            >
-              <RiWhatsappLine size={18} />
-              <span>Chat WhatsApp Sekarang</span>
-            </a>
+
+            <div className="whatsapp-dropdown-container" ref={waDropdownRef}>
+              <button
+                type="button"
+                className="channel-action-btn btn-whatsapp whatsapp-dropdown-btn"
+                onClick={() => setIsWaDropdownOpen((prev) => !prev)}
+                aria-expanded={isWaDropdownOpen}
+              >
+                <RiWhatsappLine size={18} />
+                <span>Pilih Kontak WhatsApp</span>
+                <HiChevronDown size={16} className={`dropdown-chevron-icon ${isWaDropdownOpen ? 'is-rotated' : ''}`} />
+              </button>
+
+              {isWaDropdownOpen && (
+                <div className="whatsapp-dropdown-menu">
+                  {/* Option 1: CS Sales / Penjualan */}
+                  <a
+                    href="https://wa.me/6281318747300?text=Halo%20CS%20Sales%20Mitsubishi%20Sun%20Margahayu%2C%20saya%20ingin%20konsultasi%20kendaraan%20baru"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="whatsapp-dropdown-option"
+                    onClick={() => setIsWaDropdownOpen(false)}
+                  >
+                    <div className="dropdown-wa-icon-box sales-accent">
+                      <RiWhatsappLine size={20} />
+                    </div>
+                    <div className="dropdown-wa-details">
+                      <div className="dropdown-wa-top">
+                        <strong className="dropdown-wa-name">CS Sales / Penjualan</strong>
+                        <span className="dropdown-wa-number-badge">0813-1874-7300</span>
+                      </div>
+                      <span className="dropdown-wa-desc">Promo OTR, simulasi kredit DP, & konsultasi unit baru</span>
+                    </div>
+                  </a>
+
+                  {/* Option 2: Layanan Servis / Booking Servis */}
+                  <a
+                    href="https://wa.me/6282210928822?text=Halo%20Layanan%20Servis%20Mitsubishi%20Sun%20Margahayu%2C%20saya%20ingin%20booking%20jadwal%20servis"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="whatsapp-dropdown-option"
+                    onClick={() => setIsWaDropdownOpen(false)}
+                  >
+                    <div className="dropdown-wa-icon-box service-accent">
+                      <RiWhatsappLine size={20} />
+                    </div>
+                    <div className="dropdown-wa-details">
+                      <div className="dropdown-wa-top">
+                        <strong className="dropdown-wa-name">Layanan Servis / Booking Servis</strong>
+                        <span className="dropdown-wa-number-badge">0822-1092-8822</span>
+                      </div>
+                      <span className="dropdown-wa-desc">Booking servis bengkel resmi, perawatan berkala, & suku cadang</span>
+                    </div>
+                  </a>
+
+                  {/* Option 3: CS Manager */}
+                  <a
+                    href="https://wa.me/6285183325604?text=Halo%20CS%20Manager%20Mitsubishi%20Sun%20Margahayu%2C%20saya%20ingin%20konsultasi%20layanan%20dealer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="whatsapp-dropdown-option"
+                    onClick={() => setIsWaDropdownOpen(false)}
+                  >
+                    <div className="dropdown-wa-icon-box manager-accent">
+                      <RiWhatsappLine size={20} />
+                    </div>
+                    <div className="dropdown-wa-details">
+                      <div className="dropdown-wa-top">
+                        <strong className="dropdown-wa-name">CS Manager</strong>
+                        <span className="dropdown-wa-number-badge">0851-8332-5604</span>
+                      </div>
+                      <span className="dropdown-wa-desc">Kepuasan pelanggan, aduan resmi, & pengawasan mutu</span>
+                    </div>
+                  </a>
+                </div>
+              )}
+            </div>
           </article>
 
           {/* Card 2: Hotline Darurat SOS 24 Jam */}
@@ -364,7 +446,7 @@ export default function Contact({ onOpenAiChat }) {
                     </p>
                     <div className="success-actions-wrap">
                       <a
-                        href={`https://wa.me/6281288347777?text=${waContactMessage}`}
+                        href={`https://wa.me/6281318747300?text=${waContactMessage}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-success-wa"
@@ -475,7 +557,7 @@ export default function Contact({ onOpenAiChat }) {
                     </p>
                     <div className="success-actions-wrap">
                       <a
-                        href={`https://wa.me/6281288347777?text=${waComplaintMessage}`}
+                        href={`https://wa.me/6285183325604?text=${waComplaintMessage}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="btn-success-wa"

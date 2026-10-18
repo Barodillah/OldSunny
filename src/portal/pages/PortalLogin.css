@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 1.5rem;
   background-color: var(--bg-page, #f8f9fa);
   position: relative;
   overflow: hidden;
@@ -27,7 +27,7 @@
 
 .portal-login-card {
   width: 100%;
-  max-width: 460px;
+  max-width: 480px;
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 24px;
@@ -98,10 +98,10 @@
 
 .portal-title-brand {
   font-family: var(--font-heading, sans-serif);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: #0f172a;
-  line-height: 1.1;
+  line-height: 1.2;
 }
 
 .portal-subtitle-brand {
@@ -111,32 +111,44 @@
 }
 
 .portal-login-title {
-  font-family: var(--font-heading, sans-serif);
-  font-size: 1.6rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: #0f172a;
+  margin-bottom: 0.4rem;
   letter-spacing: -0.02em;
-  margin: 0 0 0.45rem 0;
-  line-height: 1.2;
 }
 
 .portal-login-desc {
   font-size: 0.88rem;
-  color: #64748b;
   line-height: 1.5;
-  margin: 0;
+  color: #64748b;
 }
 
-/* Error Banner */
+/* Alerts */
 .portal-login-error {
   background-color: #fef2f2;
   border: 1px solid #fecaca;
-  color: #dc2626;
-  padding: 0.65rem 0.9rem;
-  border-radius: 10px;
+  color: #b91c1c;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
   font-size: 0.82rem;
   margin-bottom: 1.25rem;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.portal-login-success {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* Form */
@@ -149,7 +161,13 @@
 .portal-input-group {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.45rem;
+}
+
+.portal-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
 }
 
 .portal-label-row {
@@ -158,22 +176,18 @@
   justify-content: space-between;
 }
 
-.portal-label {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #334155;
-}
-
 .portal-forgot-link {
   font-size: 0.78rem;
-  color: #64748b;
+  font-weight: 600;
+  color: #E3000C;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
 .portal-forgot-link:hover {
-  color: #E3000C;
   text-decoration: underline;
 }
 
@@ -185,18 +199,18 @@
 
 .portal-input-icon {
   position: absolute;
-  left: 0.85rem;
+  left: 0.95rem;
   color: #94a3b8;
   pointer-events: none;
 }
 
 .portal-input {
   width: 100%;
-  padding: 0.72rem 1rem 0.72rem 2.45rem;
+  padding: 0.75rem 0.95rem 0.75rem 2.65rem;
   background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #cbd5e1;
   border-radius: 12px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: #0f172a;
   outline: none;
   transition: all 0.2s ease;
@@ -205,18 +219,13 @@
 .portal-input:focus {
   background-color: #ffffff;
   border-color: #E3000C;
-  box-shadow: 0 0 0 3px rgba(227, 0, 12, 0.1);
-}
-
-.portal-input::placeholder {
-  color: #94a3b8;
+  box-shadow: 0 0 0 3px rgba(227, 0, 12, 0.12);
 }
 
 .portal-form-options {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: -0.2rem;
 }
 
 .portal-checkbox-label {
@@ -226,16 +235,16 @@
   font-size: 0.82rem;
   color: #64748b;
   cursor: pointer;
+  user-select: none;
 }
 
 .portal-checkbox {
   width: 16px;
   height: 16px;
   accent-color: #E3000C;
-  border-radius: 4px;
+  cursor: pointer;
 }
 
-/* Primary Button */
 .portal-btn-primary {
   display: flex;
   align-items: center;
@@ -252,7 +261,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: 0 4px 14px rgba(227, 0, 12, 0.25);
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
 }
 
 .portal-btn-primary:hover:not(:disabled) {
@@ -266,7 +275,7 @@
   cursor: not-allowed;
 }
 
-/* Quick Demo Access Box */
+/* Quick Role Demo Selector */
 .portal-demo-box {
   margin-top: 1.5rem;
 }
@@ -294,27 +303,61 @@
   letter-spacing: 0.05em;
 }
 
-.portal-btn-demo {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.portal-role-buttons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background-color: #f8fafc;
-  border: 1px dashed #cbd5e1;
-  border-radius: 12px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #1e293b;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.portal-btn-demo:hover {
-  background-color: #f1f5f9;
-  border-color: #94a3b8;
-  color: #0f172a;
+.portal-btn-role {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 0.5rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.portal-btn-role:hover {
+  background: #ffffff;
+  border-color: #0f172a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.btn-role-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.15rem;
+}
+
+.btn-role-tag.superadmin {
+  color: #7c3aed;
+}
+
+.btn-role-tag.admin {
+  color: #0284c7;
+}
+
+.btn-role-tag.user {
+  color: #10b981;
+}
+
+.btn-role-name {
+  font-size: 0.75rem;
+  color: #475569;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* Footer Note */
@@ -335,8 +378,131 @@
   color: #10b981;
 }
 
-@media (max-width: 480px) {
-  .portal-login-card {
-    padding: 1.75rem 1.25rem;
+/* ==========================================================================
+   RESET PASSWORD VIA OTP MODAL
+   ========================================================================== */
+.portal-otp-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.portal-otp-modal-card {
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.3);
+  position: relative;
+}
+
+.portal-otp-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.portal-otp-modal-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.portal-otp-modal-subtitle {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.portal-otp-modal-close {
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.portal-otp-modal-close:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* Simulated OTP Notification Banner */
+.portal-simulated-otp-box {
+  background: #fefce8;
+  border: 1px dashed #eab308;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.simulated-otp-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #854d0e;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.simulated-otp-code-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.simulated-otp-big-code {
+  font-family: var(--font-heading, monospace);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #ca8a04;
+  letter-spacing: 0.2em;
+}
+
+.btn-copy-otp {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  background: #ca8a04;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-copy-otp:hover {
+  background: #a16207;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

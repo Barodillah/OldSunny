@@ -1,0 +1,74 @@
+{
+  "title": "Fasilitas & Layanan Authorized Body & Paint Mitsubishi Sun Margahayu",
+  "facility_standard": "Resmi Standar PT Mitsubishi Motors Krama Yudha Sales Indonesia (MMKSI)",
+  "overview": "Bengkel perbaikan bodi dan pengecatan berlisensi resmi dengan teknologi mutakhir untuk mengembalikan bodi kendaraan Anda persis seperti kondisi baru keluar dari pabrik.",
+  "core_facilities": [
+    {
+      "name": "Oven Spray Booth Bertekanan Positif",
+      "description": "Bilik pengecatan steril bertekanan positif dengan sistem filtrasi udara bertingkat bebas debu. Suhu pemanasan dikendalikan secara digital hingga 60-70°C untuk pematangan partikel cat yang mengilap, tahan gores, dan bebas gelembung."
+    },
+    {
+      "name": "Computerized Color Matching System",
+      "description": "Pencampuran cat dengan formula komputerisasi akurat yang tersinkronisasi langsung dengan kode warna resmi pabrikan Mitsubishi Motors (OEM). Warna panel yang dicat dijamin 100% presisi dan tidak belang dengan bodi asli."
+    },
+    {
+      "name": "Frame Correction Hydraulic Bench",
+      "description": "Peralatan hidrolik heavy-duty untuk menarik dan mengembalikan struktur rangka / sasis mobil yang mengalami benturan keras (tabrakan) kembali ke toleransi presisi ukuran pabrik demi keamanan struktur kabin."
+    },
+    {
+      "name": "Dry Sanding Vacuum System",
+      "description": "Pengamplasan kering terintegrasi vacuum cleaner peredam debu yang menghasilkan permukaan pelat halus sempurna dan mencegah korosi air."
+    }
+  ],
+  "services": [
+    {
+      "type": "Express Body Paint (Quick Repair)",
+      "duration": "1 Hari Selesai (Same Day Service)",
+      "scope": "Perbaikan baret, lecet, atau penyok ringan 1 hingga maksimal 3 panel.",
+      "requirement": "Diwajibkan melakukan reservasi jadwal kedatangan H-1 dan mobil masuk bengkel sebelum jam 09:00 WIB."
+    },
+    {
+      "type": "Medium & Heavy Repair (Perbaikan Kerusakan Sedang & Berat)",
+      "duration": "3 – 7 Hari Kerja (Tergantung ketersediaan sparepart bodi)",
+      "scope": "Penggantian pintu, kap mesin, bumper, fender, kaca, perbaikan pilar kabin, pelurusan sasis, dan pengecatan ulang menyeluruh (full body repainting)."
+    },
+    {
+      "type": "Full Body Detailing & Ceramic Coating",
+      "duration": "1 – 2 Hari",
+      "scope": "Pembersihan kerak jamur kaca, poles 3-step compound bodi, dan proteksi coating keramik 9H untuk kilau maksimal."
+    }
+  ],
+  "insurance_partners": {
+    "assistance": "Layanan Pengurusan Klaim Asuransi Satu Pintu (End-to-End). Service Advisor kami siap membantu pelaporan kronologi, pemotretan kerusakan, pengisian formulir, hingga terbitnya Surat Perintah Kerja (SPK) dari asuransi.",
+    "top_partners": [
+      { "name": "Garda Oto (Asuransi Astra)", "status": "Rekan Utama Prioritas" },
+      { "name": "Sompo Insurance", "status": "Rekan Utama Prioritas" },
+      { "name": "Zurich Insurance / Adira Autocillin", "status": "Rekan Resmi" },
+      { "name": "ACA (Asuransi Central Asia)", "status": "Rekan Resmi" },
+      { "name": "Asuransi Sinarmas", "status": "Rekan Resmi" },
+      { "name": "Tokio Marine", "status": "Rekan Resmi" },
+      { "name": "Jasindo (Asuransi Jasa Indonesia)", "status": "Rekan Resmi" },
+      { "name": "Allianz Utama Indonesia", "status": "Rekan Resmi" },
+      { "name": "Tugu Pratama Indonesia", "status": "Rekan Resmi" },
+      { "name": "Asuransi Lainnya / Non-Rekanan", "status": "Dapat diproses melalui jalur reimbursement dengan estimasi rincian resmi dealer." }
+    ],
+    "claim_requirements": [
+      "Fotokopi Polis Asuransi yang masih berlaku",
+      "Fotokopi STNK kendaraan dan KTP tertanggung",
+      "Fotokopi SIM pengemudi saat kejadian",
+      "Surat Laporan Kepolisian (khusus jika melibatkan pihak ketiga atau kehilangan part besar)",
+      "Biaya Own Risk (OR) per kejadian sesuai ketentuan polis asuransi (umumnya Rp 300.000 per kejadian)"
+    ]
+  },
+  "warranty": {
+    "paint_warranty": "Garansi Hasil Cat Resmi 6 Bulan",
+    "terms": "Meliputi jaminan warna pudar, belang, cat mengelupas, atau retak yang disebabkan oleh proses pengerjaan teknis bengkel."
+  },
+  "estimated_cash_pricing": {
+    "per_panel_standard": "Rp 750.000 – Rp 950.000 per panel (Solid / Metallic)",
+    "per_panel_premium_pearl": "Rp 950.000 – Rp 1.250.000 per panel (White Pearl / Tri-Coat)",
+    "spot_repair_lecet_bumper": "Rp 350.000 – Rp 500.000",
+    "poles_bodi_full": "Rp 1.500.000 – Rp 2.500.000",
+    "cat_full_body_oven": "Mulai dari Rp 9.500.000 (Tergantung model dimensi kendaraan)"
+  }
+}

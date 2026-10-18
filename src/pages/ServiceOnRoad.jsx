@@ -285,7 +285,7 @@ export default function ServiceOnRoad() {
       `_Saya telah menyetujui syarat & ketentuan bahwa kendaraan dalam kondisi tidak dapat dinyalakan/dikendarai dan bersedia menerima verifikasi teknisi bengkel._`
     ].join('\n')
 
-    const waUrl = `https://wa.me/6281288347777?text=${encodeURIComponent(message)}`
+    const waUrl = `https://wa.me/6282210928822?text=${encodeURIComponent(message)}`
     window.open(waUrl, '_blank')
 
     setIsTermsModalOpen(false)
@@ -400,7 +400,7 @@ export default function ServiceOnRoad() {
                     id="sor-wa"
                     type="tel"
                     name="whatsapp"
-                    placeholder="Contoh: 081288347777"
+                    placeholder="Contoh: 081234567890"
                     value={formData.whatsapp}
                     onChange={handleChange}
                     className={`sor-input ${formErrors.whatsapp ? 'has-error' : ''}`}
@@ -616,6 +616,7 @@ export default function ServiceOnRoad() {
                   type="button"
                   className="btn-map-cancel"
                   onClick={() => setIsMapModalOpen(false)}
+                  aria-label="Batal memilih lokasi"
                 >
                   Batal
                 </button>
@@ -624,8 +625,9 @@ export default function ServiceOnRoad() {
                   className="btn-map-confirm"
                   onClick={handleConfirmLocation}
                 >
-                  <HiOutlineCheckCircle size={17} />
-                  <span>Konfirmasi Titik Lokasi</span>
+                  <HiOutlineCheckCircle size={18} className="btn-confirm-icon" />
+                  <span className="btn-confirm-text-full">Konfirmasi Titik Lokasi</span>
+                  <span className="btn-confirm-text-short">Konfirmasi Lokasi</span>
                 </button>
               </div>
             </div>

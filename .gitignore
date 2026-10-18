@@ -11,9 +11,14 @@ node_modules
 dist
 dist-ssr
 *.local
-.env
-.env.*
-!.env.example
+# .env diperbolehkan sesuai instruksi user
+!.env
+!.env.*
+*.zip
+api/vendor
+api/storage/*.key
+api/storage/logs/*
+api/bootstrap/cache/*.php
 
 # Editor directories and files
 .vscode/*

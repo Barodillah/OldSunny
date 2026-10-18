@@ -341,7 +341,7 @@ export default function BookingService() {
   // Generate WhatsApp confirmation
   const createWhatsAppConfirmation = () => {
     const text = `Halo Service Advisor Mitsubishi Sun Margahayu,\n\nSaya telah melakukan booking service melalui website resmi:\n• Kode Booking: ${bookingCode}\n• Nomor Polisi: ${formData.nopol.toUpperCase()}\n${formData.nomorRangka ? `• No. Rangka: ${formData.nomorRangka.toUpperCase()}\n` : ''}• Pemilik: ${formData.nama}\n• Kendaraan: ${formData.kendaraan}\n• Rencana Servis: ${parseInt(formData.km).toLocaleString('id-ID')} KM${formData.acCare ? ' (+AC Care)' : ''}\n• Jadwal: ${formData.tanggal} jam ${formData.jam} WIB\n• No. Telepon: ${formData.verifyPhone}\n\nMohon konfirmasi ketersediaan slot stall. Terima kasih!`
-    return `https://wa.me/6281288347777?text=${encodeURIComponent(text)}`
+    return `https://wa.me/6282210928822?text=${encodeURIComponent(text)}`
   }
 
   return (

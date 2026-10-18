@@ -10,8 +10,10 @@ import { RiShieldCheckLine } from 'react-icons/ri'
 import WarningNoticeSection from '../components/WarningNoticeSection.jsx'
 import './Organization.css'
 
-// Organizational Hierarchy Data based on Official Dealer Structure
-const ORG_DATA = {
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+
+// Organizational Hierarchy Data based on Official Dealer Structure (Fallback / Default)
+const DEFAULT_ORG_DATA = {
   direksi: [
     {
       id: 'fendy-haryanto',
@@ -47,7 +49,7 @@ const ORG_DATA = {
       role: 'Service Manager',
       level: 'Level Manajerial',
       department: 'Bengkel Resmi & Pelayanan Purna Jual',
-      photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad4722c13b2a2.10000471.png',
+      photoUrl: 'https://cssunmotor.com/wp-content/uploads/asset_6ad4f2fde1e349.91841935.jpeg',
       description: 'Memimpin tim mekanik bersertifikat MMKSI, jaminan kualitas perawatan berkala, perbaikan mesin, dan layanan Emergency SOS 24 Jam.',
       tenure: '10 Tahun Pengalaman',
       nik: 'SNY-MGR-0311',
@@ -109,6 +111,70 @@ const ORG_DATA = {
 export default function Organization() {
   const location = useLocation()
   const [selectedLeader, setSelectedLeader] = useState(null)
+  const [orgData, setOrgData] = useState(DEFAULT_ORG_DATA)
+  const [loading, setLoading] = useState(true)
+
+  // Fetch live structured organization data from MySQL database
+  useEffect(() => {
+    let isMounted = true
+
+    const fetchOrgFromDatabase = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/employees?structured=1`)
+        if (!res.ok) return
+        const json = await res.json()
+
+        if (isMounted && json.success && json.data) {
+          const formatLevel = (lvl) => {
+            if (lvl === 'direksi') return 'Pimpinan Cabang / Direksi'
+            if (lvl === 'csm') return 'Staf Khusus Pimpinan Cabang'
+            if (lvl === 'managerial') return 'Level Manajerial'
+            if (lvl === 'supervisor') return 'Level Supervisor'
+            return lvl
+          }
+
+          const normalize = (list, defaultLvl) =>
+            (list || []).map((p) => ({
+              id: p.id,
+              name: p.name,
+              role: p.role,
+              level: formatLevel(p.level) || defaultLvl,
+              department: p.department || '',
+              photoUrl: p.photo_url || p.photoUrl || 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
+              description: p.description || '',
+              tenure: p.tenure || '',
+              nik: p.nik || 'SNY-EMP-XXXX',
+              badge: p.badge || p.role
+            }))
+
+          setOrgData({
+            direksi: json.data.direksi?.length
+              ? normalize(json.data.direksi, 'Pimpinan Cabang / Direksi')
+              : DEFAULT_ORG_DATA.direksi,
+            csm: json.data.csm?.length
+              ? normalize(json.data.csm, 'Staf Khusus Pimpinan Cabang')
+              : DEFAULT_ORG_DATA.csm,
+            managerial: json.data.managerial?.length
+              ? normalize(json.data.managerial, 'Level Manajerial')
+              : DEFAULT_ORG_DATA.managerial,
+            supervisor: json.data.supervisor?.length
+              ? normalize(json.data.supervisor, 'Level Supervisor')
+              : DEFAULT_ORG_DATA.supervisor
+          })
+        }
+      } catch (err) {
+        console.warn('Gagal memuat struktur organisasi dari database, menggunakan data cadangan default:', err)
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+
+    fetchOrgFromDatabase()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   // Scroll to top on mount
   useEffect(() => {
@@ -354,7 +420,7 @@ export default function Organization() {
           <section className="org-tier-section" aria-labelledby="tier-direksi-title">
 
             <div className="org-tier-cards-grid grid-direksi">
-              {ORG_DATA.direksi.map((person) => (
+              {orgData.direksi.map((person) => (
                 <div
                   key={person.id}
                   className="org-profile-card card-direksi"
@@ -410,7 +476,7 @@ export default function Organization() {
 
               {/* Right Column: Customer Satisfaction Manager (Align Kanan) */}
               <div className="advisory-right-box">
-                {ORG_DATA.csm.map((person) => (
+                {orgData.csm.map((person) => (
                   <div
                     key={person.id}
                     className="org-profile-card card-csm"
@@ -450,16 +516,15 @@ export default function Organization() {
           {/* Horizontal Distributor Line for Managerial Tier */}
           <div className="org-distributor-tree" aria-hidden="true">
             <div className="distributor-cross-bar" />
-            <div className="distributor-drops drops-3">
-              <span className="drop-stem" />
-              <span className="drop-stem" />
-              <span className="drop-stem" />
+            <div className={`distributor-drops drops-${orgData.managerial.length}`}>
+              {orgData.managerial.map((_, idx) => (
+                <span key={idx} className="drop-stem" />
+              ))}
             </div>
           </div>
 
           {/* ----------------------------------------------------------------
-              TIER 2: LEVEL MANAGERIAL (3 CARDS CENTER ALIGNED)
-              Muhamad Santiko (Service), Surie Handayani (Admin), Joko Triono (Sparepart)
+              TIER 2: LEVEL MANAGERIAL (CARDS CENTER ALIGNED)
               ---------------------------------------------------------------- */}
           <section className="org-tier-section" aria-labelledby="tier-managerial-title">
             <div className="org-tier-header">
@@ -468,7 +533,7 @@ export default function Organization() {
             </div>
 
             <div className="org-tier-cards-grid grid-managerial">
-              {ORG_DATA.managerial.map((person) => (
+              {orgData.managerial.map((person) => (
                 <div
                   key={person.id}
                   className="org-profile-card card-managerial"
@@ -505,18 +570,18 @@ export default function Organization() {
             <span className="connector-stem" />
           </div>
 
-          {/* Horizontal Distributor Line for Supervisor Tier (2 Columns) */}
+          {/* Horizontal Distributor Line for Supervisor Tier */}
           <div className="org-distributor-tree distributor-supervisor" aria-hidden="true">
-            <div className="distributor-cross-bar bar-2" />
-            <div className="distributor-drops drops-2">
-              <span className="drop-stem" />
-              <span className="drop-stem" />
+            <div className={`distributor-cross-bar bar-${orgData.supervisor.length}`} />
+            <div className={`distributor-drops drops-${orgData.supervisor.length}`}>
+              {orgData.supervisor.map((_, idx) => (
+                <span key={idx} className="drop-stem" />
+              ))}
             </div>
           </div>
 
           {/* ----------------------------------------------------------------
-              TIER 3: LEVEL SUPERVISOR (2 CARDS CENTER ALIGNED)
-              Yusuf Anshori (Spv), Riki Melianto (Spv)
+              TIER 3: LEVEL SUPERVISOR (CARDS CENTER ALIGNED)
               ---------------------------------------------------------------- */}
           <section className="org-tier-section" aria-labelledby="tier-supervisor-title">
             <div className="org-tier-header">
@@ -525,7 +590,7 @@ export default function Organization() {
             </div>
 
             <div className="org-tier-cards-grid grid-supervisor">
-              {ORG_DATA.supervisor.map((person) => (
+              {orgData.supervisor.map((person) => (
                 <div
                   key={person.id}
                   className="org-profile-card card-supervisor"

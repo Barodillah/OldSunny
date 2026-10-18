@@ -6,9 +6,11 @@ import {
   HiOutlineCalculator,
   HiOutlineShieldCheck,
   HiOutlineArrowRight,
+  HiOutlineClock,
   HiChevronLeft,
   HiChevronRight
 } from 'react-icons/hi2'
+import { openChatHistoryModal } from '../utils/sunnySessionStorage.js'
 import {
   RiEmotionHappyLine,
   RiLightbulbLine,
@@ -427,10 +429,10 @@ export default function SunnyAssistantSection({ onOpenAiChat, isHeader = false, 
               <button
                 type="button"
                 className="btn-sunny-feature-secondary"
-                onClick={() => handleLaunchChat(SUNNY_EXPRESSIONS[1].topicAction)}
+                onClick={openChatHistoryModal}
               >
-                <HiOutlineCalculator size={18} />
-                <span>Tanya Simulasi Kredit</span>
+                <HiOutlineClock size={18} />
+                <span>Riwayat Chat</span>
               </button>
             </div>
 

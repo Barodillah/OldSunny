@@ -166,7 +166,7 @@ export default function Promo({ onOpenAiChat }) {
   // WhatsApp link generator
   const createWhatsAppLink = (item) => {
     const text = `Halo Dealer Mitsubishi Sun Star Prima Motor Margahayu,\n\nSaya tertarik dengan penawaran:\n• Program: ${item.title}\n• Kategori: ${item.categoryLabel}\n• Unit: ${item.targetVehicles}\n\nMohon info simulasi detail dan persyaratan untuk klaim promo ini. Terima kasih!`
-    return `https://wa.me/6281288347777?text=${encodeURIComponent(text)}`
+    return `https://wa.me/6281318747300?text=${encodeURIComponent(text)}`
   }
 
   return (
@@ -205,13 +205,13 @@ export default function Promo({ onOpenAiChat }) {
 
           <div className="promo-hero-cta-row">
             <a
-              href="https://wa.me/6281288347777?text=Halo%20Sun%20Star%20Prima%20Motor%20Margahayu%2C%20saya%20ingin%20tanya%20promo%20resmi%20bulan%20ini."
+              href="https://wa.me/6281318747300?text=Halo%20Sun%20Star%20Prima%20Motor%20Margahayu%2C%20saya%20ingin%20tanya%20promo%20resmi%20bulan%20ini."
               target="_blank"
               rel="noopener noreferrer"
               className="btn-promo-hero-primary"
             >
               <RiWhatsappLine size={18} />
-              <span>Klaim Promo via WhatsApp</span>
+              <span>Klaim Promo via WhatsApp (0813-1874-7300)</span>
             </a>
 
             <button

@@ -1,0 +1,104 @@
+{
+  "dealer_name": "PT Sun Star Prima Motor - Margahayu",
+  "brand_identity": "Mitsubishi Motors & Fuso Authorized 3S + Body & Paint Dealer",
+  "legal_name": "PT Sun Star Prima Motor",
+  "branch_code": "SM-MGH-01",
+  "tagline": "Asisten Pintar 24 Jam Penyambung Konsumen dan Dealer Resmi Mitsubishi",
+  "location": {
+    "address": "Jl. Ir. H. Juanda No. 35 Bulak Kapal, RT.001/RW.001, Aren Jaya, Kec. Bekasi Timur, Kota Bekasi, Jawa Barat 17111",
+    "district": "Bekasi Timur",
+    "city": "Kota Bekasi",
+    "province": "Jawa Barat",
+    "postal_code": "17111",
+    "landmark": "Dekat Bulak Kapal Bekasi Timur, seberang Terminal / area komersial Margahayu",
+    "google_maps_url": "https://maps.app.goo.gl/avtswtfZ9g7sTkcZ6",
+    "coordinates": {
+      "latitude": -6.250846761200644,
+      "longitude": 107.02451547363883
+    }
+  },
+  "contact": {
+    "phone_hunting": "(021) 8834 7777",
+    "whatsapp_official": "081288347777",
+    "whatsapp_link": "https://wa.me/6281288347777",
+    "emergency_service_on_road": "081288347777",
+    "service_booking_hotline": "081288347777",
+    "email_inquiry": "info@sunmargahayu.co.id",
+    "email_csm": "csm@sunmargahayu.co.id"
+  },
+  "official_bank_account": {
+    "bank_name": "BCA (Bank Central Asia)",
+    "account_number": "3425419999",
+    "account_holder": "PT SUN STAR PRIMA MOTOR",
+    "anti_fraud_notice": "PENTING & WAJIB DIKETAHUI: Segala transaksi pembayaran pemesanan kendaraan (SPK), uang muka (DP), pelunasan, perbaikan bengkel, body & paint, serta suku cadang HANYA sah jika ditransfer ke rekening resmi Bank BCA 3425419999 a.n. PT Sun Star Prima Motor. Dilarang keras mentransfer ke rekening pribadi staf/sales manapun."
+  },
+  "operating_hours": {
+    "showroom": {
+      "monday_to_saturday": "08:30 – 19:00 WIB",
+      "sunday_and_holidays": "09:00 – 17:00 WIB",
+      "status": "Buka Setiap Hari"
+    },
+    "workshop_and_body_paint": {
+      "monday_to_friday": "08:00 – 16:30 WIB",
+      "saturday": "08:00 – 15:00 WIB",
+      "sunday": "Khusus booking terkonfirmasi / Layanan Terbatas",
+      "walk_in_cutoff_time": "11:00 WIB (Penerimaan servis datang langsung tanpa booking paling siang pukul 11:00 WIB)",
+      "status": "Senin – Sabtu"
+    },
+    "service_on_road_emergency": {
+      "schedule": "Siaga 24 Jam Penuh",
+      "description": "Layanan kedatangan teknisi darurat ke lokasi kendaraan mogok di jalan atau rumah",
+      "status": "Online 24/7"
+    },
+    "sunny_ai_assistant": {
+      "schedule": "Aktif 24 Jam Nonstop",
+      "description": "Menjawab pertanyaan harga, stok, booking servis, test drive, simulasi kredit, klaim asuransi body paint, keluhan konsumen, dan konsultasi teknis.",
+      "status": "Online 24/7"
+    }
+  },
+  "facilities": {
+    "dealership_scope": [
+      "Penjualan Kendaraan Baru (Passenger Cars & Commercial Fuso)",
+      "Bengkel Resmi Standar MMKSI (Perawatan Berkala & Perbaikan Umum)",
+      "Authorized Body & Paint (Oven Spray Booth & Klaim Asuransi)",
+      "Penyediaan Suku Cadang & Aksesoris Orisinal (Mitsubishi Genuine Parts)",
+      "Service On Road (Bantuan Darurat Mobil Mogok)",
+      "Layanan Tukar Tambah / Trade-In Bekerjasama dengan Platform Terpercaya",
+      "Layanan Pembiayaan Resmi (Dipo Star Finance, BCA Finance, Mandiri Tunas Finance, dll.)"
+    ],
+    "customer_hospitality_perks": [
+      {
+        "name": "Ruang Tunggu VIP Lounge",
+        "description": "Ruang santai ber-AC dengan sofa ergonomis yang tenang dan wangi aroma terapi."
+      },
+      {
+        "name": "Voucher Noah Coffee Gratis",
+        "description": "Setiap customer servis berhak menikmati sajian kopi premium racikan profesional tanpa biaya."
+      },
+      {
+        "name": "Kids Zone Playground",
+        "description": "Area bermain anak luas dengan kolam mandi bola dan aneka mainan edukasi food-grade yang disterilkan berkala."
+      },
+      {
+        "name": "Enjoy Room dengan Bean Bag",
+        "description": "Ruang rileks privat dengan pencahayaan hangat untuk rebahan sejenak."
+      },
+      {
+        "name": "Work From Anywhere (WFA) Station",
+        "description": "Meja kerja komprehensif, jaringan Wi-Fi 6 berkecepatan tinggi, dan stopkontak charging Type-C/universal di setiap meja."
+      },
+      {
+        "name": "Free Shuttle Service",
+        "description": "Layanan antar-jemput gratis ke stasiun atau pusat perbelanjaan terdekat selagi mobil Anda sedang dirawat di bengkel."
+      },
+      {
+        "name": "Snack & Drink Bar Gratis",
+        "description": "Pilihan air mineral, aneka teh, minuman hangat/dingin, dan camilan gratis sepanjang hari."
+      },
+      {
+        "name": "Musholla & Toilet Standar Eksekutif",
+        "description": "Tempat ibadah yang bersih dan fasilitas toilet bersih serta akses ramah disabilitas."
+      }
+    ]
+  }
+}

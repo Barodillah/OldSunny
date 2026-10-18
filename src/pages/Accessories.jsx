@@ -286,7 +286,7 @@ export default function Accessories({ onOpenAiChat }) {
   // Build WhatsApp inquiry link
   const createWhatsAppLink = (item) => {
     const text = `Halo Dealer Mitsubishi Sun Star Prima Motor Margahayu,\n\nSaya tertarik dengan aksesoris resmi:\n• Produk: ${item.item}\n• Model: ${activeVehicleInfo.name}\n• Estimasi Harga: ${formatIDR(item.price)}\n\nApakah stok unit tersedia dan bisa dijadwalkan pemasangan resmi tanpa menggugurkan garansi kelistrikan? Terima kasih!`
-    return `https://wa.me/6281288347777?text=${encodeURIComponent(text)}`
+    return `https://wa.me/6282210928822?text=${encodeURIComponent(text)}`
   }
 
   return (
@@ -699,21 +699,21 @@ export default function Accessories({ onOpenAiChat }) {
             </p>
             <div className="acc-cta-btn-group">
               <a
-                href="https://wa.me/6281288347777?text=Halo%20Sun%20Star%20Prima%20Motor%20Margahayu%2C%20saya%20ingin%20konsultasi%20pemasangan%20aksesoris%20resmi%20Mitsubishi."
+                href="https://wa.me/6282210928822?text=Halo%20Layanan%20Servis%20Mitsubishi%20Sun%20Margahayu%2C%20saya%20ingin%20konsultasi%20pemasangan%20aksesoris%20resmi%20Mitsubishi."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-acc-cta-primary"
               >
                 <RiWhatsappLine size={20} />
-                <span>Hubungi Service Advisor via WA</span>
+                <span>Hubungi Service Advisor via WA (0822-1092-8822)</span>
               </a>
 
               <a
-                href="tel:0218808000"
+                href="tel:02188347777"
                 className="btn-acc-cta-secondary"
               >
                 <HiOutlinePhone size={18} />
-                <span>Telepon Dealer (021) 880-8000</span>
+                <span>Telepon Dealer: (021) 8834 7777</span>
               </a>
             </div>
           </div>

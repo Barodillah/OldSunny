@@ -1,22 +1,107 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet, NavLink, Link, useNavigate, useLocation, Navigate } from 'react-router-dom'
 import { usePortalAuth } from './context/PortalAuthContext.jsx'
 import {
   HiOutlineSquares2X2,
   HiOutlineUsers,
+  HiOutlineChatBubbleLeftRight,
   HiOutlineArrowTopRightOnSquare,
   HiOutlineArrowRightOnRectangle,
   HiOutlineBars3,
   HiOutlineXMark,
-  HiOutlineShieldCheck
+  HiOutlineShieldCheck,
+  HiOutlineClipboardDocumentList,
+  HiOutlineChevronDown,
+  HiOutlineUserGroup,
+  HiOutlineChartBarSquare
 } from 'react-icons/hi2'
 import './PortalLayout.css'
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
 
 export default function PortalLayout() {
   const { isAuthenticated, user, logout } = usePortalAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
+  const [dbStatus, setDbStatus] = useState('checking') // 'connected' | 'disconnected' | 'checking'
+
+  // Health check database connection
+  useEffect(() => {
+    let isMounted = true
+
+    const checkHealth = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/health`, {
+          cache: 'no-store'
+        })
+        if (!isMounted) return
+
+        if (res.ok) {
+          const json = await res.json()
+          const isConnected =
+            json.status === 'ok' ||
+            json.database === 'connected' ||
+            (json.database && json.database.connected === true)
+
+          setDbStatus(isConnected ? 'connected' : 'disconnected')
+        } else {
+          setDbStatus('disconnected')
+        }
+      } catch (err) {
+        if (isMounted) setDbStatus('disconnected')
+      }
+    }
+
+    checkHealth()
+    const interval = setInterval(checkHealth, 30000)
+
+    return () => {
+      isMounted = false
+      clearInterval(interval)
+    }
+  }, [])
+
+  const isLeadsActive = location.pathname.startsWith('/portal/leads')
+  const [isLeadsSubmenuOpen, setIsLeadsSubmenuOpen] = useState(false)
+  const currentSearchType = new URLSearchParams(location.search).get('type')
+
+  const isEmployeeActive = location.pathname.startsWith('/portal/employees')
+  const [isEmployeeSubmenuOpen, setIsEmployeeSubmenuOpen] = useState(false)
+
+  // Auto-close leads submenu when navigating away from portal leads
+  useEffect(() => {
+    if (location.pathname.startsWith('/portal/leads')) {
+      setIsLeadsSubmenuOpen(true)
+    } else {
+      setIsLeadsSubmenuOpen(false)
+    }
+  }, [location.pathname])
+
+  // Auto-close employee submenu when navigating away from portal employees
+  useEffect(() => {
+    if (location.pathname.startsWith('/portal/employees')) {
+      setIsEmployeeSubmenuOpen(true)
+    } else {
+      setIsEmployeeSubmenuOpen(false)
+    }
+  }, [location.pathname])
+
+  const LEAD_SUBMENU = [
+    { label: 'Semua Lead', path: '/portal/leads', type: null },
+    { label: 'Booking Servis', path: '/portal/leads?type=booking', type: 'booking' },
+    { label: 'Test Drive', path: '/portal/leads?type=test_drive', type: 'test_drive' },
+    { label: 'Pemesanan Unit', path: '/portal/leads?type=prospect', type: 'prospect' },
+    { label: 'Emergency SOS', path: '/portal/leads?type=emergency', type: 'emergency' },
+    { label: 'Sparepart & Aksesoris', path: '/portal/leads?type=sparepart', type: 'sparepart' },
+    { label: 'Keluhan & Pertanyaan', path: '/portal/leads?type=complaint', type: 'complaint' },
+  ]
+
+  const EMPLOYEE_SUBMENU = [
+    { label: 'Struktur Organisasi', path: '/portal/employees/organization' },
+    { label: 'Sales', path: '/portal/employees/sales' },
+    { label: 'Non aktif', path: '/portal/employees/inactive' },
+  ]
 
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
@@ -29,7 +114,13 @@ export default function PortalLayout() {
   }
 
   const getPageTitle = () => {
+    if (location.pathname.includes('/employees/organization')) return 'Struktur Organisasi Dealer'
+    if (location.pathname.includes('/employees/sales')) return 'Manajemen Sales'
+    if (location.pathname.includes('/employees/inactive')) return 'Arsip Nonaktif (Employee & Sales)'
+    if (location.pathname.includes('/sales-rate')) return 'Sales Rate & Kinerja Sales'
+    if (location.pathname.includes('/leads')) return 'Manajemen Leads (Sunny AI)'
     if (location.pathname.includes('/users')) return 'Manajemen Pengguna'
+    if (location.pathname.includes('/chat-history')) return 'Riwayat Chat (Sunny AI)'
     return 'Dashboard Operasional'
   }
 
@@ -88,6 +179,117 @@ export default function PortalLayout() {
                   <span>Dashboard</span>
                 </NavLink>
               </li>
+
+              {/* Chat History */}
+              <li>
+                <NavLink
+                  to="/portal/chat-history"
+                  className={({ isActive }) => `portal-nav-item ${isActive ? 'is-active' : ''}`}
+                  onClick={() => setIsMobileSidebarOpen(false)}
+                >
+                  <HiOutlineChatBubbleLeftRight size={19} className="nav-item-icon" />
+                  <span>Chat History</span>
+                </NavLink>
+              </li>
+
+              {/* Leads Dropdown Submenu (Toggle only, no direct page navigation) */}
+              <li className={`portal-nav-group ${isLeadsActive ? 'has-active-child' : ''}`}>
+                <button
+                  type="button"
+                  className={`portal-nav-parent-row ${isLeadsActive ? 'is-active' : ''}`}
+                  onClick={() => setIsLeadsSubmenuOpen(prev => !prev)}
+                  aria-expanded={isLeadsSubmenuOpen}
+                  aria-label="Buka atau Tutup Submenu Leads"
+                >
+                  <div className="portal-nav-parent-label">
+                    <HiOutlineClipboardDocumentList size={19} className="nav-item-icon" />
+                    <span>Leads</span>
+                  </div>
+
+                  <span className={`portal-nav-toggle-icon ${isLeadsSubmenuOpen ? 'is-open' : ''}`}>
+                    <HiOutlineChevronDown size={14} />
+                  </span>
+                </button>
+
+                {isLeadsSubmenuOpen && (
+                  <ul className="portal-subnav-list">
+                    {LEAD_SUBMENU.map((sub) => {
+                      const isSubActive =
+                        isLeadsActive &&
+                        (sub.type === null
+                          ? !currentSearchType || currentSearchType === 'all'
+                          : currentSearchType === sub.type)
+
+                      return (
+                        <li key={sub.path}>
+                          <Link
+                            to={sub.path}
+                            className={`portal-subnav-item ${isSubActive ? 'is-active' : ''}`}
+                            onClick={() => setIsMobileSidebarOpen(false)}
+                          >
+                            <span className="subnav-indicator-dot" />
+                            <span>{sub.label}</span>
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+              </li>
+
+              {/* Employee Dropdown Submenu (Toggle only, no direct page navigation) */}
+              <li className={`portal-nav-group ${isEmployeeActive ? 'has-active-child' : ''}`}>
+                <button
+                  type="button"
+                  className={`portal-nav-parent-row ${isEmployeeActive ? 'is-active' : ''}`}
+                  onClick={() => setIsEmployeeSubmenuOpen(prev => !prev)}
+                  aria-expanded={isEmployeeSubmenuOpen}
+                  aria-label="Buka atau Tutup Submenu Employee"
+                >
+                  <div className="portal-nav-parent-label">
+                    <HiOutlineUserGroup size={19} className="nav-item-icon" />
+                    <span>Employee</span>
+                  </div>
+
+                  <span className={`portal-nav-toggle-icon ${isEmployeeSubmenuOpen ? 'is-open' : ''}`}>
+                    <HiOutlineChevronDown size={14} />
+                  </span>
+                </button>
+
+                {isEmployeeSubmenuOpen && (
+                  <ul className="portal-subnav-list">
+                    {EMPLOYEE_SUBMENU.map((sub) => {
+                      const isSubActive = location.pathname === sub.path
+
+                      return (
+                        <li key={sub.path}>
+                          <Link
+                            to={sub.path}
+                            className={`portal-subnav-item ${isSubActive ? 'is-active' : ''}`}
+                            onClick={() => setIsMobileSidebarOpen(false)}
+                          >
+                            <span className="subnav-indicator-dot" />
+                            <span>{sub.label}</span>
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+              </li>
+
+              {/* Sales Rate */}
+              <li>
+                <NavLink
+                  to="/portal/sales-rate"
+                  className={({ isActive }) => `portal-nav-item ${isActive ? 'is-active' : ''}`}
+                  onClick={() => setIsMobileSidebarOpen(false)}
+                >
+                  <HiOutlineChartBarSquare size={19} className="nav-item-icon" />
+                  <span>Sales Rate</span>
+                </NavLink>
+              </li>
+
               <li>
                 <NavLink
                   to="/portal/users"
@@ -95,7 +297,7 @@ export default function PortalLayout() {
                   onClick={() => setIsMobileSidebarOpen(false)}
                 >
                   <HiOutlineUsers size={19} className="nav-item-icon" />
-                  <span>Pengguna (Users)</span>
+                  <span>Users</span>
                 </NavLink>
               </li>
             </ul>
@@ -129,7 +331,7 @@ export default function PortalLayout() {
               />
               <div className="portal-user-meta">
                 <span className="portal-user-name">{user.name}</span>
-                <span className="portal-user-role">{user.role}</span>
+                <span className="portal-user-position">{user.position}</span>
               </div>
               <button
                 type="button"
@@ -167,14 +369,31 @@ export default function PortalLayout() {
           </div>
 
           <div className="portal-topbar-right">
-            <div className="portal-status-pill">
-              <span className="portal-status-dot" />
-              <span>Sistem Operasional Normal</span>
+            <div
+              className={`portal-status-pill ${dbStatus}`}
+              title={
+                dbStatus === 'connected'
+                  ? 'Koneksi Database MySQL: Terhubung & Normal'
+                  : dbStatus === 'disconnected'
+                    ? 'Koneksi Database Terputus / Gangguan Server'
+                    : 'Sedang memeriksa status koneksi database...'
+              }
+            >
+              <span className={`portal-status-dot ${dbStatus}`} />
+              <span>
+                {dbStatus === 'connected'
+                  ? 'System Normal'
+                  : dbStatus === 'disconnected'
+                    ? 'Database Terputus'
+                    : 'Memeriksa DB...'}
+              </span>
             </div>
 
             <div className="portal-topbar-user">
-              <HiOutlineShieldCheck size={16} className="text-emerald" />
-              <span className="portal-topbar-user-name">{user.name}</span>
+              <HiOutlineShieldCheck size={16} className={`text-role-${user.role || 'user'}`} />
+              <span className={`portal-topbar-role-pill ${user.role}`}>
+                {user.role === 'superadmin' ? 'SUPERADMIN' : user.role === 'admin' ? 'ADMIN' : 'USER'}
+              </span>
             </div>
           </div>
         </header>

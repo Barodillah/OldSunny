@@ -33,6 +33,9 @@ const formatShortPrice = (val) => {
   return `Rp ${jt} Juta`
 }
 
+// Toggle tampilkan armada truk niaga (Commercial Trucks: Canter, Fighter X, Tractor Head)
+const SHOW_COMMERCIAL = false
+
 export default function Vehicles() {
   const location = useLocation()
   const [activeTab, setActiveTab] = useState('passenger') // 'passenger' | 'commercial'
@@ -207,7 +210,7 @@ export default function Vehicles() {
 
   // Filtered List based on active tab and search query
   const displayedCars = useMemo(() => {
-    const list = activeTab === 'passenger' ? passengerCars : commercialCars
+    const list = (SHOW_COMMERCIAL && activeTab === 'commercial') ? commercialCars : passengerCars
     if (!searchQuery.trim()) return list
 
     const q = searchQuery.toLowerCase().trim()
@@ -223,7 +226,7 @@ export default function Vehicles() {
 
   // Scroll to catalog section smoothly
   const scrollToCatalog = (tabKey) => {
-    if (tabKey) setActiveTab(tabKey)
+    if (tabKey && (SHOW_COMMERCIAL || tabKey === 'passenger')) setActiveTab(tabKey)
     const el = document.getElementById('catalog-section')
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' })
@@ -279,7 +282,7 @@ export default function Vehicles() {
 
             <p className="hero-description">
               Experience the road in unmatched elegance and power. Jelajahi line-up lengkap kendaraan
-              penumpang (Passenger Car) dan armada niaga (Commercial Car) dengan penawaran OTR transparan
+              penumpang (Passenger Car){SHOW_COMMERCIAL ? ' dan armada niaga (Commercial Car)' : ''} dengan penawaran OTR transparan
               dan unit uji jalan siap diantar ke tempat Anda.
             </p>
 
@@ -318,16 +321,18 @@ export default function Vehicles() {
                   <span className="hud-count">{passengerCars.length} Model</span>
                 </button>
               </li>
-              <li>
-                <button
-                  type="button"
-                  className={`hud-nav-item ${activeTab === 'commercial' ? 'active' : ''}`}
-                  onClick={() => scrollToCatalog('commercial')}
-                >
-                  <span>Commercial Trucks</span>
-                  <span className="hud-count">{commercialCars.length} Seri</span>
-                </button>
-              </li>
+              {SHOW_COMMERCIAL && (
+                <li>
+                  <button
+                    type="button"
+                    className={`hud-nav-item ${activeTab === 'commercial' ? 'active' : ''}`}
+                    onClick={() => scrollToCatalog('commercial')}
+                  >
+                    <span>Commercial Trucks</span>
+                    <span className="hud-count">{commercialCars.length} Seri</span>
+                  </button>
+                </li>
+              )}
               <li>
                 <button
                   type="button"
@@ -342,8 +347,16 @@ export default function Vehicles() {
 
             {/* Quick Contact Info Strip */}
             <div className="hud-contact-strip">
-              <span>Jl. Ir. H. Juanda No. 32, Bekasi</span>
-              <a href="tel:0218808888">📞 (021) 880-8888</a>
+              <span>Jl. Ir. H. Juanda No. 35 Bulak Kapal, Bekasi Timur</span>
+              <a href="tel:02188347777">📞 (021) 8834 7777</a>
+              <a
+                href="https://wa.me/6281318747300?text=Halo%20CS%20Sales%20Mitsubishi%20Sun%20Margahayu%2C%20saya%20ingin%20konsultasi%20kendaraan%20baru"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Hubungi CS Sales via WhatsApp"
+              >
+                💬 WA: 0813-1874-7300
+              </a>
             </div>
 
             {/* HIGHLIGHT MINI CARD: NEW XFORCE (Requested) */}
@@ -407,17 +420,19 @@ export default function Vehicles() {
               <span className="tab-badge-count">{passengerCars.length}</span>
             </button>
 
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === 'commercial'}
-              className={`catalog-tab-btn ${activeTab === 'commercial' ? 'active' : ''}`}
-              onClick={() => setActiveTab('commercial')}
-            >
-              <HiOutlineTruck size={17} />
-              <span>Commercial Car</span>
-              <span className="tab-badge-count">{commercialCars.length}</span>
-            </button>
+            {SHOW_COMMERCIAL && (
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'commercial'}
+                className={`catalog-tab-btn ${activeTab === 'commercial' ? 'active' : ''}`}
+                onClick={() => setActiveTab('commercial')}
+              >
+                <HiOutlineTruck size={17} />
+                <span>Commercial Car</span>
+                <span className="tab-badge-count">{commercialCars.length}</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -427,7 +442,11 @@ export default function Vehicles() {
             <HiOutlineMagnifyingGlass className="search-icon-inside" size={20} />
             <input
               type="text"
-              placeholder={`Cari varian ${activeTab === 'passenger' ? 'Xforce, Pajero, Xpander...' : 'Canter, Fighter, Tractor Head...'}`}
+              placeholder={
+                SHOW_COMMERCIAL && activeTab === 'commercial'
+                  ? 'Cari varian Canter, Fighter, Tractor Head...'
+                  : 'Cari varian Xforce, Pajero, Xpander, Triton...'
+              }
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               aria-label="Cari mobil atau tipe spesifikasi"

@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "periode": "Oktober 2026",
+    "dealer": "PT Sun Star Prima Motor Margahayu",
+    "catatan": "Promo berlaku untuk pembelian tunai (cash) maupun kredit resmi melalui leasing rekanan."
+  },
+  "general_programs": [
+    "Program Bunga Rendah mulai 0% hingga tenor 1-2 tahun (Dipo Star Finance)",
+    "Paket DP Ringan mulai 10% - 15% dengan angsuran fleksibel hingga 6-7 tahun",
+    "Smart Cash: Bunga 0% tenor 1 tahun + Bebas Biaya Asuransi & Bebas Biaya Admin (varian tertentu)",
+    "Gratis Paket SMART Silver / Gold Perawatan Berkala hingga 50.000 KM atau 4 Tahun (Gratis Jasa & Suku Cadang Resmi)",
+    "Gratis Kaca Film Berkualitas Tinggi (V-Kool / Solar Gard sesuai tipe unit)",
+    "Program Trade-In / Tukar Tambah mobil lama segala merk dengan cashback tambahan hingga Rp 10.000.000",
+    "Layanan Darurat Service On Road 24 Jam & Asisten Sunny 24 Jam"
+  ],
+  "models": [
+    {
+      "model": "MITSUBISHI DESTINATOR",
+      "tagline": "Car of The Year 2025/2026 - The Ultimate 7-Seater Family SUV",
+      "otr_start": "Mulai Rp 395.000.000 (GLS) s.d. Rp 510.000.000 (Ultimate Premium)",
+      "promos": [
+        "Special Launching Gift: Exclusive Luxury Accessories Kit",
+        "Free Paket SMART Diamond Service hingga 60.000 KM / 5 Tahun (Jasa & Spare Part)",
+        "Bunga 0% hingga 2 tahun dengan DP mulai 55%",
+        "Paket Kredit Bunga Murah mulai 2.45% per tahun",
+        "Kaca Film Solargard Black Phantom Full Garansi 5 Tahun"
+      ]
+    },
+    {
+      "model": "ALL NEW XFORCE (Termasuk HEV)",
+      "tagline": "Infinite Xcitement - Compact SUV Premium",
+      "promos": [
+        "Cashback Spesial Puluhan Juta Rupiah",
+        "Bunga 0% hingga tenor 2 tahun atau DP Ringan mulai 15%",
+        "Free Servis Berkala SMART Package hingga 50.000 KM / 4 Tahun",
+        "Kaca Film Solargard Premium",
+        "Gratis Dashcam Eksklusif untuk varian Ultimate"
+      ]
+    },
+    {
+      "model": "NEW PAJERO SPORT",
+      "tagline": "Live The Adventure - Big SUV Tangguh Legendaris",
+      "promos": [
+        "Cashback Spesial Bulan Ini hingga Rp 25.000.000",
+        "Program Bunga 0% tenor 1 tahun (DP minimal 50%)",
+        "Paket SMART Silver Service s.d. 50.000 KM / 4 Tahun",
+        "Gratis Kaca Film V-Kool Full Kaca Depan dan Samping-Belakang",
+        "Gratis Karpet Dasar Eksklusif"
+      ]
+    },
+    {
+      "model": "NEW XPANDER & NEW XPANDER CROSS",
+      "tagline": "Be The Life Xpander - MPV Keluarga Terfavorit",
+      "promos": [
+        "DP Murah mulai Rp 15 Jutaan atau Angsuran ringan mulai Rp 4 Jutaan",
+        "Bunga 0% hingga 1 tahun",
+        "Free Servis & Sparepart SMART Silver hingga 50.000 KM / 4 Tahun",
+        "Gratis Kaca Film Konica Minolta / Solar Gard",
+        "Hadiah voucher belanja / e-money jutaan rupiah untuk SPK di tempat"
+      ]
+    },
+    {
+      "model": "ALL NEW TRITON",
+      "tagline": "Power for Great Ambitions - Double Cabin & Single Cabin 4x4",
+      "promos": [
+        "Bunga 0% DP 40% tenor 1 tahun untuk operasional usaha dan tambang",
+        "Paket DP Usaha Terjangkau mulai 20%",
+        "Free Servis berkala hingga 10.000 KM",
+        "Garansi Mesin hingga 100.000 KM / 3 Tahun"
+      ]
+    },
+    {
+      "model": "COLT L300 EURO 4 & FUSO CANTER",
+      "tagline": "Rajanya Niaga & Angkutan Tangguh Indonesia",
+      "promos": [
+        "DP Super Ringan mulai Rp 10 Jutaan (Colt L300)",
+        "Bunga Ringan dan Subsidi Angsuran",
+        "Bebas biaya uji KIR pertama",
+        "Ketersediaan unit ready stock untuk kelancaran bisnis Anda"
+      ]
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import {
   HiOutlinePhone,
   HiOutlineChevronDown
 } from 'react-icons/hi2'
+import { openChatHistoryModal } from '../utils/sunnySessionStorage.js'
 
 const NAV_MEGA_MENUS = {
   hospitality: {
@@ -124,6 +125,12 @@ const NAV_MEGA_MENUS = {
         to: '/#sunny-assistant',
         sectionId: 'sunny-assistant',
         image: 'https://bewhy.id/wp-content/uploads/asset_6ad35b160330c6.97658223.png'
+      },
+      {
+        label: 'Riwayat Chat Sunny',
+        to: '/#chat-history',
+        action: 'chat-history',
+        image: 'https://bewhy.id/wp-content/uploads/asset_6ad09424acedb0.44157863.png'
       },
       {
         label: 'Emergency Service',
@@ -428,6 +435,12 @@ export default function Navbar({ onOpenEmergency }) {
                         to={linkItem.to}
                         className={`mobile-accordion-link ${location.pathname === linkItem.to ? 'is-active' : ''}`}
                         onClick={(e) => {
+                          if (linkItem.action === 'chat-history') {
+                            e.preventDefault()
+                            openChatHistoryModal()
+                            setIsOpen(false)
+                            return
+                          }
                           if (linkItem.sectionId && location.pathname === '/') {
                             e.preventDefault()
                             scrollToSection(linkItem.sectionId)
@@ -485,6 +498,12 @@ export default function Navbar({ onOpenEmergency }) {
                         className={`megamenu-link ${isLinkActive ? 'is-active' : ''}`}
                         onMouseEnter={() => setHoveredImage(item.image)}
                         onClick={(e) => {
+                          if (item.action === 'chat-history') {
+                            e.preventDefault()
+                            openChatHistoryModal()
+                            setActiveMegaMenu(null)
+                            return
+                          }
                           if (item.sectionId && location.pathname === '/') {
                             e.preventDefault()
                             scrollToSection(item.sectionId)

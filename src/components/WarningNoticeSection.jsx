@@ -17,61 +17,55 @@ const INACTIVE_STAFF_LIST = [
     id: 'inact-1',
     name: 'Agus Pratama',
     formerRole: 'Senior Sales Consultant',
-    formerBranch: 'Showroom BSD City',
     formerNik: 'SNY-SLS-0199',
     inactiveDate: '15 Januari 2024',
     reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Margahayu',
-    photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
+    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
   },
   {
     id: 'inact-2',
     name: 'Rizky Fauzi',
     formerRole: 'Sales Executive',
-    formerBranch: 'Showroom Pusat Sudirman',
     formerNik: 'SNY-SLS-0284',
     inactiveDate: '10 Agustus 2023',
     reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Margahayu',
-    photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
+    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
   },
   {
     id: 'inact-3',
     name: 'Maya Anggraini',
     formerRole: 'Telemarketing & CRM',
-    formerBranch: 'Showroom Kelapa Gading',
     formerNik: 'SNY-SLS-0351',
     inactiveDate: '28 November 2023',
     reason: 'Habis Masa Kontrak Kerja',
-    photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80',
+    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
   },
   {
     id: 'inact-4',
     name: 'Hendra Saputra',
     formerRole: 'Junior Sales Advisor',
-    formerBranch: 'Showroom Puri Indah',
     formerNik: 'SNY-SLS-0490',
     inactiveDate: '05 Maret 2024',
     reason: 'Nonaktif / Surat Keputusan Direksi',
-    photoUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80',
+    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
   },
   {
     id: 'inact-5',
     name: 'Dedi Kurniawan',
     formerRole: 'Sales Fleet & Commercial',
-    formerBranch: 'Showroom Bekasi Barat',
     formerNik: 'SNY-SLS-0512',
     inactiveDate: '20 Mei 2024',
     reason: 'Resigned / Tidak lagi memiliki lisensi MMKSI',
-    photoUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&auto=format&fit=crop&q=80',
+    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
   },
   {
     id: 'inact-6',
     name: 'Siti Rahmawati',
     formerRole: 'Counter Sales Staff',
-    formerBranch: 'Showroom Bintaro',
     formerNik: 'SNY-SLS-0628',
     inactiveDate: '12 September 2024',
     reason: 'Mutasi Luar Kota / Nonaktif dari Dealer',
-    photoUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&auto=format&fit=crop&q=80',
+    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
   },
 ]
 
@@ -159,7 +153,7 @@ export default function WarningNoticeSection() {
     (item) =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.formerNik.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.formerBranch.toLowerCase().includes(searchQuery.toLowerCase())
+      item.formerRole.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   return (
@@ -268,7 +262,7 @@ export default function WarningNoticeSection() {
               <div className="warning-drawer-search-box">
                 <input
                   type="text"
-                  placeholder="Cari berdasarkan nama mantan staf, eks NIK, atau lokasi cabang..."
+                  placeholder="Cari berdasarkan nama mantan staf atau eks NIK..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="warning-drawer-input"
@@ -316,10 +310,6 @@ export default function WarningNoticeSection() {
                             <span className="meta-value">{staff.formerRole}</span>
                           </div>
                           <div className="inactive-card-meta-row">
-                            <span className="meta-label">Cabang Terakhir:</span>
-                            <span className="meta-value">{staff.formerBranch}</span>
-                          </div>
-                          <div className="inactive-card-meta-row">
                             <span className="meta-label">Efektif Sejak:</span>
                             <span className="meta-value text-red">{staff.inactiveDate}</span>
                           </div>
@@ -348,13 +338,13 @@ export default function WarningNoticeSection() {
                 </span>
               </div>
               <a
-                href="https://wa.me/6281289001234?text=Halo%20Tim%20Keamanan%20Mitsubishi%20Sun%20Margahayu,%20saya%20ingin%20verifikasi%20keaslian%20sales/transaksi%20kendaraan."
+                href="https://wa.me/6285183325604?text=Halo%20CS%20Manager%20Mitsubishi%20Sun%20Margahayu,%20saya%20ingin%20verifikasi%20keaslian%20sales/transaksi%20kendaraan."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-report-fraud"
               >
                 <RiWhatsappLine size={19} />
-                <span>Lapor penawaran mencurigakan</span>
+                <span>Lapor penawaran mencurigakan (CS Manager)</span>
               </a>
             </div>
           </div>

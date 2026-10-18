@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 import AIAssistantFloating from './components/AIAssistantFloating.jsx'
+import SunnyCustomerChatHistoryModal from './components/SunnyCustomerChatHistoryModal.jsx'
 import Home from './pages/Home.jsx'
 import Organization from './pages/Organization.jsx'
 import Vehicles from './pages/Vehicles.jsx'
@@ -16,6 +17,12 @@ import Promo from './pages/Promo.jsx'
 import ServiceOnRoad from './pages/ServiceOnRoad.jsx'
 import BookingService from './pages/BookingService.jsx'
 import NotFound from './pages/NotFound.jsx'
+import Forbidden from './pages/Forbidden.jsx'
+import BadRequest from './pages/BadRequest.jsx'
+import TooManyRequests from './pages/TooManyRequests.jsx'
+import ServerError from './pages/ServerError.jsx'
+import ServiceUnavailable from './pages/ServiceUnavailable.jsx'
+import ErrorPage from './pages/ErrorPage.jsx'
 import './App.css'
 
 // Portal Management Imports
@@ -23,7 +30,13 @@ import { PortalAuthProvider } from './portal/context/PortalAuthContext.jsx'
 import PortalLayout from './portal/PortalLayout.jsx'
 import PortalDashboard from './portal/pages/PortalDashboard.jsx'
 import PortalUsers from './portal/pages/PortalUsers.jsx'
+import PortalChatHistory from './portal/pages/PortalChatHistory.jsx'
+import PortalLeads from './portal/pages/PortalLeads.jsx'
 import PortalLogin from './portal/pages/PortalLogin.jsx'
+import PortalOrganization from './portal/pages/PortalOrganization.jsx'
+import PortalSales from './portal/pages/PortalSales.jsx'
+import PortalInactive from './portal/pages/PortalInactive.jsx'
+import PortalSalesRate from './portal/pages/PortalSalesRate.jsx'
 
 function App() {
   const [selectedAiService, setSelectedAiService] = useState(null)
@@ -42,9 +55,17 @@ function App() {
       {isPortalRoute ? (
         <Routes>
           <Route path="/portal/login" element={<PortalLogin />} />
+          <Route path="/portal/403" element={<Forbidden />} />
           <Route path="/portal" element={<PortalLayout />}>
             <Route index element={<PortalDashboard />} />
             <Route path="dashboard" element={<PortalDashboard />} />
+            <Route path="leads" element={<PortalLeads />} />
+            <Route path="chat-history" element={<PortalChatHistory />} />
+            <Route path="employees" element={<Navigate to="/portal/employees/organization" replace />} />
+            <Route path="employees/organization" element={<PortalOrganization />} />
+            <Route path="employees/sales" element={<PortalSales />} />
+            <Route path="employees/inactive" element={<PortalInactive />} />
+            <Route path="sales-rate" element={<PortalSalesRate />} />
             <Route path="users" element={<PortalUsers />} />
           </Route>
           <Route path="/portal/*" element={<NotFound />} />
@@ -77,6 +98,15 @@ function App() {
               <Route path="/news/:id" element={<ArticleDetail />} />
               <Route path="/article/:id" element={<ArticleDetail />} />
               <Route path="/contact" element={<Contact onOpenAiChat={(topic) => setSelectedAiService(topic)} />} />
+
+              {/* Explicit & Catch-All Error Pages */}
+              <Route path="/404" element={<NotFound />} />
+              <Route path="/403" element={<Forbidden />} />
+              <Route path="/400" element={<BadRequest />} />
+              <Route path="/429" element={<TooManyRequests />} />
+              <Route path="/500" element={<ServerError />} />
+              <Route path="/503" element={<ServiceUnavailable />} />
+              <Route path="/error/:code" element={<ErrorPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
@@ -87,6 +117,9 @@ function App() {
             prefilledAction={selectedAiService}
             onClosePrefill={() => setSelectedAiService(null)}
           />
+
+          {/* Customer Chat History Modal */}
+          <SunnyCustomerChatHistoryModal />
         </div>
       )}
     </PortalAuthProvider>

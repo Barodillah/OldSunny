@@ -664,6 +664,14 @@
   gap: 0.75rem;
 }
 
+.btn-confirm-text-short {
+  display: none;
+}
+
+.btn-confirm-icon {
+  flex-shrink: 0;
+}
+
 .btn-map-cancel {
   padding: 0.65rem 1.25rem;
   background-color: #ffffff;
@@ -674,6 +682,10 @@
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-map-cancel:hover {
@@ -684,6 +696,7 @@
 .btn-map-confirm {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.45rem;
   padding: 0.65rem 1.35rem;
   background-color: #E3000C;
@@ -694,6 +707,7 @@
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-height: 40px;
 }
 
 .btn-map-confirm:hover {
@@ -899,27 +913,77 @@
     justify-content: center;
   }
 
+  .sor-modal-backdrop {
+    padding: 0.75rem;
+  }
+
+  .sor-map-modal-window {
+    max-height: calc(100dvh - 1.5rem);
+    border-radius: 16px;
+  }
+
   .sor-map-container {
-    height: 320px;
+    height: clamp(230px, 40vh, 300px);
   }
 
   .map-modal-footer {
+    padding: 0.85rem 1rem;
+    gap: 0.75rem;
     flex-direction: column;
     align-items: stretch;
   }
 
+  .footer-coords-info {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .coords-label {
+    font-size: 0.7rem;
+  }
+
   .coords-address {
     max-width: 100%;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .footer-btns-row {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
   }
 
-  .btn-map-cancel,
+  .btn-map-cancel {
+    flex: 0 0 auto;
+    min-width: 74px;
+    min-height: 44px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.825rem;
+  }
+
   .btn-map-confirm {
-    width: 100%;
-    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.825rem;
+    white-space: nowrap;
+  }
+
+  .btn-confirm-text-full {
+    display: none;
+  }
+
+  .btn-confirm-text-short {
+    display: inline;
   }
 
   .terms-modal-footer {
