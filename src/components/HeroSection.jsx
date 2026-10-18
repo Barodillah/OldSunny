@@ -160,6 +160,7 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
                   }
                   else if (card.id === 'vehicles') navigate('/vehicles')
                   else if (card.id === 'trust') navigate('/organization')
+                  else if (card.id === 'booking') navigate('/booking')
                   else if (card.id === 'emergency') onSelectEmergency()
                   else onSelectService()
                 }}

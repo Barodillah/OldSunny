@@ -62,7 +62,7 @@ export default function Contact({ onOpenAiChat }) {
   // Scroll to top on mount and set page title
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
-    document.title = 'Hubungi Kami & Asisten Sunny | Dealer Resmi Mitsubishi Sun Star Prima Motor Bekasi'
+    document.title = 'Hubungi Kami & Asisten Sunny | Dealer Resmi Mitsubishi Sun Margahayu'
   }, [])
 
   const handleCopyBank = () => {
@@ -98,7 +98,7 @@ export default function Contact({ onOpenAiChat }) {
 
   // Pre-formatted WhatsApp text for Form 2 (Hubungi Saya)
   const waContactMessage = encodeURIComponent(
-    `Halo Admin Mitsubishi Sun Bekasi, saya *${contactName}* ingin dihubungi kembali oleh tim sales/layanan via WhatsApp: ${contactPhone}`
+    `Halo Admin Mitsubishi Sun Margahayu, saya *${contactName}* ingin dihubungi kembali oleh tim sales/layanan via WhatsApp: ${contactPhone}`
   )
 
   // Pre-formatted WhatsApp text for Form 3 (Lapor Keluhan)
@@ -109,7 +109,7 @@ export default function Contact({ onOpenAiChat }) {
       : 'Bodi & Cat (Body & Paint)'
 
   const waComplaintMessage = encodeURIComponent(
-    `Halo Tim Manajemen & CSM Mitsubishi Sun Bekasi, saya ingin menyampaikan laporan keluhan:\n` +
+    `Halo Tim Manajemen & CSM Mitsubishi Sun Margahayu, saya ingin menyampaikan laporan keluhan:\n` +
     `• Jenis Layanan: ${complaintTypeLabel}\n` +
     `• Nama: ${complaintName}\n` +
     `• No. WhatsApp: ${complaintPhone}\n` +
@@ -170,7 +170,7 @@ export default function Contact({ onOpenAiChat }) {
             </div>
             <h2 className="channel-title">Hotline Darurat (SOS)</h2>
             <p className="channel-desc">
-              Kendaraan mogok, kendala mesin, atau butuh armada derek darurat di area Bekasi & Jabodetabek 24/7.
+              Kendaraan mogok, kendala mesin, atau butuh bantuan Service on Road di area Bekasi & Jabodetabek 24/7.
             </p>
             <a href="tel:02188347777" className="channel-action-btn btn-emergency">
               <HiOutlinePhone size={18} />
@@ -360,7 +360,7 @@ export default function Contact({ onOpenAiChat }) {
                     </div>
                     <h4 className="success-title">Permintaan Diterima!</h4>
                     <p className="success-desc">
-                      Terima kasih, <strong>{contactName}</strong>. Konsultan resmi Mitsubishi Sun Bekasi akan segera menghubungi nomor WhatsApp <strong>{contactPhone}</strong> Anda.
+                      Terima kasih, <strong>{contactName}</strong>. Konsultan resmi Mitsubishi Sun Margahayu akan segera menghubungi nomor WhatsApp <strong>{contactPhone}</strong> Anda.
                     </p>
                     <div className="success-actions-wrap">
                       <a
@@ -716,7 +716,7 @@ export default function Contact({ onOpenAiChat }) {
             <div className="map-header-bar">
               <div className="map-header-left">
                 <span className="map-kicker">Lokasi Dealer Resmi</span>
-                <h3 className="map-dealer-name">MITSUBISHI BEKASI TIMUR (PT. SUN STAR PRIMA MOTOR) OFFICIAL</h3>
+                <h3 className="map-dealer-name">MITSUBISHI SUN MARGAHAYU (PT. SUN STAR PRIMA MOTOR) OFFICIAL</h3>
                 <p className="map-address-text">
                   Jl. Ir. H. Juanda No. 35 Bulak Kapal, RT.001/RW.001, Aren Jaya, Kec. Bekasi Timur, Kota Bekasi, Jawa Barat 17111
                 </p>
@@ -736,7 +736,7 @@ export default function Contact({ onOpenAiChat }) {
 
             <div className="map-iframe-container">
               <iframe
-                title="Peta Lokasi MITSUBISHI BEKASI TIMUR (PT.SUN STAR PRIMA MOTOR) OFFICIAL"
+                title="Peta Lokasi MITSUBISHI SUN MARGAHAYU (PT. SUN STAR PRIMA MOTOR) OFFICIAL"
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.097769966587!2d107.02451547363883!3d-6.250846761200644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e698fa99dbded31%3A0x19c817d443b35a3a!2sMITSUBISHI%20BEKASI%20TIMUR%20(PT.SUN%20STAR%20PRIMA%20MOTOR)%20OFFICIAL!5e0!3m2!1sid!2sid!4v1792233105635!5m2!1sid!2sid"
                 className="map-iframe"
                 style={{ border: 0 }}
@@ -759,7 +759,7 @@ export default function Contact({ onOpenAiChat }) {
                 </span>
                 <span className="perk-pill">
                   <RiToolsLine className="perk-pill-icon" />
-                  <span>Shuttle Bus Antar Jemput</span>
+                  <span>Shuttle Service</span>
                 </span>
                 <span className="perk-pill">
                   <HiOutlineSparkles className="perk-pill-icon" />

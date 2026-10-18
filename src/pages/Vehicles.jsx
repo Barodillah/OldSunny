@@ -265,7 +265,7 @@ export default function Vehicles() {
             <div className="hero-top-badge-row">
               <span className="hero-brand-pill">
                 <span className="dot" />
-                Mitsubishi Sun Bekasi
+                Mitsubishi Sun Margahayu
               </span>
               <span className="hero-period-tag">
                 Pricelist Resmi • {vehicleData.meta?.periode || 'Oktober 2026'}
@@ -296,7 +296,7 @@ export default function Vehicles() {
               <Link
                 to="/sales"
                 className="hero-btn-secondary"
-                title="Pilih Wiraniaga Terbaik Mitsubishi Sun Bekasi"
+                title="Pilih Wiraniaga Terbaik Mitsubishi Sun Margahayu"
               >
                 <RiAwardLine size={18} />
                 <span>Pilih Sales Terbaik</span>
@@ -637,7 +637,7 @@ export default function Vehicles() {
                 to="/sales"
                 className="modal-sales-btn"
                 onClick={() => setSelectedVehicle(null)}
-                title="Pilih Sales Terbaik Mitsubishi Sun Bekasi"
+                title="Pilih Sales Terbaik Mitsubishi Sun Margahayu"
               >
                 <RiAwardLine size={18} />
                 <span>Pilih Sales Terbaik</span>

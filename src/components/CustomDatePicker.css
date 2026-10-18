@@ -1,0 +1,198 @@
+/* ==========================================================================
+   CUSTOM DATE PICKER - STYLES
+   Minimalist, Clean, Interactive Calendar for Mitsubishi Booking Service
+   ========================================================================== */
+
+.custom-calendar-root {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  user-select: none;
+}
+
+/* Quick Select Pills */
+.calendar-quick-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.quick-date-pill {
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-date-pill:hover {
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+  color: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* Header Month / Year & Arrows */
+.calendar-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.15rem 0.25rem;
+}
+
+.calendar-nav-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.calendar-nav-btn:hover:not(:disabled) {
+  background-color: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+.calendar-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+.calendar-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.calendar-month-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.calendar-year-num {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* Day Names Header */
+.calendar-weekdays-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  padding: 0.25rem 0;
+}
+
+.calendar-weekday-cell.is-sunday-head {
+  color: #ef4444;
+}
+
+/* Day Cells Matrix */
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day-cell {
+  position: relative;
+  aspect-ratio: 1;
+  min-height: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.calendar-day-cell.is-outside-month {
+  opacity: 0.2;
+  color: #94a3b8;
+  cursor: default;
+}
+
+.calendar-day-cell.is-disabled {
+  opacity: 0.3;
+  color: #94a3b8;
+  cursor: not-allowed;
+  background-color: transparent !important;
+}
+
+.calendar-day-cell:hover:not(:disabled):not(.is-outside-month):not(.is-selected) {
+  background-color: #fef2f2;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.calendar-day-cell.is-today:not(.is-selected) {
+  border: 1.5px solid #f87171;
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.calendar-day-cell.is-sunday:not(.is-selected):not(.is-disabled) {
+  color: #dc2626;
+}
+
+.calendar-day-cell.is-selected {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.35);
+  transform: scale(1.02);
+}
+
+.today-dot-indicator {
+  position: absolute;
+  bottom: 3px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #dc2626;
+}
+
+/* Footer note */
+.calendar-footer-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  color: #64748b;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
+  text-align: center;
+}
+
+.footer-note-icon {
+  color: #dc2626;
+  flex-shrink: 0;
+}

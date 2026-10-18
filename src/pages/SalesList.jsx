@@ -8,9 +8,7 @@ import {
   HiOutlineUser,
   HiOutlineCheckBadge,
   HiOutlineSparkles,
-  HiOutlineMapPin,
-  HiOutlineInformationCircle,
-  HiStar
+  HiOutlineInformationCircle
 } from 'react-icons/hi2'
 import {
   RiAwardLine,
@@ -48,7 +46,7 @@ export default function SalesList() {
   const openWhatsApp = (consultant) => {
     const text = encodeURIComponent(
       consultant.whatsappMessage ||
-      `Halo Bpk/Ibu ${consultant.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Mitsubishi Sun Bekasi.`
+      `Halo Bpk/Ibu ${consultant.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Mitsubishi Sun Margahayu.`
     )
     window.open(`https://wa.me/${consultant.whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer')
   }
@@ -74,7 +72,6 @@ export default function SalesList() {
         (item) =>
           item.name.toLowerCase().includes(q) ||
           item.specialization.toLowerCase().includes(q) ||
-          item.branch.toLowerCase().includes(q) ||
           item.nik.toLowerCase().includes(q) ||
           item.rank.includes(q)
       )
@@ -328,7 +325,7 @@ export default function SalesList() {
               <HiOutlineMagnifyingGlass className="ranked-search-icon" size={18} />
               <input
                 type="text"
-                placeholder="Cari nama, NIK, cabang, spesialisasi..."
+                placeholder="Cari nama, NIK, spesialisasi..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Cari wiraniaga per peringkat"
@@ -382,9 +379,17 @@ export default function SalesList() {
                       <span className="ranked-num-val">{sales.rank}</span>
                     </div>
 
-                    {/* Avatar Initials Circle */}
+                    {/* Avatar Photo / Initials */}
                     <div className="ranked-avatar-circle">
-                      <span>{sales.initials || 'SL'}</span>
+                      {sales.photoUrl ? (
+                        <img
+                          src={sales.photoUrl}
+                          alt={sales.name}
+                          className="ranked-avatar-img"
+                        />
+                      ) : (
+                        <span>{sales.initials || 'SL'}</span>
+                      )}
                     </div>
 
                     {/* Consultant Primary Meta */}
@@ -409,8 +414,8 @@ export default function SalesList() {
                       </div>
                       <p className="spec-focus-desc">{sales.specialization}</p>
                       <p className="spec-branch-meta">
-                        <HiOutlineMapPin size={13} />
-                        <span>{sales.branch} • {sales.tenure} Pengalaman</span>
+                        <HiOutlineCheckBadge size={13} className="text-emerald" />
+                        <span>Pengalaman {sales.tenure} • {sales.joinedSince}</span>
                       </p>
                     </div>
 
@@ -425,9 +430,9 @@ export default function SalesList() {
                         <strong className="score-val">{sales.csiScore.split('/')[0].trim()}</strong>
                       </div>
                       <div className="score-pill">
-                        <span className="score-lbl">Rating</span>
-                        <strong className="score-val score-val-star">
-                          <HiStar size={13} className="star-icon" /> {sales.customerVoiceScore.split(' ')[0]}
+                        <span className="score-lbl">PKT Time Rate</span>
+                        <strong className="score-val score-val-pkt">
+                          {sales.pktTimeRate || '3 Hari'}
                         </strong>
                       </div>
                     </div>
@@ -524,16 +529,13 @@ export default function SalesList() {
                     <p className="modal-consultant-nik">
                       NIK: <strong>{selectedConsultantModal.nik}</strong> • {selectedConsultantModal.joinedSince}
                     </p>
-                    <p className="modal-consultant-branch">
-                      <HiOutlineMapPin size={14} /> {selectedConsultantModal.branch}
-                    </p>
                     <p className="modal-consultant-role">
                       {selectedConsultantModal.title}
                     </p>
                   </div>
                 </div>
 
-                {/* Metrics: NPS, Tenure, CSI */}
+                {/* Metrics: NPS, CSI, PKT Time Rate */}
                 <div className="modal-metrics-grid">
                   <div className="modal-metric-card">
                     <span className="modal-metric-label">Skor NPS</span>
@@ -541,14 +543,14 @@ export default function SalesList() {
                     <span className="modal-metric-sub">Net Promoter Score</span>
                   </div>
                   <div className="modal-metric-card">
-                    <span className="modal-metric-label">Lama Bekerja</span>
-                    <span className="modal-metric-number">{selectedConsultantModal.tenure}</span>
-                    <span className="modal-metric-sub">{selectedConsultantModal.joinedSince}</span>
-                  </div>
-                  <div className="modal-metric-card">
                     <span className="modal-metric-label">Indeks CSI</span>
                     <span className="modal-metric-number">{selectedConsultantModal.csiScore || '98.0 / 100'}</span>
                     <span className="modal-metric-sub">Customer Service</span>
+                  </div>
+                  <div className="modal-metric-card">
+                    <span className="modal-metric-label">PKT Time Rate</span>
+                    <span className="modal-metric-number text-emerald">{selectedConsultantModal.pktTimeRate || '3 Hari'}</span>
+                    <span className="modal-metric-sub">Rata-rata SPK ke PKT</span>
                   </div>
                 </div>
 

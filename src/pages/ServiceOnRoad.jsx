@@ -17,7 +17,7 @@ import {
 import { RiWhatsappLine, RiCarLine } from 'react-icons/ri'
 import './ServiceOnRoad.css'
 
-// Default center: Showroom Mitsubishi Sun Star Prima Motor Bekasi Timur
+// Default center: Showroom Mitsubishi Sun Star Prima Motor Margahayu
 const DEFAULT_CENTER = {
   lat: -6.2508468,
   lng: 107.0245155
@@ -268,9 +268,9 @@ export default function ServiceOnRoad() {
   const handleFinalConfirmDispatch = () => {
     const mapsUrl = `https://maps.google.com/?q=${formData.latitude},${formData.longitude}`
     const message = [
-      `*PERMINTAAN SERVICE ON ROAD - MITSUBISHI SUN BEKASI*`,
+      `*PERMINTAAN SERVICE ON ROAD - MITSUBISHI SUN MARGAHAYU*`,
       ``,
-      `Halo Dispatcher Bengkel Resmi Mitsubishi Sun Star Prima Motor Bekasi Timur, saya membutuhkan kedatangan teknisi darurat Service On Road untuk kendaraan mogok:`,
+      `Halo Dispatcher Bengkel Resmi Mitsubishi Sun Star Prima Motor Margahayu, saya membutuhkan kedatangan teknisi darurat Service On Road untuk kendaraan mogok:`,
       ``,
       `• *Nama Pelapor:* ${formData.nama}`,
       `• *No. WhatsApp:* ${formData.whatsapp}`,
@@ -315,7 +315,7 @@ export default function ServiceOnRoad() {
             </div>
             <h2 className="success-title">Permintaan Kunjungan Berhasil Terkirim</h2>
             <p className="success-desc">
-              Data laporan Anda telah diteruskan ke Dispatcher Bengkel Resmi PT Sun Star Prima Motor Bekasi Timur via WhatsApp.
+              Data laporan Anda telah diteruskan ke Dispatcher Bengkel Resmi PT Sun Star Prima Motor Margahayu via WhatsApp.
               Tim teknisi kami akan segera memverifikasi ketersediaan armada dan menghubungi nomor WhatsApp Anda.
             </p>
 
@@ -553,7 +553,7 @@ export default function ServiceOnRoad() {
             <div className="sor-notice-bar">
               <HiOutlineExclamationTriangle size={18} className="notice-icon" />
               <span>
-                Teknisi Service On Road beroperasi pada jam kerja bengkel (08.00 – 16.30 WIB). Untuk kondisi darurat tengah malam atau derek towing jalan tol, hubungi hotline siaga.
+                Teknisi Service On Road beroperasi pada jam kerja bengkel (08.00 – 16.30 WIB). Untuk bantuan teknis darurat atau informasi Service on Road, hubungi hotline siaga.
               </span>
             </div>
 

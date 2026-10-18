@@ -124,7 +124,7 @@ graph TD
 
 ### 4.2 Section 2: Services Section (Jelajah Layanan)
 - **Mekanika GSAP ScrollTrigger Pinning:** Section melakukan *pinning* horizontal/vertikal bertahap saat digulir (*scrub scroll*).
-- **Layanan Inti:** Perawatan Berkala Standar Pabrikan, Suku Cadang Orisinal Bersertifikat, Perbaikan Bodi & Cat Presisi, serta Layanan Derek Darurat 24/7 (SOS).
+- **Layanan Inti:** Perawatan Berkala Standar Pabrikan, Suku Cadang Orisinal Bersertifikat, Perbaikan Bodi & Cat Presisi, serta Layanan Service on Road.
 
 ### 4.3 Section 3: FeaturedVehiclesSection (3 Varian Utama)
 - **Latar Belakang Video Ambient:** Mengintegrasikan video latar belakang bersuara bisu (*muted autoplay video* `url_6acb321e18d7d3.92845255.mp4`) berulang halus (*loop*) dengan lapisan gradasi transparan gelap untuk menjaga keterbacaan teks.

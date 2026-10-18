@@ -82,13 +82,13 @@ export default function ArticleDetail() {
 
   const handleShareWhatsApp = () => {
     if (!article) return
-    const text = `Baca informasi menarik dari Dealer Mitsubishi Sun Bekasi: "${article.title}" di ${window.location.href}`
+    const text = `Baca informasi menarik dari Dealer Mitsubishi Sun Margahayu: "${article.title}" di ${window.location.href}`
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank')
   }
 
   const handleShareTwitter = () => {
     if (!article) return
-    const text = `${article.title} - Mitsubishi Sun Star Prima Motor Bekasi`
+    const text = `${article.title} - Mitsubishi Sun Star Prima Motor Margahayu`
     window.open(
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(
         window.location.href
@@ -207,7 +207,7 @@ export default function ArticleDetail() {
               </div>
               <div className="author-details">
                 <span className="author-name">{article.author || 'Tim Redaksi Mitsubishi Sun'}</span>
-                <span className="author-role">{article.authorRole || 'Dealer Resmi Sun Star Prima Motor Bekasi'}</span>
+                <span className="author-role">{article.authorRole || 'Dealer Resmi Sun Star Prima Motor Margahayu'}</span>
               </div>
             </div>
 
@@ -293,7 +293,7 @@ export default function ArticleDetail() {
             />
           </div>
           <figcaption className="article-hero-caption">
-            Dokumentasi resmi layanan & unit di dealer PT Sun Star Prima Motor Bekasi. Seluruh materi hak cipta dilindungi.
+            Dokumentasi resmi layanan & unit di dealer PT Sun Star Prima Motor Margahayu. Seluruh materi hak cipta dilindungi.
           </figcaption>
         </figure>
 
@@ -379,7 +379,7 @@ export default function ArticleDetail() {
                   </span>
                 </div>
                 <p className="author-card-desc">
-                  Artikel ini disusun dan diverifikasi langsung oleh divisi operasional PT Sun Star Prima Motor Bekasi untuk memastikan keterbukaan informasi dan kepuasan pemilik kendaraan Mitsubishi.
+                  Artikel ini disusun dan diverifikasi langsung oleh divisi operasional PT Sun Star Prima Motor Margahayu untuk memastikan keterbukaan informasi dan kepuasan pemilik kendaraan Mitsubishi.
                 </p>
               </div>
             </section>

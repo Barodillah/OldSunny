@@ -145,7 +145,7 @@ export default function News() {
                         <span className="news-hero-pulse-dot"></span>
                         <span className="news-hero-badge-title">News & Update</span>
                         <span className="news-hero-badge-divider">•</span>
-                        <span className="news-hero-badge-sub">PT Sun Star Prima Motor Bekasi</span>
+                        <span className="news-hero-badge-sub">PT Sun Star Prima Motor Margahayu</span>
                       </div>
 
                       <div className="news-hero-counter-pill">

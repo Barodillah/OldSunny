@@ -71,11 +71,11 @@ const NAV_MEGA_MENUS = {
       }
     ]
   },
-  memoriable: {
-    id: 'memoriable',
-    title: 'Memoriable Experience',
+  memorable: {
+    id: 'memorable',
+    title: 'Memorable Experience',
     acronym: 'M',
-    rest: 'emoriable Experience',
+    rest: 'emorable Experience',
     defaultImage: 'https://bewhy.id/wp-content/uploads/url_6acf48c9b8f122.20055577.webp',
     links: [
       {
@@ -223,7 +223,7 @@ export default function Navbar({ onOpenEmergency }) {
     if (menuKey === 'one') {
       return path === '/organization' || path === '/about' || path === '/struktur-organisasi' || path === '/sales' || path === '/sales-list'
     }
-    if (menuKey === 'memoriable') {
+    if (menuKey === 'memorable') {
       return path === '/news' || path.startsWith('/news/') || path.startsWith('/article/')
     }
     if (menuKey === 'empathy') {
@@ -250,7 +250,7 @@ export default function Navbar({ onOpenEmergency }) {
             onError={(e) => {
               e.currentTarget.src = '/logo-brand.webp'
             }}
-            alt="Sunny Brand Logo"
+            alt="Sun Margahayu Brand Logo"
             className="brand-logo-img"
           />
           <span className="minimal-brand-name">Sunny</span>
@@ -316,25 +316,25 @@ export default function Navbar({ onOpenEmergency }) {
               </button>
             </li>
 
-            {/* 4. Memoriable Experience (M) - Expand on hover */}
+            {/* 4. Memorable Experience (M) - Expand on hover */}
             <li
               className="nav-item-mega"
-              onMouseEnter={() => handleMenuHoverOpen('memoriable')}
+              onMouseEnter={() => handleMenuHoverOpen('memorable')}
             >
               <button
                 type="button"
-                className={`nav-mega-trigger nav-expandable ${activeMegaMenu === 'memoriable' ? 'is-open' : ''} ${isMenuRouteActive('memoriable') ? 'is-route-active' : ''}`}
+                className={`nav-mega-trigger nav-expandable ${activeMegaMenu === 'memorable' ? 'is-open' : ''} ${isMenuRouteActive('memorable') ? 'is-route-active' : ''}`}
                 onClick={() => {
-                  if (activeMegaMenu === 'memoriable') {
+                  if (activeMegaMenu === 'memorable') {
                     setActiveMegaMenu(null)
                   } else {
-                    handleMenuHoverOpen('memoriable')
+                    handleMenuHoverOpen('memorable')
                   }
                 }}
-                aria-expanded={activeMegaMenu === 'memoriable'}
-                title="Memoriable Experience - Berita, Inovasi & Panduan"
+                aria-expanded={activeMegaMenu === 'memorable'}
+                title="Memorable Experience - Berita, Inovasi & Panduan"
               >
-                <span className="nav-main-part"><span className="acronym-letter">M</span><span className="acronym-rest">emoriable</span></span>
+                <span className="nav-main-part"><span className="acronym-letter">M</span><span className="acronym-rest">emorable</span></span>
                 <span className="nav-expand-suffix">Experience</span>
               </button>
             </li>
@@ -374,7 +374,7 @@ export default function Navbar({ onOpenEmergency }) {
             <HiOutlinePhone size={17} />
           </button>
 
-          <Link to="/about" className="minimal-action-btn user-avatar-btn" title="Profil Mitsubishi Sun Bekasi">
+          <Link to="/about" className="minimal-action-btn user-avatar-btn" title="Profil Mitsubishi Sun Margahayu">
             <HiOutlineUser size={18} />
           </Link>
 

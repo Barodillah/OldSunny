@@ -37,8 +37,8 @@ const MASCOT_EXPRESSIONS = [
     id: 'berempati',
     label: 'Bantuan Darurat',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad09424ad3533.63395686.png',
-    bubbleNote: 'Mobil ada kendala di jalan? Tim derek & montir SOS kami siap meluncur 24/7!',
-    badge: 'Darurat SOS 24/7'
+    bubbleNote: 'Mobil ada kendala di jalan? Tim Service on Road & teknisi kami siap meluncur!',
+    badge: 'Service on Road'
   }
 ]
 
@@ -114,12 +114,12 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
       }
       setIsOpen(true)
       const userMsg = `Saya ingin konsultasi mengenai: ${prefilledAction.title || prefilledAction}`
-      let aiReply = `Baik, mengenai ${prefilledAction.title || prefilledAction}, sistem kami terintegrasi langsung dengan database bengkel dan inventaris Mitsubishi Sun Bekasi. Anda ingin kami bantu periksa jadwal terdekat atau estimasi biayanya?`
+      let aiReply = `Baik, mengenai ${prefilledAction.title || prefilledAction}, sistem kami terintegrasi langsung dengan database bengkel dan inventaris Mitsubishi Sun Margahayu. Anda ingin kami bantu periksa jadwal terdekat atau estimasi biayanya?`
 
       if (prefilledAction.id === 'service_on_road') {
         aiReply = `LAYANAN SERVICE ON ROAD: Teknisi mekanik resmi kami siap meluncur ke lokasi khusus untuk kendaraan yang tidak bisa menyala atau tidak dapat dikendarai. Layanan ini beroperasi sesuai jam kerja resmi bengkel (Senin - Sabtu 08.00 - 16.30 WIB). Silakan sebutkan model mobil dan titik lokasi Anda.`
       } else if (prefilledAction.id === 'emergency') {
-        aiReply = `PERINGATAN LAYANAN DARURAT: Tim teknisi darurat dan armada derek kami siaga 24 jam. Pastikan kendaraan Anda berada di area aman. Silakan ketik lokasi terkini Anda atau hubungi nomor darurat kami segera.`
+        aiReply = `LAYANAN SERVICE ON ROAD: Tim teknisi Service on Road kami siap membantu kendala kendaraan Anda di lokasi. Pastikan kendaraan Anda berada di area aman. Silakan ketik lokasi terkini Anda atau hubungi nomor darurat kami segera.`
       }
 
       setMessages((prev) => [
@@ -142,7 +142,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
     setMessages((prev) => [...prev, { sender: 'user', text: query }])
 
     setTimeout(() => {
-      let reply = `Terima kasih telah menanyakan tentang "${query}". Tim Mitsubishi Sun Bekasi siap melayani kebutuhan Anda secara transparan.`
+      let reply = `Terima kasih telah menanyakan tentang "${query}". Tim Mitsubishi Sun Margahayu siap melayani kebutuhan Anda secara transparan.`
       const lower = query.toLowerCase()
       if (
         lower.includes('servis') ||
@@ -150,7 +150,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
         lower.includes('booking') ||
         lower.includes('jadwal')
       ) {
-        reply = `Jadwal servis terdekat yang tersedia hari ini di Bengkel Resmi Mitsubishi Sun Bekasi berada pada pukul 13:30 dan 15:00 WIB. Mekanik bersertifikasi kami siap melayani servis berkala, ganti oli resmi, dan tune-up tanpa antre.`
+        reply = `Jadwal servis terdekat yang tersedia hari ini di Bengkel Resmi Mitsubishi Sun Margahayu berada pada pukul 13:30 dan 15:00 WIB. Mekanik bersertifikasi kami siap melayani servis berkala, ganti oli resmi, dan tune-up tanpa antre.`
       } else if (
         lower.includes('kredit') ||
         lower.includes('cicilan') ||
@@ -158,20 +158,20 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
         lower.includes('harga') ||
         lower.includes('simulasi')
       ) {
-        reply = `Simulasi kredit di Mitsubishi Sun Bekasi 100% transparan: suku bunga resmi lembaga pembiayaan terdaftar OJK tanpa mark-up provisi tersembunyi. DP mulai 15% dengan tenor hingga 60 bulan. Silakan sebutkan model mobil yang ingin Anda simulasikan.`
+        reply = `Simulasi kredit di Mitsubishi Sun Margahayu 100% transparan: suku bunga resmi lembaga pembiayaan terdaftar OJK tanpa mark-up provisi tersembunyi. DP mulai 15% dengan tenor hingga 60 bulan. Silakan sebutkan model mobil yang ingin Anda simulasikan.`
       } else if (
         lower.includes('darurat') ||
-        lower.includes('derek') ||
+        lower.includes('service on road') ||
         lower.includes('mogok') ||
         lower.includes('bantuan')
       ) {
-        reply = `PERINGATAN SIAGA DARURAT 24 JAM: Armada derek towing dan teknisi darurat kami langsung diterjunkan ke lokasi Anda. Hubungi Hotline Darurat di (021) 8834 7777 atau cantumkan nomor telepon & titik lokasi Anda saat ini.`
+        reply = `LAYANAN SERVICE ON ROAD: Tim teknisi Service on Road resmi kami siap meluncur ke lokasi Anda untuk menangani kendala teknis kendaraan di tempat. Untuk bantuan segera, hubungi Hotline di (021) 8834 7777 atau isi formulir Service on Road di website.`
       } else if (
         lower.includes('suku cadang') ||
         lower.includes('sparepart') ||
         lower.includes('oli')
       ) {
-        reply = `Semua suku cadang dan pelumas di Bengkel Mitsubishi Sun Bekasi dijamin 100% Original Equipment Manufacturer (OEM) berbarcode resmi dengan garansi penggantian hingga 1 tahun.`
+        reply = `Semua suku cadang dan pelumas di Bengkel Mitsubishi Sun Margahayu dijamin 100% Original Equipment Manufacturer (OEM) berbarcode resmi dengan garansi penggantian hingga 1 tahun.`
       } else if (
         lower.includes('rekening') ||
         lower.includes('legalitas') ||
@@ -342,7 +342,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
               <button
                 type="button"
                 className="shortcut-chip shortcut-chip-emergency"
-                onClick={() => sendQuery('Bantuan darurat mobil mogok & derek')}
+                onClick={() => sendQuery('Bantuan darurat mobil mogok & Service on Road')}
               >
                 <HiOutlinePhone size={13} />
                 <span>Bantuan Darurat</span>

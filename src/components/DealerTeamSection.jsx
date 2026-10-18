@@ -10,21 +10,21 @@ const TEAM_SHOWCASE = [
     id: 'dkt-tim',
     title: 'Dealer Kaizen Team',
     role: 'Divisi Komersial & Teknis',
-    company: 'at Mitsubishi Sun Bekasi®',
+    company: 'at Mitsubishi Sun Margahayu®',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad20f3f4c1a78.73235556.jpeg',
   },
   {
     id: 'frontliner-tim',
     title: 'Frontliner Team',
     role: 'Pelayanan & Customer Relations',
-    company: 'at Mitsubishi Sun Bekasi®',
+    company: 'at Mitsubishi Sun Margahayu®',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acfe735e4a127.45708367.jpeg',
   },
   {
     id: 'operational-pelayanan',
     title: 'Operational Pelayanan',
     role: 'Operasional & Layanan Pelanggan',
-    company: 'at Mitsubishi Sun Bekasi®',
+    company: 'at Mitsubishi Sun Margahayu®',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acd9f987280e1.14368522.jpeg',
   },
 ]
@@ -235,7 +235,7 @@ export default function DealerTeamSection() {
           {/* LEFT SIDE: EDITORIAL & BRAND MANIFESTO */}
           <div className="dealer-team-left">
             {/* Top Brand Tag */}
-            <div className="team-brand-tag">Mitsubishi Sun Bekasi®</div>
+            <div className="team-brand-tag">Mitsubishi Sun Margahayu®</div>
 
             {/* Giant Title */}
             <h2 id="dealer-team-title" className="team-main-heading">

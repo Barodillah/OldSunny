@@ -61,7 +61,7 @@ export default function NewsSection() {
               News & Update
             </h2>
             <p className="news-section-desc">
-              Informasi terkini seputar rilis varian baru, edukasi transparansi transaksi, serta panduan perawatan berkala resmi dari Mitsubishi Sun Bekasi.
+              Informasi terkini seputar rilis varian baru, edukasi transparansi transaksi, serta panduan perawatan berkala resmi dari Mitsubishi Sun Margahayu.
             </p>
           </div>
 

@@ -202,7 +202,7 @@ export default function FeaturedVehiclesSection({ onSelectTestDrive }) {
                   </div>
                   <h4 className="success-title">Permintaan Test Drive Terkirim!</h4>
                   <p className="success-desc">
-                    Terima kasih, <strong>{formData.name || 'Bpk/Ibu'}</strong>. Tim konsultan resmi Sunny
+                    Terima kasih, <strong>{formData.name || 'Bpk/Ibu'}</strong>. Tim konsultan resmi Sun Margahayu
                     akan segera menghubungi Anda untuk konfirmasi jadwal uji jalan {activeModalVehicle.name}.
                   </p>
                   <button
@@ -262,7 +262,7 @@ export default function FeaturedVehiclesSection({ onSelectTestDrive }) {
                         onClick={() => setFormData({ ...formData, locationType: 'showroom' })}
                       >
                         <HiOutlineShieldCheck size={16} />
-                        <span>Di Showroom Sunny</span>
+                        <span>Di Showroom Sun Margahayu</span>
                       </button>
                     </div>
                   </div>

@@ -48,23 +48,23 @@ export default function Footer() {
         <div className="footer-container footer-grid-clean">
           {/* Kolom 1: Brand & Navigasi */}
           <div className="footer-clean-col footer-col-brand">
-            <Link to="/" className="footer-brand-logo" aria-label="Kembali ke Beranda Sunny">
+            <Link to="/" className="footer-brand-logo" aria-label="Kembali ke Beranda Sun Margahayu">
               <img
                 src="https://bewhy.id/wp-content/uploads/url_6acf112141e379.21076281.webp"
                 onError={(e) => {
                   e.currentTarget.src = '/logo-brand.webp'
                 }}
-                alt="Sunny Brand Logo"
+                alt="Sun Margahayu Brand Logo"
                 className="footer-logo-img"
               />
               <div className="footer-brand-meta">
                 <span className="footer-brand-name">Sunny</span>
-                <span className="footer-brand-tagline">Mitsubishi Sun Bekasi</span>
+                <span className="footer-brand-tagline">Mitsubishi Sun Margahayu</span>
               </div>
             </Link>
 
             <p className="footer-brand-desc">
-              Dealer resmi dan bengkel terpadu di Bekasi Timur. Melayani penjualan unit baru, servis berkala berstandar pabrikan, dan penyediaan suku cadang orisinal.
+              Dealer resmi dan bengkel terpadu Sun Margahayu. Melayani penjualan unit baru, servis berkala berstandar pabrikan, dan penyediaan suku cadang orisinal.
             </p>
 
             <nav className="footer-inline-nav" aria-label="Navigasi Footer">
@@ -128,7 +128,7 @@ export default function Footer() {
       <div className="footer-bottom-bar">
         <div className="footer-container footer-bottom-clean">
           <p className="footer-clean-copyright">
-            © {currentYear} Sunny - Mitsubishi Sun Bekasi. PT Sun Star Prima Motor. Hak cipta dilindungi.
+            © {currentYear} Mitsubishi Sun Margahayu. PT Sun Star Prima Motor. Hak cipta dilindungi.
           </p>
 
           <button

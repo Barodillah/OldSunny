@@ -10,8 +10,7 @@ import {
   HiOutlineMapPin,
   HiOutlineCheckBadge,
   HiOutlineInformationCircle,
-  HiOutlineSparkles,
-  HiStar
+  HiOutlineSparkles
 } from 'react-icons/hi2'
 import {
   RiAwardLine,
@@ -223,7 +222,7 @@ export default function SalesOfTheMonthSection() {
   const openWhatsApp = (consultant) => {
     const text = encodeURIComponent(
       consultant.whatsappMessage ||
-      `Halo Bpk/Ibu ${consultant.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Mitsubishi Sun Bekasi.`
+      `Halo Bpk/Ibu ${consultant.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Mitsubishi Sun Margahayu.`
     )
     window.open(`https://wa.me/${consultant.whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer')
   }
@@ -431,7 +430,7 @@ export default function SalesOfTheMonthSection() {
 
               <div className="pop-divider" />
 
-              {/* Detail Rows: Specialization & Branch */}
+              {/* Detail Rows: Specialization & Tenure */}
               <div className="pop-details-list">
                 <div className="pop-detail-item">
                   <HiOutlineSparkles size={14} className="pop-icon text-gold" />
@@ -442,15 +441,15 @@ export default function SalesOfTheMonthSection() {
                 </div>
 
                 <div className="pop-detail-item">
-                  <HiOutlineMapPin size={14} className="pop-icon text-red" />
+                  <HiOutlineCheckBadge size={14} className="pop-icon text-emerald" />
                   <div className="pop-detail-text">
-                    <span className="pop-detail-label">Cabang Showroom</span>
-                    <span className="pop-detail-val">{hoveredConsultant.branch}</span>
+                    <span className="pop-detail-label">Pengalaman Kerja</span>
+                    <span className="pop-detail-val">{hoveredConsultant.tenure} ({hoveredConsultant.joinedSince})</span>
                   </div>
                 </div>
               </div>
 
-              {/* Dual Metric Box Row: CSI Score & Customer Voice */}
+              {/* Dual Metric Box Row: CSI Score & PKT Time Rate */}
               <div className="pop-metrics-row">
                 <div className="pop-metric-box">
                   <span className="pop-metric-caption">Indeks CSI</span>
@@ -458,12 +457,12 @@ export default function SalesOfTheMonthSection() {
                   <span className="pop-metric-sub">Kepuasan Pelanggan</span>
                 </div>
                 <div className="pop-metric-box">
-                  <span className="pop-metric-caption">Ulasan Konsumen</span>
-                  <span className="pop-metric-value">
-                    <HiStar size={13} className="text-gold" /> {hoveredConsultant.customerVoiceScore.split('(')[0].trim()}
+                  <span className="pop-metric-caption">PKT Time Rate</span>
+                  <span className="pop-metric-value text-emerald">
+                    {hoveredConsultant.pktTimeRate || '3 Hari'}
                   </span>
                   <span className="pop-metric-sub">
-                    {hoveredConsultant.customerVoiceScore.match(/\((.*?)\)/)?.[0] || 'Terverifikasi'}
+                    Rata-rata SPK ke PKT
                   </span>
                 </div>
               </div>
@@ -542,16 +541,13 @@ export default function SalesOfTheMonthSection() {
                     <p className="modal-consultant-nik">
                       NIK: <strong>{selectedConsultantModal.nik}</strong> • {selectedConsultantModal.joinedSince}
                     </p>
-                    <p className="modal-consultant-branch">
-                      <HiOutlineMapPin size={14} /> {selectedConsultantModal.branch}
-                    </p>
                     <p className="modal-consultant-role">
                       {selectedConsultantModal.title}
                     </p>
                   </div>
                 </div>
 
-                {/* Metrics: NPS, CSI, Suara Konsumen */}
+                {/* Metrics: NPS, CSI, PKT Time Rate */}
                 <div className="modal-metrics-grid">
                   <div className="modal-metric-card">
                     <span className="modal-metric-label">Skor NPS</span>
@@ -559,14 +555,14 @@ export default function SalesOfTheMonthSection() {
                     <span className="modal-metric-sub">Net Promoter Score</span>
                   </div>
                   <div className="modal-metric-card">
-                    <span className="modal-metric-label">Lama Bekerja</span>
-                    <span className="modal-metric-number">{selectedConsultantModal.tenure}</span>
-                    <span className="modal-metric-sub">{selectedConsultantModal.joinedSince}</span>
-                  </div>
-                  <div className="modal-metric-card">
                     <span className="modal-metric-label">Indeks CSI</span>
                     <span className="modal-metric-number">{selectedConsultantModal.csiScore || '98.0 / 100'}</span>
                     <span className="modal-metric-sub">Customer Service</span>
+                  </div>
+                  <div className="modal-metric-card">
+                    <span className="modal-metric-label">PKT Time Rate</span>
+                    <span className="modal-metric-number text-emerald">{selectedConsultantModal.pktTimeRate || '3 Hari'}</span>
+                    <span className="modal-metric-sub">Rata-rata SPK ke PKT</span>
                   </div>
                 </div>
 

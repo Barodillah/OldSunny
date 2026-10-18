@@ -101,7 +101,7 @@ export default function Facilities({ onOpenAiChat }) {
   const exclusivePerks = [
     {
       id: 'shuttle-bus',
-      title: 'Shuttle Bus Antar Jemput Gratis',
+      title: 'Shuttle Service',
       tag: 'Mobilitas Tanpa Kendala',
       image: 'https://bewhy.id/wp-content/uploads/url_6ad2ddca853af5.69356084.jpg',
       lead: 'Tidak perlu menghabiskan hari hanya untuk menunggu mobil di bengkel. Armada shuttle resmi siap mengantar Anda ke tujuan terdekat.',
@@ -243,7 +243,7 @@ export default function Facilities({ onOpenAiChat }) {
   return (
     <main className="facilities-page-wrapper">
       {/* 1. HERO SECTION (Mirroring Reference: Red Architectural Theme & Editorial Typography) */}
-      <section className="fac-hero-section" aria-label="Fasilitas dan Hospitalitas Dealer Sunny">
+      <section className="fac-hero-section" aria-label="Fasilitas dan Hospitalitas Dealer Sun Margahayu">
         <div
           className="fac-hero-bg-media"
           style={{
@@ -257,7 +257,7 @@ export default function Facilities({ onOpenAiChat }) {
           {/* Top meta row */}
           <div className="fac-hero-meta-top">
             <div className="fac-hero-tag-pills">
-              <span className="fac-tag-pill">Dealer Sunny</span>
+              <span className="fac-tag-pill">Dealer Sun Margahayu</span>
               <span className="fac-tag-pill">Hospitalitas Bintang 5</span>
               <span className="fac-tag-pill pill-accent">Gratis Tanpa Biaya</span>
             </div>
@@ -319,7 +319,7 @@ export default function Facilities({ onOpenAiChat }) {
               <div className="fac-mini-card-thumb-wrap">
                 <img
                   src="https://bewhy.id/wp-content/uploads/asset_6acd9f98713da4.51834350.jpeg"
-                  alt="Suasana ruang tunggu nyaman dealer Sunny"
+                  alt="Suasana ruang tunggu nyaman dealer Sun Margahayu"
                   className="fac-mini-card-img"
                   loading="lazy"
                 />
@@ -435,7 +435,7 @@ export default function Facilities({ onOpenAiChat }) {
 
           <div className="fac-manifesto-footer-row">
             <p className="fac-manifesto-subcopy">
-              Kami percaya bahwa fasilitas dealer harus menghadirkan rasa tenang dan kepedulian tulus. Setiap sudut showroom dan bengkel resmi Sunny dirancang dengan empati, memberikan rasa aman layaknya rumah kedua bagi setiap pemilik kendaraan.
+              Kami percaya bahwa fasilitas dealer harus menghadirkan rasa tenang dan kepedulian tulus. Setiap sudut showroom dan bengkel resmi Sun Margahayu dirancang dengan empati, memberikan rasa aman layaknya rumah kedua bagi setiap pemilik kendaraan.
             </p>
 
             <div className="fac-manifesto-stats-wrap">
@@ -445,7 +445,7 @@ export default function Facilities({ onOpenAiChat }) {
               </div>
               <div className="fac-stat-block">
                 <span className="fac-stat-num">15 KM</span>
-                <span className="fac-stat-label">Jangkauan Shuttle Bus</span>
+                <span className="fac-stat-label">Jangkauan Shuttle Service</span>
               </div>
               <div className="fac-stat-block">
                 <span className="fac-stat-num">Wi-Fi 6</span>
@@ -469,7 +469,7 @@ export default function Facilities({ onOpenAiChat }) {
                 <HiOutlineShieldCheck size={16} />
                 <span>Piagam Resmi Hospitalitas</span>
               </div>
-              <h3 className="fac-caption-heading">Standar Komitmen Passion To Care Sunny</h3>
+              <h3 className="fac-caption-heading">Standar Komitmen Passion To Care Sun Margahayu</h3>
               <p className="fac-caption-desc">
                 Deklarasi resmi seluruh manajemen, tim teknisi, dan staf penyerahan kendaraan untuk melayani setiap pelanggan dengan kejujuran, ketepatan waktu, dan keramahan tanpa pamrih.
               </p>
@@ -641,14 +641,14 @@ export default function Facilities({ onOpenAiChat }) {
                 <span>Apakah seluruh fasilitas ini gratis digunakan?</span>
               </h3>
               <p className="fac-faq-a">
-                Ya, seluruh fasilitas seperti Shuttle Bus, Voucher Noah Coffee, Kids Zone Playground, Snack Corner, dan area kerja Wi-Fi 6 dapat dinikmati 100% gratis oleh setiap pelanggan showroom dan bengkel resmi Sunny.
+                Ya, seluruh fasilitas seperti Shuttle Service, Voucher Noah Coffee, Kids Zone Playground, Snack Corner, dan area kerja Wi-Fi 6 dapat dinikmati 100% gratis oleh setiap pelanggan showroom dan bengkel resmi Sun Margahayu.
               </p>
             </div>
 
             <div className="fac-faq-item">
               <h3 className="fac-faq-q">
                 <HiOutlineQuestionMarkCircle size={20} className="faq-icon" />
-                <span>Bagaimana cara memesan layanan Shuttle Bus?</span>
+                <span>Bagaimana cara memesan layanan Shuttle Service?</span>
               </h3>
               <p className="fac-faq-a">
                 Anda cukup menginformasikan rencana perjalanan Anda ke Service Advisor saat melakukan registrasi servis kendaraan, atau menanyakannya lebih awal ke Asisten AI Sunny. Staf kami akan menyiapkan pengemudi dan armada shuttle.
@@ -661,7 +661,7 @@ export default function Facilities({ onOpenAiChat }) {
                 <span>Berapa jam operasional Playground & Cafe Lounge?</span>
               </h3>
               <p className="fac-faq-a">
-                Fasilitas ramah keluarga dan lounge buka setiap hari mengikuti jadwal operasional bengkel resmi Sunny, mulai pukul 08.00 hingga 17.00 WIB.
+                Fasilitas ramah keluarga dan lounge buka setiap hari mengikuti jadwal operasional bengkel resmi Sun Margahayu, mulai pukul 08.00 hingga 17.00 WIB.
               </p>
             </div>
 
@@ -681,7 +681,7 @@ export default function Facilities({ onOpenAiChat }) {
             <div className="fac-cta-banner-left">
               <h3 className="fac-cta-banner-title">Punya Pertanyaan Spesifik tentang Kunjungan Anda?</h3>
               <p className="fac-cta-banner-desc">
-                Konsultasikan jadwal servis, ketersediaan shuttle bus, atau fasilitas lainnya secara langsung bersama Asisten AI Sunny 24 jam sehari.
+                Konsultasikan jadwal servis, ketersediaan shuttle service, atau fasilitas lainnya secara langsung bersama Asisten AI Sunny 24 jam sehari.
               </p>
             </div>
 
@@ -693,7 +693,7 @@ export default function Facilities({ onOpenAiChat }) {
                   if (onOpenAiChat) {
                     onOpenAiChat({
                       id: 'facilities_inquiry',
-                      title: 'Pertanyaan Fasilitas Dealer Sunny',
+                      title: 'Pertanyaan Fasilitas Dealer Sun Margahayu',
                     })
                   }
                 }}

@@ -20,7 +20,7 @@ const INACTIVE_STAFF_LIST = [
     formerBranch: 'Showroom BSD City',
     formerNik: 'SNY-SLS-0199',
     inactiveDate: '15 Januari 2024',
-    reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Bekasi',
+    reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Margahayu',
     photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
   },
   {
@@ -30,7 +30,7 @@ const INACTIVE_STAFF_LIST = [
     formerBranch: 'Showroom Pusat Sudirman',
     formerNik: 'SNY-SLS-0284',
     inactiveDate: '10 Agustus 2023',
-    reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Bekasi',
+    reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Margahayu',
     photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
   },
   {
@@ -250,7 +250,7 @@ export default function WarningNoticeSection() {
                   Daftar Sales & Karyawan Nonaktif
                 </h3>
                 <p className="warning-drawer-sub">
-                  Pihak di bawah ini sudah tidak terafiliasi dengan PT Sun Star Prima Motor Bekasi. Segala bentuk transaksi, janji unit, maupun penerimaan uang di luar kasir resmi adalah <strong>tidak sah</strong>.
+                  Pihak di bawah ini sudah tidak terafiliasi dengan PT Sun Star Prima Motor Margahayu. Segala bentuk transaksi, janji unit, maupun penerimaan uang di luar kasir resmi adalah <strong>tidak sah</strong>.
                 </p>
               </div>
               <button
@@ -348,7 +348,7 @@ export default function WarningNoticeSection() {
                 </span>
               </div>
               <a
-                href="https://wa.me/6281289001234?text=Halo%20Tim%20Keamanan%20Mitsubishi%20Sun%20Bekasi,%20saya%20ingin%20verifikasi%20keaslian%20sales/transaksi%20kendaraan."
+                href="https://wa.me/6281289001234?text=Halo%20Tim%20Keamanan%20Mitsubishi%20Sun%20Margahayu,%20saya%20ingin%20verifikasi%20keaslian%20sales/transaksi%20kendaraan."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-report-fraud"

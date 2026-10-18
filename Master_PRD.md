@@ -27,7 +27,7 @@ Asisten 24/7 dengan kepribadian ceria khas “teman nostalgia”. Menggunakan **
 |---------|-------------|-----------------|
 | **Booking Service** | Cek slot real‑time di kalender bengkel, langsung booking atau tawarkan alternatif. | `GET /api/services/slots`, `POST /api/services/book` |
 | **Sparepart** | Cek stok, harga, estimasi pengiriman. Bila kosong: alternatif atau pre‑order. | `GET /api/spareparts/stock` |
-| **Emergency** | Panduan cepat (posisi, tombol darurat), kontak derek terdekat, catat laporan darurat. | `POST /api/emergency/report` |
+| **Emergency** | Panduan cepat (posisi, tombol darurat), kontak Service on Road, catat laporan darurat. | `POST /api/emergency/report` |
 | **Promo & Test Drive** | Tampilkan promo relevan, langsung buat janji test drive. | `GET /api/promos`, `POST /api/testdrive/book` |
 | **Simulasi Kredit** | Hitung cicilan berdasarkan harga, DP, tenor (tanpa pindah halaman). | `POST /api/simulasi-kredit` |
 | **Body Paint** | Pilihan warna dari database, estimasi biaya & durasi. | `GET /api/bodypaint/options`, `POST /api/bodypaint/estimate` |

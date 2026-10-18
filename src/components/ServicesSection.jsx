@@ -20,7 +20,8 @@ import {
   HiOutlineCheckBadge,
   HiOutlineCursorArrowRays,
   HiOutlineKey,
-  HiOutlineTicket
+  HiOutlineTicket,
+  HiOutlineCalendar
 } from 'react-icons/hi2'
 import { RiCarLine } from 'react-icons/ri'
 
@@ -578,6 +579,18 @@ export default function ServicesSection({ onOpenAiWithService }) {
                           className="btn-panel-secondary"
                         >
                           <span>Struktur Organisasi</span>
+                          <HiOutlineArrowRight size={14} />
+                        </Link>
+                      </div>
+                    ) : item.id === 'booking' ? (
+                      <div className="panel-standard-btn-group">
+                        <Link to="/booking" className="btn-panel-primary">
+                          <HiOutlineCalendar size={17} />
+                          <span>Booking Slot Servis</span>
+                        </Link>
+
+                        <Link to="/booking" className="btn-panel-secondary">
+                          <span>Jadwalkan Servis</span>
                           <HiOutlineArrowRight size={14} />
                         </Link>
                       </div>

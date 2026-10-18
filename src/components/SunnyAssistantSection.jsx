@@ -26,7 +26,7 @@ const SUNNY_EXPRESSIONS = [
     shortTitle: 'Konsultasi',
     title: 'Sambutan & Konsultasi Ramah',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acffcd78c6424.40233068.png',
-    quote: 'Halo! Saya Sunny, asisten virtual resmi Mitsubishi Sun Bekasi. Siap bantu temukan kendaraan idaman Anda kapan saja!',
+    quote: 'Halo! Saya Sunny, asisten virtual resmi Mitsubishi Sun Margahayu. Siap bantu temukan kendaraan idaman Anda kapan saja!',
     badge: 'Aktif Siaga 24 Jam',
     icon: RiEmotionHappyLine,
     topicAction: {
@@ -65,15 +65,15 @@ const SUNNY_EXPRESSIONS = [
   {
     id: 'berempati',
     label: 'Berempati',
-    shortTitle: 'Darurat 24/7',
+    shortTitle: 'Darurat SOS',
     title: 'Bantuan Darurat (SOS)',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acffcd78bbb23.46001204.png',
-    quote: 'Mobil Anda mengalami kendala di jalan? Jangan panik, tim derek dan mekanik resmi kami siap meluncur ke lokasi Anda 24/7.',
-    badge: 'Layanan Derek 24/7',
+    quote: 'Mobil Anda mengalami kendala di jalan? Jangan panik, tim Service on Road dan teknisi resmi kami siap meluncur ke lokasi Anda.',
+    badge: 'Service on Road',
     icon: RiCustomerService2Line,
     topicAction: {
       id: 'emergency',
-      title: 'Bantuan Darurat 24/7 (SOS Derek & Teknisi Bengkel)',
+      title: 'Bantuan Darurat (Service on Road & Teknisi Bengkel)',
     },
   },
 ]
@@ -339,7 +339,7 @@ export default function SunnyAssistantSection({ onOpenAiChat, isHeader = false, 
 
             {/* Narrative Description Paragraph */}
             <p className="sunny-narrative-copy">
-              Kenalkan <strong>Sunny</strong>, asisten virtual resmi Mitsubishi Sun Bekasi. Siap mendampingi dan menjawab seluruh kebutuhan otomotif Anda 24 jam penuh: mulai dari konsultasi unit mobil, kalkulasi kredit terbuka tanpa biaya siluman, jadwal test drive, hingga proteksi keamanan transaksi dari oknum.
+              Kenalkan <strong>Sunny</strong>, asisten virtual resmi Mitsubishi Sun Margahayu. Siap mendampingi dan menjawab seluruh kebutuhan otomotif Anda 24 jam penuh: mulai dari konsultasi unit mobil, kalkulasi kredit terbuka tanpa biaya siluman, jadwal test drive, hingga proteksi keamanan transaksi dari oknum.
             </p>
 
             {/* UX SLIDER DENGAN ROTASI OTOMATIS SETIAP 3 DETIK */}

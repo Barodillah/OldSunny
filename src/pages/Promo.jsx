@@ -18,7 +18,7 @@ import {
 } from 'react-icons/ri'
 import './Promo.css'
 
-// 6 Promo & Event Data Items for Mitsubishi Sun Star Prima Motor Bekasi
+// 6 Promo & Event Data Items for Mitsubishi Sun Star Prima Motor Margahayu
 const PROMO_ITEMS = [
   {
     id: 'bunga-0-xforce-xpander',
@@ -120,7 +120,7 @@ const PROMO_ITEMS = [
       'Hadiah doorprize alat elektronik rumah tangga bagi SPK yang diterbitkan di lokasi event'
     ],
     terms: [
-      'Lokasi acara: Showroom Mitsubishi Sun Star Prima Motor Bekasi Timur (Jl. Ir. H. Juanda No. 35)',
+      'Lokasi acara: Showroom Mitsubishi Sun Star Prima Motor Margahayu (Jl. Ir. H. Juanda No. 35)',
       'Peserta test drive wajib membawa SIM A aktif yang masih berlaku',
       'Keluarga dan anak-anak dapat menikmati arena playground Kids Zone'
     ]
@@ -142,8 +142,8 @@ const PROMO_ITEMS = [
     ],
     terms: [
       'Wajib melakukan booking servis minimal 1 hari sebelumnya (H-1)',
-      'Berlaku di bengkel resmi Sun Star Prima Motor Bekasi Timur',
-      'Dapat digabungkan dengan fasilitas antar jemput shuttle bus gratis'
+      'Berlaku di bengkel resmi Sun Star Prima Motor Margahayu',
+      'Dapat digabungkan dengan fasilitas antar jemput shuttle service'
     ]
   }
 ]
@@ -165,7 +165,7 @@ export default function Promo({ onOpenAiChat }) {
 
   // WhatsApp link generator
   const createWhatsAppLink = (item) => {
-    const text = `Halo Dealer Mitsubishi Sun Star Prima Motor Bekasi Timur,\n\nSaya tertarik dengan penawaran:\n• Program: ${item.title}\n• Kategori: ${item.categoryLabel}\n• Unit: ${item.targetVehicles}\n\nMohon info simulasi detail dan persyaratan untuk klaim promo ini. Terima kasih!`
+    const text = `Halo Dealer Mitsubishi Sun Star Prima Motor Margahayu,\n\nSaya tertarik dengan penawaran:\n• Program: ${item.title}\n• Kategori: ${item.categoryLabel}\n• Unit: ${item.targetVehicles}\n\nMohon info simulasi detail dan persyaratan untuk klaim promo ini. Terima kasih!`
     return `https://wa.me/6281288347777?text=${encodeURIComponent(text)}`
   }
 
@@ -199,13 +199,13 @@ export default function Promo({ onOpenAiChat }) {
           </h1>
 
           <p className="promo-sub-heading">
-            Program penjualan resmi PT Sun Star Prima Motor Bekasi Timur. Penawaran bunga 0%, paket DP terjangkau,
+            Program penjualan resmi PT Sun Star Prima Motor Margahayu. Penawaran bunga 0%, paket DP terjangkau,
             subsidi tukar tambah tertinggi, serta gathering showroom berhadiah langsung bulan ini.
           </p>
 
           <div className="promo-hero-cta-row">
             <a
-              href="https://wa.me/6281288347777?text=Halo%20Sun%20Star%20Prima%20Motor%20Bekasi%2C%20saya%20ingin%20tanya%20promo%20resmi%20bulan%20ini."
+              href="https://wa.me/6281288347777?text=Halo%20Sun%20Star%20Prima%20Motor%20Margahayu%2C%20saya%20ingin%20tanya%20promo%20resmi%20bulan%20ini."
               target="_blank"
               rel="noopener noreferrer"
               className="btn-promo-hero-primary"

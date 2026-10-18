@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import {
   HiOutlineSparkles,
@@ -10,7 +10,11 @@ import {
   HiOutlineXMark,
   HiOutlineTag,
   HiOutlineSquares2X2,
-  HiOutlineCube
+  HiOutlineCube,
+  HiOutlineMagnifyingGlassPlus,
+  HiOutlineMagnifyingGlassMinus,
+  HiOutlineArrowsPointingOut,
+  HiOutlineArrowsPointingIn
 } from 'react-icons/hi2'
 import {
   RiWhatsappLine,
@@ -85,6 +89,122 @@ export default function Accessories({ onOpenAiChat }) {
   const [singleCategoryFilter, setSingleCategoryFilter] = useState('all') // 'all' | 'exterior' | 'interior'
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedModalItem, setSelectedModalItem] = useState(null)
+
+  // Full Image Preview Lightbox with Zoom & Pan state
+  const [previewImage, setPreviewImage] = useState(null)
+  const [zoomLevel, setZoomLevel] = useState(1)
+  const [panPosition, setPanPosition] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStartRef = useRef({ x: 0, y: 0 })
+
+  const openImagePreview = (item) => {
+    setPreviewImage({
+      src: item.img,
+      title: item.item,
+      price: item.price,
+      vehicle: activeVehicleInfo.shortName,
+      category: item.categoryLabel
+    })
+    setZoomLevel(1)
+    setPanPosition({ x: 0, y: 0 })
+  }
+
+  const closeImagePreview = () => {
+    setPreviewImage(null)
+    setZoomLevel(1)
+    setPanPosition({ x: 0, y: 0 })
+  }
+
+  const handleZoomIn = () => {
+    setZoomLevel((prev) => Math.min(Number((prev + 0.35).toFixed(2)), 3.5))
+  }
+
+  const handleZoomOut = () => {
+    setZoomLevel((prev) => {
+      const next = Math.max(Number((prev - 0.35).toFixed(2)), 0.6)
+      if (next <= 1) setPanPosition({ x: 0, y: 0 })
+      return next
+    })
+  }
+
+  const handleResetZoom = () => {
+    setZoomLevel(1)
+    setPanPosition({ x: 0, y: 0 })
+  }
+
+  const handleMouseDown = (e) => {
+    if (zoomLevel <= 1) return
+    setIsDragging(true)
+    dragStartRef.current = {
+      x: e.clientX - panPosition.x,
+      y: e.clientY - panPosition.y
+    }
+  }
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || zoomLevel <= 1) return
+    setPanPosition({
+      x: e.clientX - dragStartRef.current.x,
+      y: e.clientY - dragStartRef.current.y
+    })
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const handleTouchStart = (e) => {
+    if (zoomLevel <= 1 || e.touches.length !== 1) return
+    setIsDragging(true)
+    dragStartRef.current = {
+      x: e.touches[0].clientX - panPosition.x,
+      y: e.touches[0].clientY - panPosition.y
+    }
+  }
+
+  const handleTouchMove = (e) => {
+    if (!isDragging || zoomLevel <= 1 || e.touches.length !== 1) return
+    setPanPosition({
+      x: e.touches[0].clientX - dragStartRef.current.x,
+      y: e.touches[0].clientY - dragStartRef.current.y
+    })
+  }
+
+  const handleTouchEnd = () => {
+    setIsDragging(false)
+  }
+
+  const handleWheel = (e) => {
+    e.preventDefault()
+    if (e.deltaY < 0) {
+      handleZoomIn()
+    } else {
+      handleZoomOut()
+    }
+  }
+
+  // Handle escape key and keyboard zoom controls
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (previewImage) {
+          closeImagePreview()
+        } else if (selectedModalItem) {
+          setSelectedModalItem(null)
+        }
+      } else if (previewImage) {
+        if (e.key === '+' || e.key === '=') {
+          handleZoomIn()
+        } else if (e.key === '-' || e.key === '_') {
+          handleZoomOut()
+        } else if (e.key === '0') {
+          handleResetZoom()
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [previewImage, selectedModalItem])
 
   // Scroll to top on page mount or vehicle switch
   useEffect(() => {
@@ -165,7 +285,7 @@ export default function Accessories({ onOpenAiChat }) {
 
   // Build WhatsApp inquiry link
   const createWhatsAppLink = (item) => {
-    const text = `Halo Dealer Mitsubishi Sun Star Prima Motor Bekasi Timur,\n\nSaya tertarik dengan aksesoris resmi:\n• Produk: ${item.item}\n• Model: ${activeVehicleInfo.name}\n• Estimasi Harga: ${formatIDR(item.price)}\n\nApakah stok unit tersedia dan bisa dijadwalkan pemasangan resmi tanpa menggugurkan garansi kelistrikan? Terima kasih!`
+    const text = `Halo Dealer Mitsubishi Sun Star Prima Motor Margahayu,\n\nSaya tertarik dengan aksesoris resmi:\n• Produk: ${item.item}\n• Model: ${activeVehicleInfo.name}\n• Estimasi Harga: ${formatIDR(item.price)}\n\nApakah stok unit tersedia dan bisa dijadwalkan pemasangan resmi tanpa menggugurkan garansi kelistrikan? Terima kasih!`
     return `https://wa.me/6281288347777?text=${encodeURIComponent(text)}`
   }
 
@@ -281,6 +401,19 @@ export default function Accessories({ onOpenAiChat }) {
                           e.currentTarget.src = 'https://bewhy.id/wp-content/uploads/url_6ab0a091597dd8.89523512.webp'
                         }}
                       />
+                      <button
+                        type="button"
+                        className="bento-zoom-trigger-btn"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          openImagePreview(item)
+                        }}
+                        title="Perbesar / Full Preview Gambar"
+                        aria-label="Perbesar gambar"
+                      >
+                        <HiOutlineMagnifyingGlassPlus size={15} />
+                        <span>Preview Gambar</span>
+                      </button>
                     </div>
 
                     <div className="bento-bundle-details">
@@ -455,6 +588,19 @@ export default function Accessories({ onOpenAiChat }) {
                           e.currentTarget.src = 'https://bewhy.id/wp-content/uploads/url_6ab0a091597dd8.89523512.webp'
                         }}
                       />
+                      <button
+                        type="button"
+                        className="bento-zoom-trigger-btn"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          openImagePreview(item)
+                        }}
+                        title="Perbesar / Full Preview Gambar"
+                        aria-label="Perbesar gambar"
+                      >
+                        <HiOutlineMagnifyingGlassPlus size={15} />
+                        <span>Preview Gambar</span>
+                      </button>
                     </div>
 
                     <div className="bento-content-box">
@@ -492,7 +638,7 @@ export default function Accessories({ onOpenAiChat }) {
                   <h3 className="info-card-title">Jaminan Garansi 100% Aman</h3>
                   <p className="info-card-desc">
                     Setiap aksesoris satuan menggunakan soket konektor standar pabrikan. Pemasangan di bengkel resmi
-                    Sun Motor Bekasi Timur tidak memotong kabel asli bawaan mobil, menjaga garansi kelistrikan tetap berlaku penuh.
+                    Sun Margahayu tidak memotong kabel asli bawaan mobil, menjaga garansi kelistrikan tetap berlaku penuh.
                   </p>
                   <div className="info-check-row">
                     <span className="info-tag-check">✓ Tanpa Potong Kabel</span>
@@ -545,7 +691,7 @@ export default function Accessories({ onOpenAiChat }) {
       <section className="acc-cta-section">
         <div className="acc-cta-container">
           <div className="acc-cta-content">
-            <span className="acc-cta-kicker">INSTALASI RESMI MITSUBISHI BEKASI TIMUR</span>
+            <span className="acc-cta-kicker">INSTALASI RESMI MITSUBISHI SUN MARGAHAYU</span>
             <h2 className="acc-cta-heading">Siap Kustomisasi Kendaraan Idaman Anda?</h2>
             <p className="acc-cta-sub">
               Hubungi Service Advisor kami untuk konfirmasi ketersediaan stok komponen, estimasi waktu pasang, atau
@@ -553,7 +699,7 @@ export default function Accessories({ onOpenAiChat }) {
             </p>
             <div className="acc-cta-btn-group">
               <a
-                href="https://wa.me/6281288347777?text=Halo%20Sun%20Star%20Prima%20Motor%20Bekasi%2C%20saya%20ingin%20konsultasi%20pemasangan%20aksesoris%20resmi%20Mitsubishi."
+                href="https://wa.me/6281288347777?text=Halo%20Sun%20Star%20Prima%20Motor%20Margahayu%2C%20saya%20ingin%20konsultasi%20pemasangan%20aksesoris%20resmi%20Mitsubishi."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-acc-cta-primary"
@@ -605,6 +751,15 @@ export default function Accessories({ onOpenAiChat }) {
                     e.currentTarget.src = 'https://bewhy.id/wp-content/uploads/url_6ab0a091597dd8.89523512.webp'
                   }}
                 />
+                <button
+                  type="button"
+                  className="modal-zoom-trigger-btn"
+                  onClick={() => openImagePreview(selectedModalItem)}
+                  title="Buka Preview Gambar & Zoom"
+                >
+                  <HiOutlineArrowsPointingOut size={15} />
+                  <span>Lihat Full &amp; Zoom</span>
+                </button>
               </div>
 
               <div className="acc-modal-info-col">
@@ -649,7 +804,7 @@ export default function Accessories({ onOpenAiChat }) {
                   </div>
                   <div className="modal-spec-row">
                     <span className="spec-label">Lokasi Pasang:</span>
-                    <span className="spec-val">Bengkel Resmi Sun Star Prima Motor Bekasi</span>
+                    <span className="spec-val">Bengkel Resmi Sun Star Prima Motor Margahayu</span>
                   </div>
                 </div>
 
@@ -672,6 +827,127 @@ export default function Accessories({ onOpenAiChat }) {
                     Kembali ke Katalog
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 7. FULL IMAGE PREVIEW & INTERACTIVE ZOOM LIGHTBOX */}
+      {previewImage && (
+        <div
+          className="acc-lightbox-backdrop"
+          onClick={closeImagePreview}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Preview Full Gambar"
+        >
+          <div
+            className="acc-lightbox-stage"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Lightbox Header Bar */}
+            <div className="acc-lightbox-header">
+              <div className="lightbox-header-meta">
+                <div className="lightbox-tags">
+                  <span className="lightbox-badge-car">{previewImage.vehicle}</span>
+                  <span className="lightbox-badge-cat">{previewImage.category}</span>
+                </div>
+                <h3 className="lightbox-item-title">{previewImage.title}</h3>
+                {previewImage.price > 0 && (
+                  <span className="lightbox-price-tag">{formatIDR(previewImage.price)}</span>
+                )}
+              </div>
+
+              <div className="lightbox-header-actions">
+                <button
+                  type="button"
+                  className="lightbox-close-btn"
+                  onClick={closeImagePreview}
+                  title="Tutup Preview (Esc)"
+                  aria-label="Tutup Preview"
+                >
+                  <HiOutlineXMark size={22} />
+                </button>
+              </div>
+            </div>
+
+            {/* Lightbox Canvas Area with Zoom & Drag */}
+            <div
+              className={`acc-lightbox-viewport ${isDragging ? 'is-dragging' : ''} ${zoomLevel > 1 ? 'is-zoomed' : ''}`}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              onWheel={handleWheel}
+              onClick={() => {
+                if (zoomLevel === 1) {
+                  setZoomLevel(1.8)
+                }
+              }}
+              title={zoomLevel === 1 ? 'Klik gambar untuk memperbesar' : 'Geser untuk melihat detail'}
+            >
+              <img
+                src={previewImage.src}
+                alt={previewImage.title}
+                className="acc-lightbox-img"
+                style={{
+                  transform: `translate3d(${panPosition.x}px, ${panPosition.y}px, 0) scale(${zoomLevel})`,
+                  transition: isDragging ? 'none' : 'transform 0.18s ease-out'
+                }}
+                draggable={false}
+                onError={(e) => {
+                  e.currentTarget.src = 'https://bewhy.id/wp-content/uploads/url_6ab0a091597dd8.89523512.webp'
+                }}
+              />
+            </div>
+
+            {/* Lightbox Floating Controls Toolbar */}
+            <div className="acc-lightbox-toolbar" onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                className="lightbox-tool-btn"
+                onClick={handleZoomOut}
+                disabled={zoomLevel <= 0.6}
+                title="Perkecil (-)"
+                aria-label="Zoom Out"
+              >
+                <HiOutlineMagnifyingGlassMinus size={19} />
+              </button>
+
+              <span className="lightbox-zoom-readout">
+                {Math.round(zoomLevel * 100)}%
+              </span>
+
+              <button
+                type="button"
+                className="lightbox-tool-btn"
+                onClick={handleZoomIn}
+                disabled={zoomLevel >= 3.5}
+                title="Perbesar (+)"
+                aria-label="Zoom In"
+              >
+                <HiOutlineMagnifyingGlassPlus size={19} />
+              </button>
+
+              <div className="lightbox-tool-sep" />
+
+              <button
+                type="button"
+                className="lightbox-tool-btn lightbox-tool-reset"
+                onClick={handleResetZoom}
+                title="Reset Ukuran (100%)"
+                aria-label="Reset Ukuran"
+              >
+                <HiOutlineArrowsPointingIn size={18} />
+                <span>Reset</span>
+              </button>
+
+              <div className="lightbox-hint-pill">
+                <span>Gunakan roda mouse atau tombol zoom • Geser saat diperbesar</span>
               </div>
             </div>
           </div>

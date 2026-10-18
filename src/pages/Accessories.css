@@ -13,7 +13,7 @@
    1. VEHICLE TAB PANE SECTION (WITH COMPACT TOP SPACING UNDER NAVBAR)
    -------------------------------------------------------------------------- */
 .acc-tabs-section {
-  padding: 6.75rem 1.5rem 1rem;
+  padding: 1.25rem 1.5rem 0.85rem;
 }
 
 .acc-tabs-container {
@@ -345,6 +345,7 @@
 }
 
 .bento-bundle-img-wrap {
+  position: relative;
   width: 100%;
   height: 220px;
   border-radius: 14px;
@@ -663,6 +664,7 @@
 }
 
 .bento-img-container {
+  position: relative;
   width: 100%;
   height: 160px;
   border-radius: 12px;
@@ -1104,6 +1106,7 @@
 }
 
 .acc-modal-img-col {
+  position: relative;
   background-color: #f8fafc;
   border-radius: 18px;
   border: 1px solid #e2e8f0;
@@ -1324,9 +1327,314 @@
   }
 }
 
+/* --------------------------------------------------------------------------
+   7. ZOOM TRIGGER BUTTONS & FULL IMAGE PREVIEW LIGHTBOX
+   -------------------------------------------------------------------------- */
+.bento-zoom-trigger-btn {
+  position: absolute;
+  bottom: 0.65rem;
+  right: 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+  z-index: 2;
+}
+
+.bento-card:hover .bento-zoom-trigger-btn {
+  opacity: 1;
+  background: rgba(227, 0, 12, 0.92);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(227, 0, 12, 0.35);
+}
+
+.modal-zoom-trigger-btn {
+  position: absolute;
+  bottom: 0.85rem;
+  right: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.modal-zoom-trigger-btn:hover {
+  background: #E3000C;
+  border-color: #E3000C;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(227, 0, 12, 0.35);
+}
+
+/* Lightbox Modal */
+.acc-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(10, 15, 29, 0.93);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  animation: lightboxFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  user-select: none;
+}
+
+@keyframes lightboxFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.acc-lightbox-stage {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Lightbox Header */
+.acc-lightbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 2rem;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0) 100%);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.lightbox-header-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.lightbox-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lightbox-badge-car {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #FDC700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(253, 199, 0, 0.14);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid rgba(253, 199, 0, 0.3);
+}
+
+.lightbox-badge-cat {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+.lightbox-item-title {
+  font-family: var(--font-heading, inherit);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.3;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-price-tag {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ef4444;
+}
+
+.lightbox-close-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.lightbox-close-btn:hover {
+  background: #E3000C;
+  border-color: #E3000C;
+  transform: rotate(90deg) scale(1.08);
+}
+
+/* Lightbox Viewport & Image Canvas */
+.acc-lightbox-viewport {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  cursor: zoom-in;
+  touch-action: none;
+}
+
+.acc-lightbox-viewport.is-zoomed {
+  cursor: grab;
+}
+
+.acc-lightbox-viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.acc-lightbox-img {
+  max-width: 82vw;
+  max-height: 68vh;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  will-change: transform;
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.45));
+}
+
+/* Lightbox Floating Toolbar */
+.acc-lightbox-toolbar {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 1.25rem;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9999px;
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.5);
+  z-index: 20;
+}
+
+.lightbox-tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lightbox-tool-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1);
+}
+
+.lightbox-tool-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.lightbox-tool-reset {
+  width: auto;
+  padding: 0 0.85rem;
+  border-radius: 9999px;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.lightbox-zoom-readout {
+  font-family: monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #38bdf8;
+  min-width: 48px;
+  text-align: center;
+}
+
+.lightbox-tool-sep {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 0.25rem;
+}
+
+.lightbox-hint-pill {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  margin-left: 0.5rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .acc-lightbox-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .lightbox-item-title {
+    font-size: 1.05rem;
+  }
+
+  .acc-lightbox-toolbar {
+    bottom: 1.25rem;
+    padding: 0.5rem 0.85rem;
+    gap: 0.45rem;
+    max-width: 92vw;
+  }
+
+  .lightbox-hint-pill {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .acc-tabs-section {
-    padding-top: 5.5rem;
+    padding: 0.85rem 1rem 0.65rem;
   }
 
   .acc-active-vehicle-banner {

@@ -20,7 +20,7 @@ const ORG_DATA = {
       level: 'Pimpinan Cabang / Direksi',
       department: 'Branch Executive & Operational Leadership',
       photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6acf43d62380a8.00133085.png',
-      description: 'Bertanggung jawab penuh atas arah strategis, integritas transaksi dealer resmi, dan tata kelola operasional Mitsubishi Sun Motor Bekasi.',
+      description: 'Bertanggung jawab penuh atas arah strategis, integritas transaksi dealer resmi, dan tata kelola operasional Mitsubishi Sun Margahayu.',
       tenure: '12 Tahun Pengalaman',
       nik: 'SNY-DIR-0101',
       badge: 'Pimpinan Cabang'
@@ -47,7 +47,7 @@ const ORG_DATA = {
       role: 'Service Manager',
       level: 'Level Manajerial',
       department: 'Bengkel Resmi & Pelayanan Purna Jual',
-      photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
+      photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad4722c13b2a2.10000471.png',
       description: 'Memimpin tim mekanik bersertifikat MMKSI, jaminan kualitas perawatan berkala, perbaikan mesin, dan layanan Emergency SOS 24 Jam.',
       tenure: '10 Tahun Pengalaman',
       nik: 'SNY-MGR-0311',
@@ -59,7 +59,7 @@ const ORG_DATA = {
       role: 'Admin Head',
       level: 'Level Manajerial',
       department: 'Administrasi, Keuangan & Verifikasi Sah',
-      photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
+      photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad4722c138b93.90082080.png',
       description: 'Mengawasi kepatuhan administrasi faktur, STNK/BPKB, serta memastikan seluruh transaksi uang muka disalurkan hanya ke rekening resmi dealer PT Sun Star Prima Motor.',
       tenure: '8 Tahun Pengalaman',
       nik: 'SNY-MGR-0324',
@@ -71,7 +71,7 @@ const ORG_DATA = {
       role: 'Sparepart Manager',
       level: 'Level Manajerial',
       department: 'Suku Cadang Asli Mitsubishi Motors Genuine Parts',
-      photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
+      photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad4722c11cc89.85094896.png',
       description: 'Menjamin ketersediaan suku cadang asli bergaransi pabrikan untuk varian kendaraan penumpang maupun kendaraan niaga berat.',
       tenure: '11 Tahun Pengalaman',
       nik: 'SNY-MGR-0338',
@@ -85,7 +85,7 @@ const ORG_DATA = {
       role: 'Supervisor',
       level: 'Level Supervisor',
       department: 'Supervisi Operasional Wiraniaga & Fleet',
-      photoUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=600&q=80',
+      photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
       description: 'Membimbing dan mengawal kualitas interaksi wiraniaga dengan konsumen serta koordinasi unit pengadaan armada komersial.',
       tenure: '6 Tahun Pengalaman',
       nik: 'SNY-SPV-0419',
@@ -97,7 +97,7 @@ const ORG_DATA = {
       role: 'Supervisor',
       level: 'Level Supervisor',
       department: 'Supervisi Layanan Konsultasi & Test Drive',
-      photoUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80',
+      photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
       description: 'Memastikan seluruh proses uji jalan (Test Drive) dan simulasi kredit berjalan transparan, ramah, dan sesuai standar H.O.M.E.',
       tenure: '5 Tahun Pengalaman',
       nik: 'SNY-SPV-0428',
@@ -132,21 +132,21 @@ export default function Organization() {
       id: 'dkt-tim',
       title: 'Dealer Kaizen Team',
       role: 'Divisi Komersial & Teknis',
-      company: 'at Mitsubishi Sun Bekasi®',
+      company: 'at Mitsubishi Sun Margahayu®',
       imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad20f3f4c1a78.73235556.jpeg',
     },
     {
       id: 'frontliner-tim',
       title: 'Frontliner Team',
       role: 'Pelayanan & Customer Relations',
-      company: 'at Mitsubishi Sun Bekasi®',
+      company: 'at Mitsubishi Sun Margahayu®',
       imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acfe735e4a127.45708367.jpeg',
     },
     {
       id: 'operational-pelayanan',
       title: 'Operational Pelayanan',
       role: 'Operasional & Layanan Pelanggan',
-      company: 'at Mitsubishi Sun Bekasi®',
+      company: 'at Mitsubishi Sun Margahayu®',
       imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6acd9f987280e1.14368522.jpeg',
     },
   ]
@@ -272,7 +272,7 @@ export default function Organization() {
           <div className="org-hero-left">
             <div className="org-header-tag">
               <span className="red-dot" />
-              <span>MITSUBISHI SUN BEKASI • STRUKTUR RESMI DEALER</span>
+              <span>MITSUBISHI SUN MARGAHAYU • STRUKTUR RESMI DEALER</span>
             </div>
 
             <h1 className="org-hero-title">
@@ -280,7 +280,7 @@ export default function Organization() {
             </h1>
 
             <p className="org-hero-desc">
-              Bagan kepemimpinan resmi PT Sun Star Prima Motor Bekasi. Struktur terpadu yang menjamin
+              Bagan kepemimpinan resmi PT Sun Star Prima Motor Margahayu. Struktur terpadu yang menjamin
               layanan profesional, integritas transaksi anti-oknum, dan kepuasan pelanggan di setiap lini.
             </p>
 
@@ -352,10 +352,6 @@ export default function Organization() {
               TIER 1: LEVEL DIREKSI (BRANCH MANAGER - CENTER ALIGNED)
               ---------------------------------------------------------------- */}
           <section className="org-tier-section" aria-labelledby="tier-direksi-title">
-            <div className="org-tier-header">
-              <h2 id="tier-direksi-title" className="org-tier-title">Direksi</h2>
-              <div className="org-tier-line" />
-            </div>
 
             <div className="org-tier-cards-grid grid-direksi">
               {ORG_DATA.direksi.map((person) => (
@@ -631,7 +627,7 @@ export default function Organization() {
                 <div className="org-modal-security-notice">
                   <RiShieldCheckLine size={20} className="notice-icon" />
                   <p>
-                    <strong>Komitmen Integritas Dealer:</strong> Manajemen Mitsubishi Sun Motor Bekasi memastikan seluruh proses pemesanan kendaraan, servis bengkel, dan pengadaan suku cadang mematuhi protokol resmi PT Sun Star Prima Motor.
+                    <strong>Komitmen Integritas Dealer:</strong> Manajemen Mitsubishi Sun Margahayu memastikan seluruh proses pemesanan kendaraan, servis bengkel, dan pengadaan suku cadang mematuhi protokol resmi PT Sun Star Prima Motor.
                   </p>
                 </div>
               </div>
