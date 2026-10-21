@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import {
   HiOutlineClipboardDocumentList,
@@ -67,6 +67,12 @@ export default function PortalLeads() {
   const [drawerStatus, setDrawerStatus] = useState('new')
   const [updateFeedback, setUpdateFeedback] = useState(null)
 
+  // Lead Type change dropdown & confirmation modal states
+  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false)
+  const [pendingTypeChange, setPendingTypeChange] = useState(null)
+  const [isUpdatingType, setIsUpdatingType] = useState(false)
+  const typeDropdownRef = useRef(null)
+
   // Direct Chat Drawer state inside Leads
   const [activeChatSessionId, setActiveChatSessionId] = useState(null)
   const [activeChatSessionMeta, setActiveChatSessionMeta] = useState(null)
@@ -84,6 +90,17 @@ export default function PortalLeads() {
       hour: '2-digit',
       minute: '2-digit'
     }) + ' WIB'
+  }
+
+  // Format payload key into human-readable Title Case with spaces
+  const formatPayloadKey = (key) => {
+    if (!key) return ''
+    return String(key)
+      .replace(/_/g, ' ')
+      .trim()
+      .split(/\s+/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
   }
 
   // Escape HTML entities to prevent XSS in drawer markdown
@@ -246,11 +263,28 @@ export default function PortalLeads() {
     setActiveChatSessionMeta(null)
   }
 
-  // Close drawer on Escape key
+  // Close type dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (typeDropdownRef.current && !typeDropdownRef.current.contains(e.target)) {
+        setIsTypeDropdownOpen(false)
+      }
+    }
+    if (isTypeDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isTypeDropdownOpen])
+
+  // Close drawer or modals on Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        if (activeChatSessionId) {
+        if (pendingTypeChange) {
+          if (!isUpdatingType) setPendingTypeChange(null)
+        } else if (isTypeDropdownOpen) {
+          setIsTypeDropdownOpen(false)
+        } else if (activeChatSessionId) {
           handleCloseChatDrawer()
         } else if (selectedLead) {
           setSelectedLead(null)
@@ -259,7 +293,7 @@ export default function PortalLeads() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [activeChatSessionId, selectedLead])
+  }, [pendingTypeChange, isUpdatingType, isTypeDropdownOpen, activeChatSessionId, selectedLead])
 
   // Sync state if URL query changes
   useEffect(() => {
@@ -346,6 +380,7 @@ export default function PortalLeads() {
         setSelectedLead(json.data)
         setLeads(prev => prev.map(l => (l.id === json.data.id ? json.data : l)))
         setUpdateFeedback({ type: 'success', message: 'Status dan catatan lead berhasil diperbarui!' })
+        window.dispatchEvent(new CustomEvent('leads_updated'))
       } else {
         setUpdateFeedback({ type: 'error', message: json.message || 'Gagal memperbarui lead.' })
       }
@@ -353,6 +388,53 @@ export default function PortalLeads() {
       setUpdateFeedback({ type: 'error', message: 'Terjadi kendala jaringan saat menyimpan status.' })
     } finally {
       setIsUpdatingStatus(false)
+    }
+  }
+
+  // Handle selecting new lead type from dropdown
+  const handleSelectLeadType = (typeId) => {
+    setIsTypeDropdownOpen(false)
+    if (!selectedLead || typeId === selectedLead.type) return
+    setPendingTypeChange(typeId)
+  }
+
+  // Execute type change and save immediately to backend
+  const handleConfirmTypeChange = async () => {
+    if (!selectedLead || !pendingTypeChange) return
+    setIsUpdatingType(true)
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/ai/leads/${selectedLead.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          type: pendingTypeChange
+        })
+      })
+
+      const json = await res.json()
+      if (json.success && json.data) {
+        setSelectedLead(json.data)
+        setLeads(prev => prev.map(l => (l.id === json.data.id ? json.data : l)))
+        setUpdateFeedback({
+          type: 'success',
+          message: `Kategori lead berhasil diubah menjadi "${getTypeMeta(json.data.type).label}".`
+        })
+        window.dispatchEvent(new CustomEvent('leads_updated'))
+        setPendingTypeChange(null)
+        // Refresh leads list to keep badge counts synchronized
+        fetchLeads()
+      } else {
+        alert(json.message || 'Gagal mengubah tipe lead.')
+      }
+    } catch (err) {
+      console.error('Error changing lead type:', err)
+      alert('Terjadi kendala jaringan saat memperbarui tipe lead.')
+    } finally {
+      setIsUpdatingType(false)
     }
   }
 
@@ -639,15 +721,47 @@ export default function PortalLeads() {
             {/* Drawer Header */}
             <div className="leads-drawer-header">
               <div className="drawer-header-left">
-                <span
-                  className="lead-type-badge-large"
-                  style={{
-                    color: getTypeMeta(selectedLead.type).color,
-                    backgroundColor: getTypeMeta(selectedLead.type).bg
-                  }}
-                >
-                  {getTypeMeta(selectedLead.type).label}
-                </span>
+                <div className="lead-type-dropdown-container" ref={typeDropdownRef}>
+                  <button
+                    type="button"
+                    className="lead-type-badge-large is-clickable"
+                    style={{
+                      color: getTypeMeta(selectedLead.type).color,
+                      backgroundColor: getTypeMeta(selectedLead.type).bg
+                    }}
+                    onClick={() => setIsTypeDropdownOpen(prev => !prev)}
+                    title="Klik untuk mengubah kategori lead"
+                  >
+                    <span>{getTypeMeta(selectedLead.type).label}</span>
+                    <HiOutlineChevronDown
+                      size={13}
+                      className={`type-badge-chevron ${isTypeDropdownOpen ? 'is-open' : ''}`}
+                    />
+                  </button>
+
+                  {isTypeDropdownOpen && (
+                    <div className="lead-type-dropdown-menu">
+                      <div className="type-dropdown-header">Ubah Kategori Lead:</div>
+                      {LEAD_TYPES.filter(t => t.id !== 'all').map((t) => {
+                        const isCurrent = t.id === selectedLead.type
+                        return (
+                          <button
+                            key={t.id}
+                            type="button"
+                            className={`type-dropdown-item ${isCurrent ? 'is-selected' : ''}`}
+                            onClick={() => handleSelectLeadType(t.id)}
+                          >
+                            <span className="type-dot" style={{ backgroundColor: t.color }} />
+                            <span className="type-name">{t.label}</span>
+                            {isCurrent && (
+                              <HiOutlineCheckCircle size={15} className="type-check-icon" />
+                            )}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
                 <h3 className="drawer-lead-title">Rincian Permintaan Konsumen</h3>
                 <span className="drawer-lead-meta-id">Lead #{selectedLead.id} • Sumber: {selectedLead.source}</span>
               </div>
@@ -728,7 +842,7 @@ export default function PortalLeads() {
                   <div className="drawer-payload-list">
                     {Object.entries(selectedLead.data).map(([k, v], i) => (
                       <div key={i} className="payload-item-row">
-                        <span className="payload-key">{k}</span>
+                        <span className="payload-key">{formatPayloadKey(k)}</span>
                         <span className="payload-val">{String(v)}</span>
                       </div>
                     ))}
@@ -954,6 +1068,102 @@ export default function PortalLeads() {
             </div>
           </div>
         </>
+      )}
+
+      {/* Modal Dialog Konfirmasi Ubah Tipe Lead */}
+      {pendingTypeChange && selectedLead && (
+        <div
+          className="confirm-lead-type-backdrop"
+          onClick={() => !isUpdatingType && setPendingTypeChange(null)}
+          aria-modal="true"
+          role="dialog"
+        >
+          <div className="portal-modal-window confirm-type-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header-row">
+              <div className="modal-header-title-box">
+                <HiOutlineArrowPath className="text-red" size={22} />
+                <h3 className="modal-title">Konfirmasi Ubah Tipe Lead</h3>
+              </div>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => !isUpdatingType && setPendingTypeChange(null)}
+                disabled={isUpdatingType}
+                aria-label="Tutup"
+              >
+                <HiOutlineXMark size={20} />
+              </button>
+            </div>
+
+            <div className="confirm-modal-body">
+              <p className="confirm-modal-desc">
+                Apakah Anda yakin ingin memindahkan kategori untuk <strong>Lead #{selectedLead.id}</strong> ({selectedLead.customer_name || 'Pelanggan'})?
+              </p>
+
+              <div className="type-change-compare-box">
+                <div className="type-compare-col">
+                  <span className="type-compare-tag">Kategori Saat Ini</span>
+                  <span
+                    className="lead-type-badge-large"
+                    style={{
+                      color: getTypeMeta(selectedLead.type).color,
+                      backgroundColor: getTypeMeta(selectedLead.type).bg
+                    }}
+                  >
+                    {getTypeMeta(selectedLead.type).label}
+                  </span>
+                </div>
+
+                <div className="type-compare-arrow">
+                  <HiOutlineChevronRight size={18} />
+                </div>
+
+                <div className="type-compare-col">
+                  <span className="type-compare-tag">Kategori Baru</span>
+                  <span
+                    className="lead-type-badge-large"
+                    style={{
+                      color: getTypeMeta(pendingTypeChange).color,
+                      backgroundColor: getTypeMeta(pendingTypeChange).bg
+                    }}
+                  >
+                    {getTypeMeta(pendingTypeChange).label}
+                  </span>
+                </div>
+              </div>
+
+              <p className="confirm-modal-hint">
+                Perubahan kategori ini akan langsung tersimpan ke sistem dan otomatis memperbarui penghitungan badge lead di seluruh portal.
+              </p>
+            </div>
+
+            <div className="modal-actions-bar">
+              <button
+                type="button"
+                className="btn-modal-cancel"
+                onClick={() => setPendingTypeChange(null)}
+                disabled={isUpdatingType}
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                className="btn-confirm-type-save"
+                onClick={handleConfirmTypeChange}
+                disabled={isUpdatingType}
+              >
+                {isUpdatingType ? (
+                  <>
+                    <HiOutlineArrowPath className="animate-spin" size={15} />
+                    <span>Menyimpan...</span>
+                  </>
+                ) : (
+                  <span>Ya, Ubah Kategori Lead</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

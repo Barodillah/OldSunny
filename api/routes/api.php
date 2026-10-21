@@ -337,6 +337,7 @@ Route::post('/ai/session/close', [AiAssistantController::class, 'closeSession'])
 Route::get('/ai/sessions', [AiAssistantController::class, 'getSessions']);
 Route::match(['get', 'post'], '/ai/customer/sessions', [AiAssistantController::class, 'getCustomerSessions']);
 Route::get('/ai/knowledge/{key}', [AiAssistantController::class, 'getKnowledge']);
+Route::get('/ai/leads/counts', [AiAssistantController::class, 'getLeadCounts']);
 Route::post('/ai/leads', [AiAssistantController::class, 'storeLead']);
 Route::get('/ai/leads', [AiAssistantController::class, 'getLeads']);
 Route::match(['put', 'patch'], '/ai/leads/{id}', [AiAssistantController::class, 'updateLead']);

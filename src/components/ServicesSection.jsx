@@ -594,6 +594,28 @@ export default function ServicesSection({ onOpenAiWithService }) {
                           <HiOutlineArrowRight size={14} />
                         </Link>
                       </div>
+                    ) : item.id === 'test_drive' ? (
+                      <div className="panel-standard-btn-group">
+                        <button
+                          type="button"
+                          className="btn-panel-primary"
+                          onClick={() => {
+                            if (onOpenAiWithService) onOpenAiWithService(item)
+                            else setActiveModal(item)
+                          }}
+                        >
+                          <HiOutlineChatBubbleLeftRight size={17} />
+                          <span>{item.aiAction}</span>
+                        </button>
+
+                        <Link
+                          to="/vehicles"
+                          className="btn-panel-secondary"
+                        >
+                          <span>Pilih Unit Test Drive</span>
+                          <HiOutlineArrowRight size={14} />
+                        </Link>
+                      </div>
                     ) : (
                       <div className="panel-standard-btn-group">
                         <button

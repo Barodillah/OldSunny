@@ -31,7 +31,7 @@ const NAV_MEGA_MENUS = {
         label: 'Jelajahi Layanan Kami',
         to: '/#layanan',
         sectionId: 'layanan',
-        image: 'https://bewhy.id/wp-content/uploads/url_6acf48a6d7c287.43180500.webp'
+        image: 'https://bewhy.id/wp-content/uploads/url_6acf48b4e326b2.90529833.webp'
       }
     ]
   },

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Outlet, NavLink, Link, useNavigate, useLocation, Navigate } from 'react-router-dom'
 import { usePortalAuth } from './context/PortalAuthContext.jsx'
 import {
@@ -25,6 +25,48 @@ export default function PortalLayout() {
   const location = useLocation()
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
   const [dbStatus, setDbStatus] = useState('checking') // 'connected' | 'disconnected' | 'checking'
+
+  // Real-time count of new leads (by total and per-type)
+  const [newLeadCounts, setNewLeadCounts] = useState({
+    all: 0,
+    booking: 0,
+    test_drive: 0,
+    prospect: 0,
+    emergency: 0,
+    sparepart: 0,
+    complaint: 0
+  })
+
+  const fetchLeadCounts = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/ai/leads/counts`, {
+        headers: { 'Accept': 'application/json' }
+      })
+      if (res.ok) {
+        const json = await res.json()
+        if (json.success && json.new_counts) {
+          setNewLeadCounts(json.new_counts)
+        }
+      }
+    } catch {
+      // Silently catch network error
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchLeadCounts()
+    const timer = setInterval(fetchLeadCounts, 20000)
+
+    const handleLeadsUpdated = () => {
+      fetchLeadCounts()
+    }
+    window.addEventListener('leads_updated', handleLeadsUpdated)
+
+    return () => {
+      clearInterval(timer)
+      window.removeEventListener('leads_updated', handleLeadsUpdated)
+    }
+  }, [fetchLeadCounts])
 
   // Health check database connection
   useEffect(() => {
@@ -206,9 +248,19 @@ export default function PortalLayout() {
                     <span>Leads</span>
                   </div>
 
-                  <span className={`portal-nav-toggle-icon ${isLeadsSubmenuOpen ? 'is-open' : ''}`}>
-                    <HiOutlineChevronDown size={14} />
-                  </span>
+                  <div className="portal-nav-parent-actions">
+                    {newLeadCounts.all > 0 && (
+                      <span
+                        className="portal-nav-badge-count"
+                        title={`${newLeadCounts.all} lead baru`}
+                      >
+                        {newLeadCounts.all > 99 ? '99+' : newLeadCounts.all}
+                      </span>
+                    )}
+                    <span className={`portal-nav-toggle-icon ${isLeadsSubmenuOpen ? 'is-open' : ''}`}>
+                      <HiOutlineChevronDown size={14} />
+                    </span>
+                  </div>
                 </button>
 
                 {isLeadsSubmenuOpen && (
@@ -220,6 +272,8 @@ export default function PortalLayout() {
                           ? !currentSearchType || currentSearchType === 'all'
                           : currentSearchType === sub.type)
 
+                      const count = sub.type === null ? newLeadCounts.all : (newLeadCounts[sub.type] || 0)
+
                       return (
                         <li key={sub.path}>
                           <Link
@@ -228,7 +282,15 @@ export default function PortalLayout() {
                             onClick={() => setIsMobileSidebarOpen(false)}
                           >
                             <span className="subnav-indicator-dot" />
-                            <span>{sub.label}</span>
+                            <span className="subnav-item-label">{sub.label}</span>
+                            {count > 0 && (
+                              <span
+                                className="portal-subnav-badge-count"
+                                title={`${count} lead ${sub.label.toLowerCase()} berstatus baru`}
+                              >
+                                {count > 99 ? '99+' : count}
+                              </span>
+                            )}
                           </Link>
                         </li>
                       )

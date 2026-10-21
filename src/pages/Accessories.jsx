@@ -23,6 +23,7 @@ import {
   RiShoppingBag3Line
 } from 'react-icons/ri'
 import accessoriesData from '../../aksesoris.json'
+import AccessoryOrderModal from '../components/AccessoryOrderModal.jsx'
 import './Accessories.css'
 
 const RAW_ACCESSORIES = accessoriesData.mitsubishi_accessories || {}
@@ -89,6 +90,7 @@ export default function Accessories({ onOpenAiChat }) {
   const [singleCategoryFilter, setSingleCategoryFilter] = useState('all') // 'all' | 'exterior' | 'interior'
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedModalItem, setSelectedModalItem] = useState(null)
+  const [orderModalItem, setOrderModalItem] = useState(null)
 
   // Full Image Preview Lightbox with Zoom & Pan state
   const [previewImage, setPreviewImage] = useState(null)
@@ -285,8 +287,38 @@ export default function Accessories({ onOpenAiChat }) {
 
   // Build WhatsApp inquiry link
   const createWhatsAppLink = (item) => {
+    if (!item) return '#'
     const text = `Halo Dealer Mitsubishi Sun Star Prima Motor Margahayu,\n\nSaya tertarik dengan aksesoris resmi:\n• Produk: ${item.item}\n• Model: ${activeVehicleInfo.name}\n• Estimasi Harga: ${formatIDR(item.price)}\n\nApakah stok unit tersedia dan bisa dijadwalkan pemasangan resmi tanpa menggugurkan garansi kelistrikan? Terima kasih!`
     return `https://wa.me/6282210928822?text=${encodeURIComponent(text)}`
+  }
+
+  // Handle direct inquiry via Sunny AI Floating Assistant
+  const handleAskSunny = (item) => {
+    if (!item) return
+    const isPackage = Array.isArray(item.include)
+    const promptQuery = isPackage
+      ? `Halo Sunny, saya tertarik dengan paket aksesoris "${item.item}" untuk ${activeVehicleInfo.name} (${formatIDR(item.price)}). Apakah paket ini ready stok di dealer Sun Margahayu dan bagaimana proses estimasi pemasangannya?`
+      : `Halo Sunny, saya ingin tanya ketersediaan dan pemasangan aksesoris resmi "${item.item}" untuk ${activeVehicleInfo.name} (${formatIDR(item.price)}). Apakah stok unit ready dan apakah garansi kelistrikan tetap aman?`
+
+    // Dispatch custom event to trigger Sunny AI flyout & automatically submit query
+    window.dispatchEvent(
+      new CustomEvent('sunny_ask_question', {
+        detail: {
+          query: promptQuery,
+          accessory: item,
+          vehicle: activeVehicleInfo
+        }
+      })
+    )
+
+    // Fallback prop callback if provided
+    if (onOpenAiChat) {
+      onOpenAiChat({
+        id: 'accessory_inquiry',
+        title: `${item.item} (${activeVehicleInfo.shortName})`,
+        query: promptQuery
+      })
+    }
   }
 
   return (
@@ -439,16 +471,18 @@ export default function Accessories({ onOpenAiChat }) {
                       )}
 
                       <div className="bento-card-actions">
-                        <a
-                          href={createWhatsAppLink(item)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-bento-wa"
-                          onClick={(e) => e.stopPropagation()}
+                        <button
+                          type="button"
+                          className="btn-bento-sunny"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleAskSunny(item)
+                          }}
+                          title={`Tanya ketersediaan ${item.item} ke Asisten AI Sunny`}
                         >
-                          <RiWhatsappLine size={18} />
-                          <span>Pesan Paket via WA</span>
-                        </a>
+                          <HiOutlineSparkles size={18} className="sunny-btn-sparkle" />
+                          <span>Pesan Langsung ke Sunny</span>
+                        </button>
                         <button
                           type="button"
                           className="btn-bento-detail"
@@ -611,17 +645,22 @@ export default function Accessories({ onOpenAiChat }) {
                       </div>
 
                       <div className="bento-item-footer">
-                        <span className="bento-socket-note">✓ Soket OEM Plug &amp; Play</span>
-                        <a
-                          href={createWhatsAppLink(item)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn-bento-icon-wa"
-                          title="Pesan via WhatsApp"
-                          onClick={(e) => e.stopPropagation()}
+                        <div className="bento-footer-meta">
+                          <span className="bento-socket-note">✓ Soket OEM Plug &amp; Play</span>
+                        </div>
+                        <button
+                          type="button"
+                          className="btn-bento-item-sunny"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleAskSunny(item)
+                          }}
+                          title={`Tanya ketersediaan ${item.item} ke Asisten AI Sunny`}
+                          aria-label={`Tanya ${item.item} ke Asisten AI Sunny`}
                         >
-                          <RiWhatsappLine size={18} />
-                        </a>
+                          <HiOutlineSparkles size={15} className="sunny-btn-sparkle" />
+                          <span>Pesan Langsung ke Sunny</span>
+                        </button>
                       </div>
                     </div>
                   </article>
@@ -809,15 +848,18 @@ export default function Accessories({ onOpenAiChat }) {
                 </div>
 
                 <div className="modal-actions-group">
-                  <a
-                    href={createWhatsAppLink(selectedModalItem)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="modal-btn-wa"
+                  <button
+                    type="button"
+                    className="modal-btn-order"
+                    onClick={() => {
+                      const itemToOrder = selectedModalItem
+                      setSelectedModalItem(null)
+                      setOrderModalItem(itemToOrder)
+                    }}
                   >
-                    <RiWhatsappLine size={20} />
-                    <span>Pesan &amp; Jadwalkan Pasang via WhatsApp</span>
-                  </a>
+                    <RiShoppingBag3Line size={20} />
+                    <span>Pesan Aksesoris</span>
+                  </button>
 
                   <button
                     type="button"
@@ -953,6 +995,13 @@ export default function Accessories({ onOpenAiChat }) {
           </div>
         </div>
       )}
+      {/* 8. ACCESSORY ORDER FORM MODAL */}
+      <AccessoryOrderModal
+        isOpen={!!orderModalItem}
+        item={orderModalItem}
+        vehicle={activeVehicleInfo}
+        onClose={() => setOrderModalItem(null)}
+      />
     </div>
   )
 }

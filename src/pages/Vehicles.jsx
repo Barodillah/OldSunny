@@ -8,7 +8,8 @@ import {
   HiOutlineTruck,
   HiOutlineChevronRight
 } from 'react-icons/hi2'
-import { RiAwardLine } from 'react-icons/ri'
+import { RiAwardLine, RiSteering2Line } from 'react-icons/ri'
+import TestDriveModal from '../components/TestDriveModal.jsx'
 import vehicleData from '../../vehicle-list.json'
 import './Vehicles.css'
 
@@ -41,6 +42,7 @@ export default function Vehicles() {
   const [activeTab, setActiveTab] = useState('passenger') // 'passenger' | 'commercial'
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedVehicle, setSelectedVehicle] = useState(null)
+  const [testDriveVehicle, setTestDriveVehicle] = useState(null)
 
   // Scroll to top on mount
   useEffect(() => {
@@ -644,13 +646,17 @@ export default function Vehicles() {
 
             {/* Modal Footer Bar */}
             <div className="modal-footer-bar">
-              <Link
-                to="/contact"
+              <button
+                type="button"
                 className="modal-testdrive-btn"
-                onClick={() => setSelectedVehicle(null)}
+                onClick={() => {
+                  setTestDriveVehicle(selectedVehicle)
+                  setSelectedVehicle(null)
+                }}
               >
+                <RiSteering2Line size={18} />
                 <span>Jadwalkan Test Drive</span>
-              </Link>
+              </button>
 
               <Link
                 to="/sales"
@@ -665,6 +671,14 @@ export default function Vehicles() {
           </div>
         </div>
       )}
+
+      {/* Test Drive Reservation Modal */}
+      <TestDriveModal
+        vehicle={testDriveVehicle}
+        isOpen={Boolean(testDriveVehicle)}
+        onClose={() => setTestDriveVehicle(null)}
+        source="Website - Vehicles Page Detail"
+      />
     </div>
   )
 }

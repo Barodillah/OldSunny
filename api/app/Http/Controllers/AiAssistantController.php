@@ -67,7 +67,60 @@ class AiAssistantController extends Controller
         // 3. Generate AI Response
         $result = $this->aiService->chat($messages, $sessionId);
 
-        // Update session telemetry if lead was successfully captured by AI
+        // If no saved_lead was returned by AI, check if session already has a lead or user just provided a phone number
+        if (empty($result['saved_lead'])) {
+            $activePhone = $session->customer_phone ?? ($clientInfo['customer_phone'] ?? null);
+            if (!empty($activePhone) && preg_match('/(?:\+?62|0)8[0-9]{7,12}/', $activePhone)) {
+                $existingLead = Lead::where('session_id', $sessionId)->first();
+                if ($existingLead) {
+                    // Lead already exists! Append new user information to notes without duplicating
+                    if ($lastUserMsg && !str_contains($existingLead->notes ?? '', $lastUserMsg) && strlen($lastUserMsg) > 3) {
+                        $time = date('d/m H:i');
+                        $existingLead->notes = ($existingLead->notes ? $existingLead->notes . "\n" : "") . "[Pesan Pengguna {$time} WIB]: " . $lastUserMsg;
+                    }
+                    if (empty($existingLead->customer_name) && !empty($session->customer_name)) {
+                        $existingLead->customer_name = $session->customer_name;
+                    }
+                    // Detect vehicle mentioned in message
+                    if (empty($existingLead->vehicle_model)) {
+                        foreach (['pajero', 'xpander cross', 'xpander', 'xforce', 'destinator', 'triton', 'l300', 'canter', 'fuso'] as $vm) {
+                            if (stripos($lastUserMsg, $vm) !== false) {
+                                $existingLead->vehicle_model = ucwords($vm);
+                                break;
+                            }
+                        }
+                    }
+                    $existingLead->save();
+                    $result['saved_lead'] = [
+                        'id' => $existingLead->id,
+                        'type' => $existingLead->type,
+                        'customer_name' => $existingLead->customer_name,
+                        'customer_phone' => $existingLead->customer_phone,
+                        'is_updated' => true,
+                    ];
+                } elseif (isset($phoneMatch) && !empty($phoneMatch[0])) {
+                    // User just gave phone in this turn for the first time!
+                    // Save initial lead
+                    $newLead = $this->aiService->saveOrUpdateLead($sessionId, 'prospect', [
+                        'customer_name' => $session->customer_name ?? null,
+                        'customer_phone' => $phoneMatch[0],
+                        'notes' => "Nomor WhatsApp diberikan via chat Sunny AI" . ($lastUserMsg ? "\n[Pesan]: {$lastUserMsg}" : ""),
+                    ], $phoneMatch[0]);
+
+                    if ($newLead) {
+                        $result['saved_lead'] = [
+                            'id' => $newLead->id,
+                            'type' => $newLead->type,
+                            'customer_name' => $newLead->customer_name,
+                            'customer_phone' => $newLead->customer_phone,
+                            'is_updated' => false,
+                        ];
+                    }
+                }
+            }
+        }
+
+        // Update session telemetry if lead was successfully captured or updated by AI
         if (!empty($result['saved_lead'])) {
             $leadUpdates = [];
             if (!empty($result['saved_lead']['customer_name']) && empty($session->customer_name)) {
@@ -247,7 +300,14 @@ class AiAssistantController extends Controller
      */
     public function storeLead(Request $request)
     {
-        $validated = $request->validate([
+        $data = $request->json()->all() ?: $request->all();
+        if (empty($data)) {
+            $raw = file_get_contents('php://input');
+            $cleanRaw = preg_replace('/^\xEF\xBB\xBF/', '', $raw);
+            $data = json_decode($cleanRaw, true) ?: [];
+        }
+
+        $validator = \Illuminate\Support\Facades\Validator::make($data, [
             'session_id' => 'nullable|string|max:100',
             'type' => 'required|string|max:50',
             'customer_name' => 'nullable|string|max:255',
@@ -258,6 +318,65 @@ class AiAssistantController extends Controller
             'notes' => 'nullable|string',
             'source' => 'nullable|string|max:50'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $validated = $validator->validated();
+
+        // Normalize type (e.g. "test drive" -> "test_drive")
+        $validated['type'] = str_replace(' ', '_', strtolower($validated['type']));
+        if ($validated['type'] === 'aksesoris') {
+            $validated['type'] = 'sparepart';
+        }
+
+        // Deduplication: check if lead already exists for this session or phone
+        $existingLead = null;
+        if (!empty($validated['session_id'])) {
+            $existingLead = Lead::where('session_id', $validated['session_id'])->first();
+        }
+        if (!$existingLead && !empty($validated['customer_phone'])) {
+            $existingLead = Lead::where('customer_phone', $validated['customer_phone'])
+                ->where('status', 'new')
+                ->where('created_at', '>=', now()->subHours(24))
+                ->latest()
+                ->first();
+        }
+
+        if ($existingLead) {
+            $updates = [
+                'type' => $validated['type'],
+                'customer_phone' => $validated['customer_phone'],
+            ];
+            if (!empty($validated['customer_name'])) {
+                $updates['customer_name'] = $validated['customer_name'];
+            }
+            if (!empty($validated['vehicle_model'])) {
+                $updates['vehicle_model'] = $validated['vehicle_model'];
+            }
+            if (!empty($validated['customer_nopol'])) {
+                $updates['customer_nopol'] = $validated['customer_nopol'];
+            }
+            if (!empty($validated['notes'])) {
+                $time = date('d/m H:i');
+                $updates['notes'] = ($existingLead->notes ? $existingLead->notes . "\n" : "") . "[Form {$validated['type']} {$time} WIB]: " . $validated['notes'];
+            }
+            if (!empty($validated['data'])) {
+                $updates['data'] = array_merge($existingLead->data ?? [], $validated['data']);
+            }
+            $existingLead->update($updates);
+
+            return response()->json([
+                'success' => true,
+                'data' => $existingLead,
+                'message' => 'Data prospek berhasil diperbarui dengan informasi terbaru.'
+            ], 200);
+        }
 
         $lead = Lead::create($validated);
 
@@ -307,15 +426,59 @@ class AiAssistantController extends Controller
             'complaint' => Lead::where('type', 'complaint')->count()
         ];
 
+        // Aggregate new leads counts for sidebar / badges
+        $newCounts = [
+            'all' => Lead::where('status', 'new')->count(),
+            'booking' => Lead::where('status', 'new')->where('type', 'booking')->count(),
+            'test_drive' => Lead::where('status', 'new')->where('type', 'test_drive')->count(),
+            'prospect' => Lead::where('status', 'new')->where('type', 'prospect')->count(),
+            'emergency' => Lead::where('status', 'new')->where('type', 'emergency')->count(),
+            'sparepart' => Lead::where('status', 'new')->where('type', 'sparepart')->count(),
+            'complaint' => Lead::where('status', 'new')->where('type', 'complaint')->count()
+        ];
+
         return response()->json([
             'success' => true,
             'data' => $query->paginate(25),
-            'type_counts' => $typeCounts
+            'type_counts' => $typeCounts,
+            'new_counts' => $newCounts
         ]);
     }
 
     /**
-     * Update lead status and follow-up notes
+     * Retrieve aggregated lead counts (by status and type) for navigation badges
+     */
+    public function getLeadCounts(Request $request)
+    {
+        $newCounts = [
+            'all' => Lead::where('status', 'new')->count(),
+            'booking' => Lead::where('status', 'new')->where('type', 'booking')->count(),
+            'test_drive' => Lead::where('status', 'new')->where('type', 'test_drive')->count(),
+            'prospect' => Lead::where('status', 'new')->where('type', 'prospect')->count(),
+            'emergency' => Lead::where('status', 'new')->where('type', 'emergency')->count(),
+            'sparepart' => Lead::where('status', 'new')->where('type', 'sparepart')->count(),
+            'complaint' => Lead::where('status', 'new')->where('type', 'complaint')->count()
+        ];
+
+        $totalCounts = [
+            'all' => Lead::count(),
+            'booking' => Lead::where('type', 'booking')->count(),
+            'test_drive' => Lead::where('type', 'test_drive')->count(),
+            'prospect' => Lead::where('type', 'prospect')->count(),
+            'emergency' => Lead::where('type', 'emergency')->count(),
+            'sparepart' => Lead::where('type', 'sparepart')->count(),
+            'complaint' => Lead::where('type', 'complaint')->count()
+        ];
+
+        return response()->json([
+            'success' => true,
+            'new_counts' => $newCounts,
+            'total_counts' => $totalCounts
+        ]);
+    }
+
+    /**
+     * Update lead status, type, and follow-up notes
      */
     public function updateLead(Request $request, $id)
     {
@@ -329,16 +492,30 @@ class AiAssistantController extends Controller
 
         $data = $request->json()->all() ?: $request->all();
         $status = $data['status'] ?? $request->input('status');
+        $type = $data['type'] ?? $request->input('type');
         $notes = array_key_exists('notes', $data) ? $data['notes'] : $request->input('notes');
 
-        if (!$status || !in_array($status, ['new', 'contacted', 'in_progress', 'completed', 'cancelled'])) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Status tidak valid. Pilihan: new, contacted, in_progress, completed, cancelled.'
-            ], 422);
+        if ($status !== null) {
+            if (!in_array($status, ['new', 'contacted', 'in_progress', 'completed', 'cancelled'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Status tidak valid. Pilihan: new, contacted, in_progress, completed, cancelled.'
+                ], 422);
+            }
+            $lead->status = $status;
         }
 
-        $lead->status = $status;
+        if ($type !== null) {
+            $allowedTypes = ['booking', 'test_drive', 'prospect', 'emergency', 'sparepart', 'aksesoris', 'complaint', 'question'];
+            if (!in_array($type, $allowedTypes)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tipe lead tidak valid. Pilihan: ' . implode(', ', $allowedTypes)
+                ], 422);
+            }
+            $lead->type = $type;
+        }
+
         if ($notes !== null) {
             $lead->notes = $notes;
         }
@@ -347,7 +524,7 @@ class AiAssistantController extends Controller
         return response()->json([
             'success' => true,
             'data' => $lead,
-            'message' => 'Status lead berhasil diperbarui.'
+            'message' => 'Data lead berhasil diperbarui.'
         ]);
     }
 }

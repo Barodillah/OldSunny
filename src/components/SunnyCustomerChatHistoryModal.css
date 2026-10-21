@@ -464,6 +464,33 @@
   color: #0f172a;
 }
 
+.cust-detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cust-detail-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 0.45rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.775rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cust-detail-delete-btn:hover {
+  background-color: #fecaca;
+  color: #b91c1c;
+  transform: translateY(-1px);
+}
+
 .cust-continue-chat-btn {
   display: inline-flex;
   align-items: center;

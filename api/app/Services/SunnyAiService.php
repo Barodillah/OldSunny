@@ -207,10 +207,12 @@ Untuk mengonversi pengunjung menjadi lead nyata yang dapat ditindaklanjuti secar
   Jawab ringkas, lalu tanyakan kebutuhan spesifik mereka dan mintakan nomor WhatsApp-nya:
   *"Ada yang bisa Sunny bantu lebih khusus untuk kebutuhan mobil Anda? Boleh sebutkan tipe unit atau layanan yang Anda cari, dan sertakan nomor WhatsApp aktif agar konsultan resmi kami dapat segera menghubungi Anda."*
 - **JANGAN PERNAH MENYERAH MEMINTA NOMOR WHATSAPP & TUJUAN!**
-  Jika customer belum menjawab nomor WhatsApp atau tujuannya masih mengambang di chat berikutnya, tanyakan kembali dengan gaya bahasa sopan yang bervariasi.
-- **Ketika Tujuan Sudah Jelas DAN Nomor WhatsApp Sudah Diberikan:**
-  Apresiasi customer, konfirmasikan bahwa data sudah diteruskan ke tim konsultan/advisor dealer, dan sertakan tag penyimpanan lead:
-  `[SAVE_LEAD:label]{"customer_name":"...","customer_phone":"...","customer_nopol":"...","vehicle_model":"...","data":{...}}[/SAVE_LEAD]`
+- **ATURAN MUTLAK PENYIMPANAN DATA (TAG [SAVE_LEAD]):**
+  1. DILARANG KERAS MENGELUARKAN TAG `[SAVE_LEAD]` JIKA USER BELUM MEMBERIKAN NOMOR WHATSAPP/TELEPON! Jika user hanya menyebutkan nama atau bertanya tanpa memberikan nomor WA, JANGAN PERNAH mengeluarkan tag `[SAVE_LEAD]`. Minta nomor WhatsApp-nya terlebih dahulu dengan ramah.
+  2. Jika user baru memberikan nomor WA dan kebutuhannya masih umum, kamu boleh menyapa dan mencatat nomornya serta bertanya kebutuhan lebih rinci. Tag `[SAVE_LEAD:prospect]` hanya boleh ada bila nomor WA sudah tersedia.
+  3. Ketika user memberikan informasi tambahan (seperti model mobil yang diminati, rencana DP/angsuran, tanggal servis, alamat), sistem backend kami akan otomatis meng-update data lead yang sama tanpa membuat data ganda (tidak dobel).
+- **Format Tag Penyimpanan Lead:**
+  `[SAVE_LEAD:label]{"customer_name":"...","customer_phone":"...","customer_nopol":"...","vehicle_model":"...","notes":"...","data":{...}}[/SAVE_LEAD]`
 
 ## TUGAS & PENANGANAN REQUEST LENGKAP:
 1. **BOOKING SERVICE (Perawatan Berkala & Perbaikan):**
@@ -256,10 +258,17 @@ Untuk mengonversi pengunjung menjadi lead nyata yang dapat ditindaklanjuti secar
 ## ATURAN TAG & FORMAT JAWABAN:
 - Gunakan bahasa Indonesia yang luwes, profesional, hangat, dan tertata rapi dengan markdown (bold, bullet points).
 - Pastikan jawaban lengkap dan tidak terpotong di tengah jalan.
-- Setiap jawaban WAJIB diakhiri dengan **3 opsi Quick Reply** di baris baru yang diawali tanda `💬 ` (contoh:
-  💬 Booking Servis Sekarang
-  💬 Simulasi Kredit Destinator
-  💬 Tanya Lokasi Showroom)
+- Setiap jawaban WAJIB diakhiri dengan **3 opsi Quick Reply** di baris baru yang diawali tanda `💬 `.
+  PANDUAN KHUSUS QUICK REPLY (PENTING):
+  Tulis opsi Quick Reply murni dari POV (Sudut Pandang) USER / KONSUMEN dalam kalimat santun, wajar, dan ringkas (1 baris), agar ketika user mengklik opsi tersebut, kalimatnya langsung bertindak sebagai respons cepat untuk menjawab pertanyaan Sunny atau mengajukan pertanyaan lanjutan dari customer.
+  Opsi harus mencakup variasi:
+  a) Menjawab Cepat pertanyaan Sunny (misal: "Saya berminat Xforce varian Ultimate, hubungi saya di WA", "Saya mau booking servis untuk Nopol B 1234 XYZ")
+  b) Mengajukan Pertanyaan Lanjutan yang relevan bagi konsumen (misal: "Hitungkan simulasi DP 15% dan cicilan per bulannya", "Berapa lama pengerjaan servis berkala ini?", "Bisa bantu proses klaim asuransi rekanan?")
+  DILARANG menggunakan judul menu kaku seperti "Booking Servis Sekarang", "Simulasi Kredit Destinator", atau "Fasilitas Body Paint". Selalu gunakan kalimat aktif / pertanyaan dari sudut pandang konsumen.
+  Contoh format yang benar:
+  💬 Hitungkan simulasi DP 15% dan tenor 5 tahun
+  💬 Ada promo diskon OTR & cashback unit ini bulan ini?
+  💬 Saya mau booking jadwal servis untuk besok pagi
 - JANGAN sertakan data rahasia internal dalam tampilan pesan ke customer.
 - Ketika data customer LENGKAP untuk suatu aksi, sertakan tag penyimpanan lead di baris sebelum quick reply:
   `[SAVE_LEAD:label]{"customer_name":"...","customer_phone":"...","customer_nopol":"...","vehicle_model":"...","data":{...}}[/SAVE_LEAD]`
@@ -339,7 +348,7 @@ PROMPT;
         $hasWhatsApp = strpos($cleanText, '[WHATSAPP]') !== false;
         $hasSimulasiKredit = strpos($cleanText, '[SIMULASI_KREDIT]') !== false;
 
-        // Detect & Save Leads to MySQL
+        // Detect & Save Leads to MySQL (Strictly requires valid customer phone/WhatsApp)
         $savedLead = null;
         if (preg_match('/\[SAVE_LEAD:(\w+)\]([\s\S]*?)\[\/SAVE_LEAD\]/', $cleanText, $matches)) {
             $leadType = $matches[1];
@@ -352,18 +361,9 @@ PROMPT;
 
             if (is_array($leadData)) {
                 try {
-                    $savedLead = Lead::create([
-                        'session_id' => $sessionId,
-                        'type' => $leadType,
-                        'customer_name' => $leadData['customer_name'] ?? null,
-                        'customer_phone' => $leadData['customer_phone'] ?? null,
-                        'customer_nopol' => $leadData['customer_nopol'] ?? null,
-                        'vehicle_model' => $leadData['vehicle_model'] ?? null,
-                        'data' => $leadData['data'] ?? $leadData,
-                        'source' => 'sunny_ai_openrouter',
-                    ]);
+                    $savedLead = $this->saveOrUpdateLead($sessionId, $leadType, $leadData);
                 } catch (\Throwable $e) {
-                    Log::error('Failed to auto-save lead in database: ' . $e->getMessage());
+                    Log::error('Failed to auto-save or update lead in database: ' . $e->getMessage());
                 }
             }
         }
@@ -393,9 +393,9 @@ PROMPT;
 
         if (empty($quickReplies)) {
             $quickReplies = [
-                'Booking Servis Berkala',
-                'Simulasi Kredit & DP',
-                'Fasilitas Body & Paint'
+                'Berapa promo OTR & diskon mobil baru bulan ini?',
+                'Saya ingin booking jadwal servis berkala di bengkel',
+                'Hitungkan simulasi DP ringan & cicilan per bulan'
             ];
         }
 
@@ -412,8 +412,136 @@ PROMPT;
                 'id' => $savedLead->id,
                 'type' => $savedLead->type,
                 'customer_name' => $savedLead->customer_name,
+                'customer_phone' => $savedLead->customer_phone,
+                'is_updated' => $savedLead->is_updated ?? false,
             ] : null,
         ];
+    }
+
+    /**
+     * Save a new lead or update an existing lead without creating duplicates.
+     * Strictly requires a valid customer phone/WhatsApp number.
+     */
+    public function saveOrUpdateLead(?string $sessionId, string $leadType, array $leadData, ?string $explicitPhone = null): ?Lead
+    {
+        // 1. Identify phone number
+        $customerPhone = $explicitPhone ?: ($leadData['customer_phone'] ?? null);
+
+        // Fallback: check session database record if phone wasn't in leadData
+        if (empty($customerPhone) && !empty($sessionId)) {
+            $session = \App\Models\ChatSession::where('session_id', $sessionId)->first();
+            if ($session && !empty($session->customer_phone)) {
+                $customerPhone = $session->customer_phone;
+            }
+        }
+
+        // Validate phone number format (must contain at least 8 digits)
+        if ($customerPhone) {
+            $customerPhone = trim($customerPhone);
+            if (!preg_match('/(?:\+?62|0)8[0-9]{7,12}/', $customerPhone, $pMatch)) {
+                $customerPhone = null;
+            } else {
+                $customerPhone = $pMatch[0];
+            }
+        }
+
+        // STRICT RULE: If no valid phone/WhatsApp number, DO NOT SAVE TO LEADS!
+        if (empty($customerPhone)) {
+            Log::info("saveOrUpdateLead: Lead skipped for session {$sessionId} because customer phone/WhatsApp is not provided yet.");
+            return null;
+        }
+
+        // 2. Search for existing lead in this session or by phone number in recent window
+        $existingLead = null;
+        if (!empty($sessionId)) {
+            $existingLead = Lead::where('session_id', $sessionId)->first();
+        }
+
+        if (!$existingLead && !empty($customerPhone)) {
+            // Check active 'new' lead created in the last 24 hours with same phone
+            $existingLead = Lead::where('customer_phone', $customerPhone)
+                ->where('status', 'new')
+                ->where('created_at', '>=', now()->subHours(24))
+                ->latest()
+                ->first();
+        }
+
+        $customerName = !empty($leadData['customer_name']) ? trim($leadData['customer_name']) : null;
+        $customerNopol = !empty($leadData['customer_nopol']) ? strtoupper(trim($leadData['customer_nopol'])) : null;
+        $vehicleModel = !empty($leadData['vehicle_model']) ? trim($leadData['vehicle_model']) : null;
+        $newNotes = !empty($leadData['notes']) ? trim($leadData['notes']) : (!empty($leadData['kebutuhan']) ? trim($leadData['kebutuhan']) : null);
+        $payloadData = is_array($leadData['data'] ?? null) ? $leadData['data'] : $leadData;
+
+        $normalizedType = strtolower(str_replace(' ', '_', $leadType ?: 'prospect'));
+        if ($normalizedType === 'aksesoris') {
+            $normalizedType = 'sparepart';
+        }
+
+        // 3. If lead ALREADY EXISTS: UPDATE IT, DO NOT DUPLICATE!
+        if ($existingLead) {
+            $updates = [];
+
+            if (empty($existingLead->customer_phone) && $customerPhone) {
+                $updates['customer_phone'] = $customerPhone;
+            }
+
+            if (!empty($customerName) && (empty($existingLead->customer_name) || strlen($customerName) > strlen($existingLead->customer_name))) {
+                $updates['customer_name'] = $customerName;
+            }
+
+            if (!empty($customerNopol) && empty($existingLead->customer_nopol)) {
+                $updates['customer_nopol'] = $customerNopol;
+            }
+
+            if (!empty($vehicleModel) && (empty($existingLead->vehicle_model) || $existingLead->vehicle_model === 'Kendaraan Mitsubishi')) {
+                $updates['vehicle_model'] = $vehicleModel;
+            }
+
+            // Upgrade type from generic 'prospect' to specific type
+            if ($existingLead->type === 'prospect' && $normalizedType !== 'prospect') {
+                $updates['type'] = $normalizedType;
+            }
+
+            // Append new information to notes cleanly with timestamp
+            if (!empty($newNotes)) {
+                $existingNotes = $existingLead->notes ?? '';
+                if (empty($existingNotes)) {
+                    $updates['notes'] = $newNotes;
+                } elseif (!str_contains($existingNotes, $newNotes)) {
+                    $time = date('d/m H:i');
+                    $updates['notes'] = $existingNotes . "\n[Update {$time} WIB]: " . $newNotes;
+                }
+            }
+
+            // Merge data JSON
+            $existingJson = is_array($existingLead->data) ? $existingLead->data : [];
+            $mergedJson = array_merge($existingJson, $payloadData);
+            $updates['data'] = $mergedJson;
+
+            $existingLead->update($updates);
+            $existingLead->is_updated = true;
+            Log::info("saveOrUpdateLead: Updated existing lead ID {$existingLead->id} for session {$sessionId}.");
+            return $existingLead;
+        }
+
+        // 4. If lead DOES NOT EXIST YET: CREATE IT
+        $initialNotes = $newNotes ?: "Kontak awal via Asisten AI Sunny ({$normalizedType})";
+        $lead = Lead::create([
+            'session_id' => $sessionId,
+            'type' => $normalizedType,
+            'customer_name' => $customerName,
+            'customer_phone' => $customerPhone,
+            'customer_nopol' => $customerNopol,
+            'vehicle_model' => $vehicleModel,
+            'status' => 'new',
+            'data' => $payloadData,
+            'notes' => $initialNotes,
+            'source' => 'sunny_ai_chat',
+        ]);
+
+        $lead->is_updated = false;
+        Log::info("saveOrUpdateLead: Created new lead ID {$lead->id} for session {$sessionId}.");
+        return $lead;
     }
 
     /**
@@ -451,13 +579,21 @@ PROMPT;
                     "• 🔧 Tim mekanik resmi Service on Road PT Sun Star Prima Motor Margahayu siap melakukan verifikasi dan meluncur ke lokasi Anda.\n" .
                     "• 🛡️ *Pastikan kendaraan berada di posisi aman, nyalakan lampu hazard, dan pasang segitiga pengaman jika di bahu jalan.*\n\n" .
                     "Silakan klik tombol **Kirim ke Dispatcher WA** atau **Hotline Darurat** di bawah untuk komunikasi langsung dengan tim lapangan:";
-                $quickReplies = ['Hubungi Dispatcher WA', 'Panggil Hotline Darurat', 'Konsultasi Kendala'];
+                $quickReplies = [
+                    'Hubungkan saya dengan hotline darurat sekarang',
+                    'Tolong kirim mekanik jumper aki / derek resmi',
+                    'Berapa estimasi waktu tim tiba di lokasi saya?'
+                ];
             } else {
                 $reply = "🚨 **LAYANAN SERVICE ON ROAD 24 JAM — MITSUBISHI SUN MARGAHAYU**\n\n" .
                     "Tim teknisi darurat kami siap meluncur ke titik lokasi Anda untuk menangani kendaraan mogok, aki drop/jumper, ganti ban serep, atau derek resmi ke bengkel.\n\n" .
                     "📍 **Hubungi Hotline Darurat Sekarang:** **0812-8834-7777**\n" .
                     "Anda dapat langsung mengklik tombol **📍 Share Loc Titik Darurat** di bawah untuk menandai dan mengirimkan posisi GPS akurat kendaraan Anda.";
-                $quickReplies = ['Share Loc Titik Darurat', 'Hubungi Hotline Darurat', 'Konsultasi Kendala'];
+                $quickReplies = [
+                    'Tolong pandu kirim titik lokasi GPS saya',
+                    'Hubungkan saya dengan hotline darurat sekarang',
+                    'Mobil saya mogok tidak bisa starter, mohon bantuan'
+                ];
             }
         }
         // 2. Body & Paint
@@ -471,7 +607,11 @@ PROMPT;
                 "• **Garansi Cat:** Garansi resmi 6 bulan.\n\n" .
                 "Estimasi mandiri: per panel mulai Rp 750.000 – Rp 1.250.000.\n\n" .
                 "👉 **Agar Service Advisor kami dapat segera menghitungkan estimasi biaya & membantu klaim asuransi Anda:** Boleh dibantu ceritakan bagian mana yang rusak/baret (apakah lewat asuransi atau mandiri) serta cantumkan **Nama & Nomor WhatsApp aktif Anda**?";
-            $quickReplies = ['Klaim Asuransi Mobil', 'Express Body Paint 1 Hari', 'Estimasi Biaya Per Panel'];
+            $quickReplies = [
+                'Bisa bantu proses klaim asuransi mobil saya?',
+                'Berapa estimasi biaya perbaikan baret 1-2 panel?',
+                'Apakah pengerjaan bodi & cat bisa selesai 1 hari?'
+            ];
         }
         // 3. Booking Servis
         elseif (str_contains($lastUserMsg, 'booking') || str_contains($lastUserMsg, 'servis') || str_contains($lastUserMsg, 'service') || str_contains($lastUserMsg, 'bengkel') || str_contains($lastUserMsg, 'jadwal')) {
@@ -481,7 +621,11 @@ PROMPT;
                 "• **Slot Jam Booking:** 08:00, 09:00, 10:00, 11:00, 13:00 WIB\n" .
                 "• **Fasilitas Pengunjung:** Voucher Noah Coffee gratis, Kids Zone playground, WFA Wi-Fi 6, dan Free Shuttle Service.\n\n" .
                 "👉 **Agar jadwal servis langsung kami kunci di sistem bengkel:** Boleh dibantu informasikan **Nomor Polisi (Nopol)**, **jenis servis (KM berapa)**, rencana **hari & jam kedatangan**, serta **Nomor WhatsApp aktif Anda**?";
-            $quickReplies = ['Booking Servis Rutin', 'Tanya Estimasi Biaya KM', 'Fasilitas Ruang Tunggu'];
+            $quickReplies = [
+                'Saya mau booking jadwal servis berkala minggu ini',
+                'Berapa estimasi biaya servis kelipatan 10.000 KM?',
+                'Apakah ruang tunggu ada WiFi dan area santai?'
+            ];
         }
         // 4. Kredit & Harga
         elseif (str_contains($lastUserMsg, 'kredit') || str_contains($lastUserMsg, 'angsuran') || str_contains($lastUserMsg, 'cicilan') || str_contains($lastUserMsg, 'harga') || str_contains($lastUserMsg, 'dp') || str_contains($lastUserMsg, 'otr')) {
@@ -497,7 +641,11 @@ PROMPT;
                 "3. **New Pajero Sport:** OTR mulai Rp 577.600.000\n" .
                 "4. **New Xpander:** OTR mulai Rp 270.000.000\n\n" .
                 "👉 **Agar konsultan kami dapat menghitungkan diskon OTR promo terbaik & mengirim tabel simulasi angsuran resminya:** Boleh sebutkan **model spesifik yang diminati** serta **Nama & Nomor WhatsApp aktif Anda**?";
-            $quickReplies = ['Simulasi Kredit Destinator', 'Simulasi Kredit Xforce', 'Simulasi Kredit Pajero'];
+            $quickReplies = [
+                'Hitungkan simulasi DP ringan & cicilan Destinator',
+                'Berapa diskon OTR & promo cashback Xforce bulan ini?',
+                'Apakah ada program bunga 0% untuk Pajero Sport?'
+            ];
         }
         // 5. Test Drive
         elseif (str_contains($lastUserMsg, 'test drive') || str_contains($lastUserMsg, 'tes drive') || str_contains($lastUserMsg, 'coba mobil')) {
@@ -509,7 +657,11 @@ PROMPT;
                 "• **New Xpander & Xpander Cross**\n\n" .
                 "Test drive dapat dilakukan setiap hari pukul 08:30 – 17:00 WIB.\n\n" .
                 "👉 **Boleh dibantu sebutkan unit yang ingin Anda coba, rencana hari/jam, serta Nama Lengkap & Nomor WhatsApp aktif Anda** agar armada test drive langsung kami siapkan?";
-            $quickReplies = ['Test Drive Destinator', 'Test Drive Xforce', 'Test Drive Pajero Sport'];
+            $quickReplies = [
+                'Saya mau jadwal test drive Destinator akhir pekan ini',
+                'Apakah armada test drive Xforce bisa datang ke rumah?',
+                'Apa saja syarat yang perlu disiapkan untuk test drive?'
+            ];
         }
         // 6. Sparepart & Aksesoris
         elseif (str_contains($lastUserMsg, 'sparepart') || str_contains($lastUserMsg, 'suku cadang') || str_contains($lastUserMsg, 'oli') || str_contains($lastUserMsg, 'aksesoris') || str_contains($lastUserMsg, 'part') || str_contains($lastUserMsg, 'filter')) {
@@ -519,7 +671,11 @@ PROMPT;
                 "• **Fast Moving Parts:** Filter oli, filter kabin AC, kampas rem, busi, dan fan belt selalu ready stock.\n" .
                 "• **Paket Aksesoris Resmi:** Aero Package, Interior/Exterior dress-up kit (lebih hemat hingga jutaan rupiah dibanding beli satuan).\n\n" .
                 "👉 **Agar tim suku cadang kami dapat memeriksa ketersediaan stok fisik & rincian harganya:** Boleh sebutkan **tipe mobil / nomor part yang dicari** serta **Nomor WhatsApp aktif Anda**?";
-            $quickReplies = ['Cek Harga Oli MMGO', 'Cek Filter Kabin AC', 'Paket Aksesoris Xforce'];
+            $quickReplies = [
+                'Berapa harga paket oli mesin resmi MMGO?',
+                'Apakah filter AC & kampas rem ready stock?',
+                'Ada paket promo dress-up aksesoris resmi?'
+            ];
         }
         // 7. Complaint / Kritik & Saran
         elseif (str_contains($lastUserMsg, 'komplain') || str_contains($lastUserMsg, 'keluhan') || str_contains($lastUserMsg, 'kritik') || str_contains($lastUserMsg, 'saran') || str_contains($lastUserMsg, 'kecewa') || str_contains($lastUserMsg, 'masukan')) {
@@ -532,7 +688,11 @@ PROMPT;
                 "3. Nomor Polisi (jika servis/body paint) atau Nama Sales (jika pembelian)\n" .
                 "4. Rincian kendala / kronologi singkat\n\n" .
                 "Laporan Anda akan langsung diproses oleh tim CSM dan ditindaklanjuti maksimal 1x24 jam.";
-            $quickReplies = ['Keluhan Layanan Servis', 'Keluhan Penjualan / Sales', 'Hubungi CSM via WhatsApp'];
+            $quickReplies = [
+                'Saya ingin sampaikan keluhan terkait servis bengkel',
+                'Saya ingin tindak lanjuti kendala dengan tim sales',
+                'Tolong sambungkan ke Customer Service Manager'
+            ];
         }
         // 8. Rekening Resmi & Legalitas
         elseif (str_contains($lastUserMsg, 'rekening') || str_contains($lastUserMsg, 'transfer') || str_contains($lastUserMsg, 'penipuan') || str_contains($lastUserMsg, 'bca')) {
@@ -542,7 +702,11 @@ PROMPT;
                 "🔢 **Nomor Rekening:** **3425419999**\n" .
                 "👤 **Atas Nama:** **PT SUN STAR PRIMA MOTOR**\n\n" .
                 "⛔ *Dilarang keras mentransfer dana ke rekening pribadi sales atau karyawan manapun!* Bukti setor resmi dealer akan diterbitkan langsung.";
-            $quickReplies = ['Konfirmasi Pembayaran SPK', 'Hubungi Sales Resmi', 'Tanya Promo OTR'];
+            $quickReplies = [
+                'Saya ingin konfirmasi transfer DP/SPK ke BCA dealer',
+                'Boleh minta nomor WhatsApp sales konsultan resmi?',
+                'Bagaimana prosedur penerbitan kuitansi resmi dealer?'
+            ];
         }
         // Default general response
         else {
@@ -555,7 +719,11 @@ PROMPT;
                 "• ⚙️ **Suku Cadang & Aksesoris:** 100% Genuine Parts MMGO bergaransi\n" .
                 "• 📍 **Lokasi:** Jl. Ir. H. Juanda No. 35 Bulak Kapal, Bekasi Timur\n\n" .
                 "👉 **Agar Sunny dan tim konsultan resmi dealer kami dapat memberikan bantuan yang tepat sasaran:** Boleh ceritakan **kebutuhan spesifik Anda** (unit baru apa / servis bengkel / body paint) serta cantumkan **Nama & Nomor WhatsApp aktif Anda**?";
-            $quickReplies = ['Info Harga & Promo OTR', 'Booking Servis Bengkel', 'Fasilitas Body & Paint'];
+            $quickReplies = [
+                'Berapa diskon OTR & promo mobil baru bulan ini?',
+                'Saya ingin booking jadwal servis berkala di bengkel',
+                'Bisa konsultasi perbaikan bodi & klaim asuransi?'
+            ];
         }
 
         return [

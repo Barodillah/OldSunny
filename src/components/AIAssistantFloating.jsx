@@ -54,13 +54,11 @@ const MASCOT_EXPRESSIONS = [
 ]
 
 const DEFAULT_QUICK_REPLIES = [
-  { label: 'Booking Servis', query: 'Saya ingin booking jadwal servis berkala di bengkel resmi Sun Margahayu' },
-  { label: 'Simulasi Kredit', query: 'Berapa simulasi angsuran & DP kredit mobil baru Mitsubishi?' },
-  { label: 'Fasilitas Body Paint', query: 'Tolong jelaskan fasilitas oven dan rekanan asuransi body paint' },
-  { label: 'Bantuan Darurat 24H', query: 'Kendaraan saya mengalami kendala darurat di jalan dan butuh Service on Road' },
-  { label: 'Share Loc Darurat', query: 'Saya butuh bantuan Service on Road darurat, tolong pandu kirim titik lokasi GPS saya' },
-  { label: 'Rekening Resmi BCA', query: 'Info rekening resmi transaksi PT Sun Star Prima Motor' },
-  { label: 'Lokasi & Jam Buka', query: 'Dimana alamat showroom dan bengkel resmi serta jam operasionalnya?' }
+  'Berapa diskon OTR & promo mobil baru bulan ini?',
+  'Saya ingin booking jadwal servis berkala di bengkel',
+  'Hitungkan simulasi DP ringan & cicilan per bulan',
+  'Bisa bantu proses klaim asuransi & perbaikan bodi?',
+  'Saya butuh bantuan darurat Service on Road 24 Jam'
 ]
 
 const LOADING_STATUSES = [
@@ -161,7 +159,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
         id: 'init-1',
         sender: 'ai',
         text: 'Halo! Saya **Sunny**, asisten pintar 24 jam resmi dari **PT Sun Star Prima Motor - Margahayu** (Bekasi Timur).\n\nSilakan sampaikan **kebutuhan spesifik Anda** (misal: tipe unit impian, jadwal booking servis, keluhan bodi & cat, atau kendala darurat) serta **nomor WhatsApp aktif**, agar Sunny dan konsultan resmi kami dapat segera memberikan rincian promo, simulasi kredit, atau konfirmasi tercepat untuk Anda!',
-        quickReplies: ['Pemesanan Mobil Baru', 'Booking Servis Berkala', 'Simulasi Kredit & DP', 'Fasilitas Body & Paint', 'Bantuan Darurat 24 Jam']
+        quickReplies: DEFAULT_QUICK_REPLIES
       }
     ]
   })
@@ -171,12 +169,13 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
     if (lastMsg && lastMsg.sender === 'ai' && Array.isArray(lastMsg.quickReplies) && lastMsg.quickReplies.length > 0) {
       return lastMsg.quickReplies
     }
-    return DEFAULT_QUICK_REPLIES.map(q => q.label)
+    return DEFAULT_QUICK_REPLIES
   })
 
   const [inputText, setInputText] = useState('')
   const streamEndRef = useRef(null)
   const inputRef = useRef(null)
+  const sendQueryRef = useRef(null)
 
   // Save session ID and local backup of chat history & record to customer history
   useEffect(() => {
@@ -363,11 +362,11 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
         id: `init-${Date.now()}`,
         sender: 'ai',
         text: 'Halo kembali! Percakapan baru telah dimulai.\n\nSampaikan **tujuan / kebutuhan Anda** (tipe kendaraan, tanggal booking servis, sparepart, atau kendala darurat) beserta **nomor WhatsApp aktif**, agar Sunny dapat segera mencocokkan solusi terbaik & menghubungkan Anda dengan konsultan resmi.',
-        quickReplies: ['Pemesanan Mobil Baru', 'Booking Servis Berkala', 'Simulasi Kredit & DP', 'Fasilitas Body & Paint', 'Bantuan Darurat 24 Jam']
+        quickReplies: DEFAULT_QUICK_REPLIES
       }
     ]
     setMessages(initial)
-    setCurrentQuickReplies(DEFAULT_QUICK_REPLIES.map(q => q.label))
+    setCurrentQuickReplies(DEFAULT_QUICK_REPLIES)
     localStorage.setItem('sunny_ai_session_id', newSess)
     localStorage.setItem('sunny_chat_history', JSON.stringify(initial))
   }
@@ -528,6 +527,14 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
       } catch { }
     }
 
+    // If user text contains customer name
+    const nameMatch = textToSend.match(/(?:nama\s+(?:saya|lengkap)?\s*(?:adalah|:)?\s*|saya\s+)([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)*)/i)
+    if (nameMatch && nameMatch[1]) {
+      try {
+        localStorage.setItem('sunny_customer_name', nameMatch[1].trim())
+      } catch { }
+    }
+
     const newUserMsg = {
       id: `u-${Date.now()}`,
       sender: 'user',
@@ -567,8 +574,10 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
       if (data.success && data.reply) {
         if (data.saved_lead) {
           try {
-            if (data.saved_lead.phone) localStorage.setItem('sunny_customer_phone', data.saved_lead.phone)
-            if (data.saved_lead.name) localStorage.setItem('sunny_customer_name', data.saved_lead.name)
+            const phoneVal = data.saved_lead.customer_phone || data.saved_lead.phone
+            const nameVal = data.saved_lead.customer_name || data.saved_lead.name
+            if (phoneVal) localStorage.setItem('sunny_customer_phone', phoneVal)
+            if (nameVal) localStorage.setItem('sunny_customer_name', nameVal)
           } catch { }
         }
 
@@ -606,6 +615,30 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
       setIsLoading(false)
     }
   }, [messages, sessionId, isLoading])
+
+  // Keep sendQueryRef in sync with sendQueryToBackend
+  useEffect(() => {
+    sendQueryRef.current = sendQueryToBackend
+  }, [sendQueryToBackend])
+
+  // Listen for external components asking a question directly (e.g., from TestDriveModal)
+  useEffect(() => {
+    const handleAskQuestion = (e) => {
+      const query = e.detail?.query || (typeof e.detail === 'string' ? e.detail : null)
+      if (!query) return
+
+      handleOpenChat()
+      const timer = setTimeout(() => {
+        if (sendQueryRef.current) {
+          sendQueryRef.current(query)
+        }
+      }, 150)
+      return () => clearTimeout(timer)
+    }
+
+    window.addEventListener('sunny_ask_question', handleAskQuestion)
+    return () => window.removeEventListener('sunny_ask_question', handleAskQuestion)
+  }, [])
 
   // Confirm Location Share: Send to chat & generate Dispatcher WA link
   const handleConfirmLocationShare = () => {
@@ -873,7 +906,11 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
                   {m.savedLead && (
                     <div className="chat-lead-badge">
                       <HiOutlineCheckCircle size={15} />
-                      <span>Data {m.savedLead.type || 'permintaan'} berhasil dicatat ke sistem dealer!</span>
+                      <span>
+                        {m.savedLead.is_updated
+                          ? 'Informasi tambahan Anda berhasil diperbarui di data dealer!'
+                          : `Data ${m.savedLead.type || 'permintaan'} berhasil dicatat ke sistem dealer!`}
+                      </span>
                     </div>
                   )}
 
@@ -900,7 +937,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
                             className="chat-action-btn action-btn-emergency"
                           >
                             <HiOutlinePhone size={15} />
-                            <span>Hotline Servis (0822-1092-8822)</span>
+                            <span>Hotline Servis</span>
                           </a>
                         </>
                       )}
@@ -913,7 +950,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
                           className="chat-action-btn action-btn-whatsapp"
                         >
                           <RiWhatsappLine size={16} />
-                          <span>Chat WA CS Sales (0813-1874-7300)</span>
+                          <span>Chat WA CS</span>
                         </a>
                       )}
 

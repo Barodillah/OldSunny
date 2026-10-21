@@ -19,6 +19,7 @@ import {
   switchCustomerActiveSession,
   getActiveSessionId
 } from '../utils/sunnySessionStorage.js'
+import ConfirmDialog from './ConfirmDialog.jsx'
 import './SunnyCustomerChatHistoryModal.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
@@ -72,6 +73,7 @@ export default function SunnyCustomerChatHistoryModal() {
   const [isLoadingList, setIsLoadingList] = useState(false)
   const [isLoadingDetail, setIsLoadingDetail] = useState(false)
   const [activeSessionId, setActiveSessionId] = useState('')
+  const [sessionToDelete, setSessionToDelete] = useState(null)
 
   // Listen to open_sunny_chat_history and sunny_session_updated events
   useEffect(() => {
@@ -97,7 +99,9 @@ export default function SunnyCustomerChatHistoryModal() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isOpen) {
-        if (selectedSessionId) {
+        if (sessionToDelete) {
+          setSessionToDelete(null)
+        } else if (selectedSessionId) {
           setSelectedSessionId(null)
         } else {
           setIsOpen(false)
@@ -106,7 +110,7 @@ export default function SunnyCustomerChatHistoryModal() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, selectedSessionId])
+  }, [isOpen, selectedSessionId, sessionToDelete])
 
   const loadSessions = async () => {
     setIsLoadingList(true)
@@ -199,16 +203,28 @@ export default function SunnyCustomerChatHistoryModal() {
     }, 150)
   }
 
-  // Handle delete session
-  const handleDeleteSession = (e, sessionId) => {
+  // Handle delete session via custom public dialog modal
+  const handleDeleteSession = (e, sessionId, snippet) => {
     e.stopPropagation()
-    if (confirm('Hapus sesi ini dari riwayat obrolan di perangkat Anda?')) {
-      deleteCustomerSession(sessionId)
-      if (selectedSessionId === sessionId) {
-        setSelectedSessionId(null)
-      }
-      loadSessions()
+    setSessionToDelete({
+      sessionId,
+      snippet: snippet || sessionId
+    })
+  }
+
+  const handleConfirmDelete = () => {
+    if (!sessionToDelete) return
+    const id = sessionToDelete.sessionId
+    deleteCustomerSession(id)
+    if (selectedSessionId === id) {
+      setSelectedSessionId(null)
     }
+    setSessionToDelete(null)
+    loadSessions()
+  }
+
+  const handleCancelDelete = () => {
+    setSessionToDelete(null)
   }
 
   const filteredSessions = useMemo(() => {
@@ -226,7 +242,8 @@ export default function SunnyCustomerChatHistoryModal() {
   if (!isOpen) return null
 
   return (
-    <div className="cust-history-backdrop" onClick={() => setIsOpen(false)}>
+    <>
+      <div className="cust-history-backdrop" onClick={() => setIsOpen(false)}>
       <div className="cust-history-modal" onClick={(e) => e.stopPropagation()}>
         {/* Modal Header */}
         <div className="cust-history-header">
@@ -273,11 +290,20 @@ export default function SunnyCustomerChatHistoryModal() {
                 <div className="cust-detail-actions">
                   <button
                     type="button"
+                    className="cust-detail-delete-btn"
+                    title="Hapus sesi ini dari riwayat"
+                    onClick={(e) => handleDeleteSession(e, selectedSessionId, 'Sesi ini')}
+                  >
+                    <HiOutlineTrash size={15} />
+                    <span>Hapus Sesi</span>
+                  </button>
+                  <button
+                    type="button"
                     className="cust-continue-chat-btn"
                     onClick={() => handleContinueChat(selectedSessionId)}
                   >
                     <HiOutlineChatBubbleLeftRight size={17} />
-                    <span>Lanjutkan Chat Ini</span>
+                    <span>Lanjutkan Chat</span>
                   </button>
                 </div>
               </div>
@@ -429,7 +455,7 @@ export default function SunnyCustomerChatHistoryModal() {
                             type="button"
                             className="cust-card-action-btn cust-delete-btn"
                             title="Hapus sesi dari perangkat"
-                            onClick={(e) => handleDeleteSession(e, id)}
+                            onClick={(e) => handleDeleteSession(e, id, snippet)}
                           >
                             <HiOutlineTrash size={15} />
                           </button>
@@ -474,5 +500,19 @@ export default function SunnyCustomerChatHistoryModal() {
         </div>
       </div>
     </div>
-  )
+
+    {/* Reusable Public Confirm Dialog */}
+    <ConfirmDialog
+      isOpen={Boolean(sessionToDelete)}
+      onClose={handleCancelDelete}
+      onConfirm={handleConfirmDelete}
+      title="Hapus Sesi Percakapan?"
+      message="Sesi percakapan ini akan dihapus secara permanen dari penyimpanan riwayat di perangkat Anda. Tindakan ini tidak dapat dibatalkan."
+      confirmText="Ya, Hapus Sesi"
+      cancelText="Batal"
+      variant="danger"
+      itemIdentifier={sessionToDelete?.snippet}
+    />
+  </>
+)
 }
