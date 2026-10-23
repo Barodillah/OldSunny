@@ -1,0 +1,375 @@
+/* ==========================================================================
+   SIMULASI KREDIT MODAL - STYLES
+   Mitsubishi Sun Star Prima Motor Margahayu
+   ========================================================================== */
+
+.simulasi-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: simulasiFadeIn 0.2s ease-out;
+}
+
+@keyframes simulasiFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.simulasi-modal-dialog {
+  background: #ffffff;
+  width: 100%;
+  max-width: 540px;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.35);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: simulasiSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes simulasiSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header */
+.simulasi-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  background: linear-gradient(to right, #f8fafc, #ffffff);
+  position: relative;
+  overflow: hidden;
+}
+
+.simulasi-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.simulasi-header-icon {
+  width: 42px;
+  height: 42px;
+  background: #E3000C;
+  color: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(227, 0, 12, 0.25);
+  flex-shrink: 0;
+}
+
+.simulasi-header-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.simulasi-header-sub {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0.15rem 0 0 0;
+}
+
+.simulasi-modal-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  padding: 0.45rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.simulasi-modal-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Body */
+.simulasi-modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  background-color: #fafbfc;
+}
+
+.simulasi-card-group {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+}
+
+.simulasi-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.simulasi-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.simulasi-label-icon {
+  color: #E3000C;
+}
+
+.simulasi-select-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.simulasi-select,
+.simulasi-input {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.simulasi-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.simulasi-select:focus,
+.simulasi-input:focus {
+  background-color: #ffffff;
+  border-color: #E3000C;
+  box-shadow: 0 0 0 3px rgba(227, 0, 12, 0.12);
+}
+
+.simulasi-select-chevron {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+/* OTR Highlight Banner */
+.simulasi-otr-card {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border-radius: 14px;
+  padding: 1.15rem 1.25rem;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 16px -2px rgba(15, 23, 42, 0.25);
+}
+
+.simulasi-otr-bg-icon {
+  position: absolute;
+  right: -10px;
+  bottom: -15px;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.simulasi-otr-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin: 0 0 0.35rem 0;
+}
+
+.simulasi-otr-price {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.simulasi-otr-hint {
+  font-size: 0.75rem;
+  color: #cbd5e1;
+  margin: 0.35rem 0 0 0;
+}
+
+/* Two columns grid */
+.simulasi-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 520px) {
+  .simulasi-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* DP Input Group with % and Rp selector */
+.simulasi-dp-group {
+  display: flex;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.simulasi-dp-group:focus-within {
+  background-color: #ffffff;
+  border-color: #E3000C;
+  box-shadow: 0 0 0 3px rgba(227, 0, 12, 0.12);
+}
+
+.simulasi-dp-type {
+  background-color: #f1f5f9;
+  border: none;
+  border-right: 1px solid #cbd5e1;
+  padding: 0 0.85rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  outline: none;
+}
+
+.simulasi-dp-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  font-family: inherit;
+}
+
+.simulasi-dp-nominal-hint {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* Skema Angsuran Segmented Button */
+.simulasi-skema-switch {
+  display: flex;
+  background-color: #f1f5f9;
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+
+.simulasi-skema-btn {
+  flex: 1;
+  padding: 0.55rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.simulasi-skema-btn.is-active {
+  background-color: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+}
+
+/* Footer */
+.simulasi-modal-footer {
+  padding: 1.15rem 1.5rem;
+  border-top: 1px solid #f1f5f9;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btn-simulasi-cancel {
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-simulasi-cancel:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.btn-simulasi-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: #E3000C;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(227, 0, 12, 0.28);
+  transition: all 0.15s ease;
+}
+
+.btn-simulasi-submit:hover {
+  background: #b9000a;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(227, 0, 12, 0.38);
+}

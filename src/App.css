@@ -36,7 +36,7 @@
   width: 100%;
   height: 64px;
   box-sizing: border-box;
-  z-index: 40;
+  z-index: 100;
   background-color: transparent;
   transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
               backdrop-filter 0.3s cubic-bezier(0.16, 1, 0.3, 1),
@@ -267,6 +267,7 @@
   background-color: #ffffff !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
   box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08) !important;
+  z-index: 1000 !important;
 }
 
 /* ==========================================================================
@@ -3259,8 +3260,14 @@
 }
 
 /* Sunny AI Enhanced Message Formatting & Actions */
+.chat-msg-block {
+  margin-bottom: 0.5rem;
+}
+.chat-msg-block:last-child {
+  margin-bottom: 0;
+}
 .chat-msg-p {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.45rem 0;
   color: inherit;
   font-size: 0.885rem;
   line-height: 1.55;
@@ -3268,16 +3275,41 @@
 .chat-msg-p:last-child {
   margin-bottom: 0;
 }
-.chat-msg-list {
-  margin: 0.35rem 0 0.5rem 1.15rem;
+.chat-msg-list,
+.chat-msg-ol {
+  margin: 0.35rem 0 0.5rem 1.25rem;
   padding: 0;
+}
+.chat-msg-list {
   list-style-type: disc;
 }
-.chat-msg-list li {
+.chat-msg-ol {
+  list-style-type: decimal;
+}
+.chat-msg-list:last-child,
+.chat-msg-ol:last-child {
+  margin-bottom: 0;
+}
+.chat-msg-list li,
+.chat-msg-ol li {
   margin-bottom: 0.25rem;
   color: inherit;
   font-size: 0.875rem;
   line-height: 1.5;
+}
+.chat-msg-list li:last-child,
+.chat-msg-ol li:last-child {
+  margin-bottom: 0;
+}
+.chat-code-span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82rem;
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.item-user .chat-code-span {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 .chat-inline-link {
   color: var(--accent-red, #e3000c);

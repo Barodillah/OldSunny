@@ -9,6 +9,7 @@ import {
   HiOutlineArrowRight
 } from 'react-icons/hi2'
 import { RiCarLine, RiCustomerService2Line } from 'react-icons/ri'
+import SimulasiKreditModal from './SimulasiKreditModal'
 
 export default function HeroSection({ onSelectService, onSelectEmergency, onSelectTrust, onSelectSunny }) {
   const navigate = useNavigate()
@@ -18,6 +19,7 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
   const ctaRef = useRef(null)
   const [hoveredCard, setHoveredCard] = useState(null)
   const [activeDeckIndex, setActiveDeckIndex] = useState(0)
+  const [isSimulasiModalOpen, setIsSimulasiModalOpen] = useState(false)
 
   const handleDeckScroll = (e) => {
     const el = e.currentTarget
@@ -161,6 +163,7 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
                   else if (card.id === 'vehicles') navigate('/vehicles')
                   else if (card.id === 'trust') navigate('/organization')
                   else if (card.id === 'booking') navigate('/booking')
+                  else if (card.id === 'credit') setIsSimulasiModalOpen(true)
                   else if (card.id === 'emergency') onSelectEmergency()
                   else onSelectService()
                 }}
@@ -238,6 +241,12 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
           </div>
         </div>
       </div>
+
+      {/* Simulasi Kredit Modal */}
+      <SimulasiKreditModal
+        isOpen={isSimulasiModalOpen}
+        onClose={() => setIsSimulasiModalOpen(false)}
+      />
     </section>
   )
 }

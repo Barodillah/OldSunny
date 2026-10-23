@@ -24,6 +24,7 @@ import {
   HiOutlineCalendar
 } from 'react-icons/hi2'
 import { RiCarLine } from 'react-icons/ri'
+import SimulasiKreditModal from './SimulasiKreditModal'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -37,6 +38,7 @@ export default function ServicesSection({ onOpenAiWithService }) {
   const [activeModal, setActiveModal] = useState(null)
   const [activeTooltip, setActiveTooltip] = useState(null)
   const [cursorPos, setCursorPos] = useState({ x: -400, y: -400 })
+  const [isSimulasiModalOpen, setIsSimulasiModalOpen] = useState(false)
 
   // 9 Complete Services in Fullscreen Horizontal Scroll
   const services = [
@@ -616,6 +618,29 @@ export default function ServicesSection({ onOpenAiWithService }) {
                           <HiOutlineArrowRight size={14} />
                         </Link>
                       </div>
+                    ) : item.id === 'credit' ? (
+                      <div className="panel-standard-btn-group">
+                        <button
+                          type="button"
+                          className="btn-panel-primary"
+                          onClick={() => {
+                            if (onOpenAiWithService) onOpenAiWithService(item)
+                            else setActiveModal(item)
+                          }}
+                        >
+                          <HiOutlineChatBubbleLeftRight size={17} />
+                          <span>{item.aiAction}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          className="btn-panel-secondary"
+                          onClick={() => setIsSimulasiModalOpen(true)}
+                        >
+                          <HiOutlineCalculator size={15} />
+                          <span>Hitung Simulasi</span>
+                        </button>
+                      </div>
                     ) : (
                       <div className="panel-standard-btn-group">
                         <button
@@ -748,6 +773,12 @@ export default function ServicesSection({ onOpenAiWithService }) {
           </div>,
           document.body
         )}
+
+      {/* Simulasi Kredit Modal */}
+      <SimulasiKreditModal
+        isOpen={isSimulasiModalOpen}
+        onClose={() => setIsSimulasiModalOpen(false)}
+      />
     </section>
   )
 }

@@ -7,7 +7,7 @@ import {
   HiOutlinePhone,
   HiOutlineChevronDown
 } from 'react-icons/hi2'
-import { openChatHistoryModal } from '../utils/sunnySessionStorage.js'
+import { openChatHistoryModal, openSunnyChat, openSecurityWarningDrawer } from '../utils/sunnySessionStorage.js'
 
 const NAV_MEGA_MENUS = {
   hospitality: {
@@ -43,32 +43,25 @@ const NAV_MEGA_MENUS = {
     defaultImage: 'https://bewhy.id/wp-content/uploads/asset_6ad20f3f4c1a78.73235556.jpeg',
     links: [
       {
-        label: 'Struktur Organisasi & Pimpinan',
+        label: 'Tim Dealer Kami',
         to: '/organization',
         image: 'https://bewhy.id/wp-content/uploads/asset_6ad20f3f4c1a78.73235556.jpeg'
       },
       {
-        label: 'Konsultan Sales Bersertifikat',
+        label: 'Sales of The Month',
         to: '/sales',
         image: 'https://bewhy.id/wp-content/uploads/url_6ab0a0964447f8.27266986.png'
       },
       {
-        label: 'Sales of The Month',
-        to: '/#hall-of-fame',
-        sectionId: 'hall-of-fame',
-        image: 'https://bewhy.id/wp-content/uploads/url_6ad348bb728297.76754474.jpg'
-      },
-      {
-        label: 'Tim Dealer Resmi',
-        to: '/#tim-dealer',
-        sectionId: 'tim-dealer',
-        image: 'https://bewhy.id/wp-content/uploads/asset_6acd9f987280e1.14368522.jpeg'
-      },
-      {
         label: 'Peringatan Sales Nonaktif',
         to: '/#security-warning',
-        sectionId: 'security-warning',
+        action: 'security-warning',
         image: 'https://bewhy.id/wp-content/uploads/url_6ad348dc577e51.43814009.jpg'
+      },
+      {
+        label: 'Booking Servis Langsung',
+        to: '/booking',
+        image: 'https://bewhy.id/wp-content/uploads/url_6ab0a0870ef816.72351873.webp'
       }
     ]
   },
@@ -123,7 +116,7 @@ const NAV_MEGA_MENUS = {
       {
         label: 'Sunny Virtual Assistant 24/7',
         to: '/#sunny-assistant',
-        sectionId: 'sunny-assistant',
+        action: 'sunny-assistant',
         image: 'https://bewhy.id/wp-content/uploads/asset_6ad35b160330c6.97658223.png'
       },
       {
@@ -199,6 +192,27 @@ export default function Navbar({ onOpenEmergency }) {
     }
   }
 
+  const handleSecurityWarningClick = (e) => {
+    e.preventDefault()
+    setIsOpen(false)
+    setActiveMegaMenu(null)
+
+    if (
+      location.pathname === '/' ||
+      location.pathname === '/about' ||
+      location.pathname === '/organization' ||
+      location.pathname === '/struktur-organisasi'
+    ) {
+      const elem = document.getElementById('security-warning')
+      if (elem) {
+        elem.scrollIntoView({ behavior: 'smooth' })
+      }
+      openSecurityWarningDrawer()
+    } else {
+      window.location.href = '/#security-warning'
+    }
+  }
+
   // Open mega menu with preview image default
   const handleMenuHoverOpen = (menuKey) => {
     if (closeTimeoutRef.current) {
@@ -228,14 +242,50 @@ export default function Navbar({ onOpenEmergency }) {
       return path === '/facilities' || path === '/fasilitas' || path === '/vehicles' || path === '/vehicle-list' || path === '/services'
     }
     if (menuKey === 'one') {
-      return path === '/organization' || path === '/about' || path === '/struktur-organisasi' || path === '/sales' || path === '/sales-list'
+      return (
+        path === '/organization' ||
+        path === '/about' ||
+        path === '/struktur-organisasi' ||
+        path === '/sales' ||
+        path === '/sales-list' ||
+        path === '/booking' ||
+        path === '/booking-service' ||
+        path.startsWith('/booking')
+      )
     }
     if (menuKey === 'memorable') {
-      return path === '/news' || path.startsWith('/news/') || path.startsWith('/article/')
+      return (
+        path === '/news' ||
+        path.startsWith('/news/') ||
+        path.startsWith('/article/') ||
+        path === '/promo' ||
+        path === '/promo-event' ||
+        path.startsWith('/promo') ||
+        path === '/accessories' ||
+        path === '/aksesoris' ||
+        path.startsWith('/accessories') ||
+        path.startsWith('/aksesoris')
+      )
     }
     if (menuKey === 'empathy') {
-      return path === '/contact'
+      return path === '/contact' || path === '/service-on-road' || path === '/service-on-the-road'
     }
+    return false
+  }
+
+  // Check if sublink within a menu is active
+  const isSubLinkActive = (to) => {
+    const path = location.pathname
+    if (path === to) return true
+    if (to === '/promo' && (path === '/promo-event' || path.startsWith('/promo'))) return true
+    if (to === '/accessories' && (path === '/aksesoris' || path.startsWith('/accessories') || path.startsWith('/aksesoris'))) return true
+    if (to === '/news' && (path.startsWith('/news/') || path.startsWith('/article/'))) return true
+    if (to === '/facilities' && path === '/fasilitas') return true
+    if (to === '/vehicles' && path === '/vehicle-list') return true
+    if (to === '/organization' && (path === '/about' || path === '/struktur-organisasi')) return true
+    if (to === '/sales' && path === '/sales-list') return true
+    if (to === '/booking' && (path === '/booking-service' || path.startsWith('/booking'))) return true
+    if (to === '/service-on-road' && path === '/service-on-the-road') return true
     return false
   }
 
@@ -433,8 +483,18 @@ export default function Navbar({ onOpenEmergency }) {
                       <Link
                         key={idx}
                         to={linkItem.to}
-                        className={`mobile-accordion-link ${location.pathname === linkItem.to ? 'is-active' : ''}`}
+                        className={`mobile-accordion-link ${isSubLinkActive(linkItem.to) ? 'is-active' : ''}`}
                         onClick={(e) => {
+                          if (linkItem.action === 'security-warning') {
+                            handleSecurityWarningClick(e)
+                            return
+                          }
+                          if (linkItem.action === 'sunny-assistant') {
+                            e.preventDefault()
+                            openSunnyChat()
+                            setIsOpen(false)
+                            return
+                          }
                           if (linkItem.action === 'chat-history') {
                             e.preventDefault()
                             openChatHistoryModal()
@@ -490,7 +550,7 @@ export default function Navbar({ onOpenEmergency }) {
               <div className="megamenu-links-col">
                 <nav className="megamenu-links-nav" aria-label={`Submenu ${currentMegaData.title}`}>
                   {currentMegaData.links.map((item, idx) => {
-                    const isLinkActive = location.pathname === item.to
+                    const isLinkActive = isSubLinkActive(item.to)
                     return (
                       <Link
                         key={idx}
@@ -498,6 +558,16 @@ export default function Navbar({ onOpenEmergency }) {
                         className={`megamenu-link ${isLinkActive ? 'is-active' : ''}`}
                         onMouseEnter={() => setHoveredImage(item.image)}
                         onClick={(e) => {
+                          if (item.action === 'security-warning') {
+                            handleSecurityWarningClick(e)
+                            return
+                          }
+                          if (item.action === 'sunny-assistant') {
+                            e.preventDefault()
+                            openSunnyChat()
+                            setActiveMegaMenu(null)
+                            return
+                          }
                           if (item.action === 'chat-history') {
                             e.preventDefault()
                             openChatHistoryModal()

@@ -365,9 +365,9 @@ export default function BookingService() {
             ) : (
               <button
                 type="button"
-                onClick={() => navigate('/')}
+                onClick={() => navigate(-1)}
                 className="booking-btn-back"
-                aria-label="Kembali ke Beranda"
+                aria-label="Kembali ke halaman sebelumnya"
               >
                 <HiOutlineArrowLeft size={19} />
               </button>

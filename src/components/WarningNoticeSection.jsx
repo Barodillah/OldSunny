@@ -128,11 +128,18 @@ export default function WarningNoticeSection() {
     return () => ctx.revert()
   }, [])
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    if (typeof window !== 'undefined' && window.location.hash === '#security-warning') {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search)
+    }
+  }
+
   // Keyboard Escape listener for drawer & body scroll lock
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isModalOpen) {
-        setIsModalOpen(false)
+        handleCloseModal()
       }
     }
 
@@ -148,6 +155,30 @@ export default function WarningNoticeSection() {
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [isModalOpen])
+
+  // Listen for open security warning drawer event or URL hash #security-warning
+  useEffect(() => {
+    const handleOpen = () => {
+      setIsModalOpen(true)
+    }
+
+    if (window.location.hash === '#security-warning') {
+      setIsModalOpen(true)
+    }
+
+    const handleHashChange = () => {
+      if (window.location.hash === '#security-warning') {
+        setIsModalOpen(true)
+      }
+    }
+
+    window.addEventListener('open_security_warning_drawer', handleOpen)
+    window.addEventListener('hashchange', handleHashChange)
+    return () => {
+      window.removeEventListener('open_security_warning_drawer', handleOpen)
+      window.removeEventListener('hashchange', handleHashChange)
+    }
+  }, [])
 
   const filteredInactiveStaff = INACTIVE_STAFF_LIST.filter(
     (item) =>
@@ -228,7 +259,7 @@ export default function WarningNoticeSection() {
       {isModalOpen && (
         <div
           className="warning-drawer-overlay"
-          onClick={() => setIsModalOpen(false)}
+          onClick={handleCloseModal}
           role="dialog"
           aria-modal="true"
           aria-labelledby="drawer-inactive-title"
@@ -250,7 +281,7 @@ export default function WarningNoticeSection() {
               <button
                 type="button"
                 className="warning-drawer-close"
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleCloseModal}
                 aria-label="Tutup Drawer"
               >
                 <HiOutlineXMark size={24} />

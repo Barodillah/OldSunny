@@ -193,7 +193,7 @@ export default function PortalLogin() {
                 id="portal-email"
                 type="text"
                 className="portal-input"
-                placeholder="dev@sunmargahayu.co.id / 0812... / NIK"
+                placeholder="csm@cssunmotor.com / 0812... / NIK"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
                 autoComplete="username"
@@ -316,7 +316,7 @@ export default function PortalLogin() {
                     <input
                       type="text"
                       className="portal-input"
-                      placeholder="dev@sunmargahayu.co.id / 0812... / NIK"
+                      placeholder="csm@cssunmotor.com / 0812... / NIK"
                       value={resetIdentifier}
                       onChange={(e) => setResetIdentifier(e.target.value)}
                       required

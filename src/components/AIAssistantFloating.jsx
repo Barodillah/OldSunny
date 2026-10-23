@@ -19,6 +19,7 @@ import {
 } from 'react-icons/hi2'
 import { RiWhatsappLine, RiCarLine, RiPaintBrushLine } from 'react-icons/ri'
 import { recordCustomerSession } from '../utils/sunnySessionStorage.js'
+import SimulasiKreditModal from './SimulasiKreditModal'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
 
@@ -125,6 +126,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
   const [isBubbleVisible, setIsBubbleVisible] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStatusIndex, setLoadingStatusIndex] = useState(0)
+  const [isSimulasiModalOpen, setIsSimulasiModalOpen] = useState(false)
 
   // Default showroom coordinates: Margahayu Bekasi Timur
   const DEFAULT_CENTER = { lat: -6.2508468, lng: 107.0245155 }
@@ -624,7 +626,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
   // Listen for external components asking a question directly (e.g., from TestDriveModal)
   useEffect(() => {
     const handleAskQuestion = (e) => {
-      const query = e.detail?.query || (typeof e.detail === 'string' ? e.detail : null)
+      const query = e.detail?.query || e.detail?.message || (typeof e.detail === 'string' ? e.detail : null)
       if (!query) return
 
       handleOpenChat()
@@ -638,6 +640,26 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
 
     window.addEventListener('sunny_ask_question', handleAskQuestion)
     return () => window.removeEventListener('sunny_ask_question', handleAskQuestion)
+  }, [])
+
+  // Listen for external open chat request (e.g. from Navbar)
+  useEffect(() => {
+    const handleOpenChatEvent = () => {
+      handleOpenChat()
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 200)
+    }
+
+    window.addEventListener('open_sunny_chat', handleOpenChatEvent)
+    return () => window.removeEventListener('open_sunny_chat', handleOpenChatEvent)
+  }, [])
+
+  // Listen for external open simulasi kredit modal request
+  useEffect(() => {
+    const handleOpenSimulasi = () => setIsSimulasiModalOpen(true)
+    window.addEventListener('open_simulasi_kredit', handleOpenSimulasi)
+    return () => window.removeEventListener('open_simulasi_kredit', handleOpenSimulasi)
   }, [])
 
   // Confirm Location Share: Send to chat & generate Dispatcher WA link
@@ -679,45 +701,130 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
     sendQueryToBackend(inputText)
   }
 
-  // Format inline markdown (bold, italic, links)
-  const formatInline = (str) => {
-    return str
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="chat-inline-link">$1</a>')
+  // Escape HTML entities to prevent XSS in chat markdown
+  const escapeHtml = (str) => {
+    if (!str) return ''
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;')
   }
 
-  // Render markdown text blocks
-  const renderMessageContent = (text) => {
-    if (!text) return null
-    const blocks = text.split('\n\n')
+  // Format inline markdown (bold, italic, code, links)
+  const formatInline = (text) => {
+    if (!text) return ''
+    let formatted = escapeHtml(text)
 
-    return blocks.map((block, idx) => {
-      const lines = block.split('\n').map(l => l.trim()).filter(Boolean)
-      const isBulletList = lines.length > 0 && lines.every(l => l.startsWith('•') || l.startsWith('-') || /^\d+\./.test(l))
+    // Markdown Bold: **text**
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
 
-      if (isBulletList) {
-        return (
-          <ul key={idx} className="chat-msg-list">
-            {lines.map((item, lIdx) => {
-              const cleanItem = item.replace(/^[•\-\d+\.]\s*/, '')
-              return (
-                <li
-                  key={lIdx}
-                  dangerouslySetInnerHTML={{ __html: formatInline(cleanItem) }}
-                />
-              )
-            })}
-          </ul>
-        )
+    // Markdown Italic: *text*
+    formatted = formatted.replace(/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
+
+    // Markdown Inline Code: `text`
+    formatted = formatted.replace(/`([^`]+)`/g, '<code class="chat-code-span">$1</code>')
+
+    // Markdown Links: [label](url)
+    formatted = formatted.replace(
+      /\[(.*?)\]\(((?:https?:\/\/|tel:|mailto:|wa\.me).*?)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer" class="chat-inline-link">$1</a>'
+    )
+
+    return formatted
+  }
+
+  // Render markdown text blocks (paragraphs, bullet lists, numbered lists)
+  const renderMessageContent = (rawText) => {
+    if (!rawText) return null
+
+    // Split text by multiple consecutive newlines
+    const rawBlocks = String(rawText).split(/\n{2,}/)
+
+    return rawBlocks.map((block, blockIdx) => {
+      const rawLines = block.split('\n').map(l => l.trim()).filter(Boolean)
+      if (rawLines.length === 0) return null
+
+      // Group lines into paragraphs or lists
+      const segments = []
+      let currentList = null
+      let listKind = null // 'ul' or 'ol'
+
+      rawLines.forEach((line) => {
+        const isBullet = /^[•\-\*]\s+/.test(line)
+        const isNumbered = /^\d+[\.\)]\s+/.test(line)
+
+        if (isBullet) {
+          if (currentList && listKind !== 'ul') {
+            segments.push({ kind: listKind, items: currentList })
+            currentList = null
+          }
+          if (!currentList) {
+            currentList = []
+            listKind = 'ul'
+          }
+          currentList.push(line.replace(/^[•\-\*]\s+/, ''))
+        } else if (isNumbered) {
+          if (currentList && listKind !== 'ol') {
+            segments.push({ kind: listKind, items: currentList })
+            currentList = null
+          }
+          if (!currentList) {
+            currentList = []
+            listKind = 'ol'
+          }
+          currentList.push(line.replace(/^\d+[\.\)]\s+/, ''))
+        } else {
+          if (currentList) {
+            segments.push({ kind: listKind, items: currentList })
+            currentList = null
+            listKind = null
+          }
+          segments.push({ kind: 'p', text: line })
+        }
+      })
+
+      if (currentList) {
+        segments.push({ kind: listKind, items: currentList })
       }
 
       return (
-        <p
-          key={idx}
-          className="chat-msg-p"
-          dangerouslySetInnerHTML={{ __html: formatInline(block.replace(/\n/g, '<br />')) }}
-        />
+        <div key={blockIdx} className="chat-msg-block">
+          {segments.map((seg, sIdx) => {
+            if (seg.kind === 'ul') {
+              return (
+                <ul key={sIdx} className="chat-msg-list">
+                  {seg.items.map((item, iIdx) => (
+                    <li
+                      key={iIdx}
+                      dangerouslySetInnerHTML={{ __html: formatInline(item) }}
+                    />
+                  ))}
+                </ul>
+              )
+            }
+            if (seg.kind === 'ol') {
+              return (
+                <ol key={sIdx} className="chat-msg-ol">
+                  {seg.items.map((item, iIdx) => (
+                    <li
+                      key={iIdx}
+                      dangerouslySetInnerHTML={{ __html: formatInline(item) }}
+                    />
+                  ))}
+                </ol>
+              )
+            }
+            return (
+              <p
+                key={sIdx}
+                className="chat-msg-p"
+                dangerouslySetInnerHTML={{ __html: formatInline(seg.text) }}
+              />
+            )
+          })}
+        </div>
       )
     })
   }
@@ -958,7 +1065,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
                         <button
                           type="button"
                           className="chat-action-btn action-btn-booking"
-                          onClick={() => sendQueryToBackend('Tolong hitungkan simulasi kredit dengan DP 20% untuk unit terlaris')}
+                          onClick={() => setIsSimulasiModalOpen(true)}
                         >
                           <HiOutlineCalculator size={15} />
                           <span>Minta Rincian Simulasi Kredit</span>
@@ -1122,6 +1229,12 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
           </div>
         </div>
       )}
+
+      {/* Simulasi Kredit Modal */}
+      <SimulasiKreditModal
+        isOpen={isSimulasiModalOpen}
+        onClose={() => setIsSimulasiModalOpen(false)}
+      />
     </div>
   )
 }

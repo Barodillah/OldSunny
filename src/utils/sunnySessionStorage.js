@@ -110,3 +110,15 @@ export const openChatHistoryModal = () => {
     window.dispatchEvent(new CustomEvent('open_sunny_chat_history'))
   }
 }
+
+export const openSunnyChat = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('open_sunny_chat'))
+  }
+}
+
+export const openSecurityWarningDrawer = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('open_security_warning_drawer'))
+  }
+}

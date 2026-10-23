@@ -447,26 +447,61 @@
   margin-top: auto;
 }
 
-.btn-card-wa {
+.btn-card-wa,
+.btn-card-action {
   flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background-color: #25d366;
+  background-color: var(--accent-red, #E3000C);
   color: #ffffff;
   padding: 0.75rem 1.15rem;
   border-radius: 10px;
   font-size: 0.875rem;
   font-weight: 700;
   text-decoration: none;
+  border: none;
+  cursor: pointer;
   transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(227, 0, 12, 0.22);
+}
+
+.btn-card-wa {
+  background-color: #25d366;
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
 }
 
 .btn-card-wa:hover {
   background-color: #1eb956;
   transform: translateY(-1px);
+}
+
+.btn-card-action:hover {
+  background-color: #b9000a;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(227, 0, 12, 0.32);
+}
+
+.btn-card-action.btn-card-event {
+  background-color: #0f172a;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+.btn-card-action.btn-card-event:hover {
+  background-color: #1e293b;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
+}
+
+.btn-card-action.btn-card-service {
+  background-color: #dc2626;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.22);
+}
+
+.btn-card-action.btn-card-service:hover {
+  background-color: #b91c1c;
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.32);
 }
 
 .btn-card-terms {
@@ -678,6 +713,29 @@
 
 .btn-modal-wa:hover {
   background-color: #1eb956;
+}
+
+.btn-modal-sunny {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  background: linear-gradient(135deg, #E3000C 0%, #b9000a 100%);
+  color: #ffffff;
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.925rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(227, 0, 12, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-modal-sunny:hover {
+  background: linear-gradient(135deg, #b9000a 0%, #990008 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(227, 0, 12, 0.4);
 }
 
 .btn-modal-back {

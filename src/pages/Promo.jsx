@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import {
   HiOutlineCheck,
   HiOutlineCalendar,
@@ -7,14 +7,15 @@ import {
   HiOutlineTag,
   HiOutlineSquares2X2,
   HiOutlineSparkles,
-  HiOutlineArrowRight
+  HiOutlineArrowRight,
+  HiOutlineWrenchScrewdriver
 } from 'react-icons/hi2'
 import {
-  RiWhatsappLine,
   RiCustomerService2Line,
   RiCarLine,
   RiPercentLine,
-  RiCoupon2Line
+  RiCoupon2Line,
+  RiUserStarLine
 } from 'react-icons/ri'
 import './Promo.css'
 
@@ -23,8 +24,8 @@ const PROMO_ITEMS = [
   {
     id: 'bunga-0-xforce-xpander',
     title: 'Program Bunga 0% Tenor hingga 2 Tahun',
-    category: 'credit',
-    categoryLabel: 'Bunga 0% & Kredit',
+    category: 'leasing',
+    categoryLabel: 'Leasing',
     badge: 'BUNGA 0%',
     badgeTheme: 'red',
     targetVehicles: 'New XFORCE, New Xpander, New Xpander Cross',
@@ -44,8 +45,8 @@ const PROMO_ITEMS = [
   {
     id: 'dp-ringan-xpander',
     title: 'Paket DP Ringan Mulai Rp 15 Jutaan',
-    category: 'dp',
-    categoryLabel: 'DP Ringan & Diskon',
+    category: 'leasing',
+    categoryLabel: 'Leasing',
     badge: 'DP RINGAN',
     badgeTheme: 'dark',
     targetVehicles: 'New Xpander & New Xpander Cross',
@@ -65,8 +66,8 @@ const PROMO_ITEMS = [
   {
     id: 'subsidi-trade-in',
     title: 'Subsidi Tukar Tambah (Trade-In) s/d Rp 10 Juta',
-    category: 'tradein',
-    categoryLabel: 'Tukar Tambah',
+    category: 'leasing',
+    categoryLabel: 'Leasing',
     badge: 'SUBSIDI TRADE-IN',
     badgeTheme: 'red',
     targetVehicles: 'Semua Lini Mitsubishi Baru',
@@ -86,8 +87,8 @@ const PROMO_ITEMS = [
   {
     id: 'special-rate-pajero',
     title: 'Special Rate & Paket Mewah New Pajero Sport',
-    category: 'credit',
-    categoryLabel: 'Bunga 0% & Kredit',
+    category: 'leasing',
+    categoryLabel: 'Leasing',
     badge: 'SPECIAL RATE',
     badgeTheme: 'red',
     targetVehicles: 'New Pajero Sport Dakar & Exceed',
@@ -204,15 +205,6 @@ export default function Promo({ onOpenAiChat }) {
           </p>
 
           <div className="promo-hero-cta-row">
-            <a
-              href="https://wa.me/6281318747300?text=Halo%20Sun%20Star%20Prima%20Motor%20Margahayu%2C%20saya%20ingin%20tanya%20promo%20resmi%20bulan%20ini."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-promo-hero-primary"
-            >
-              <RiWhatsappLine size={18} />
-              <span>Klaim Promo via WhatsApp (0813-1874-7300)</span>
-            </a>
 
             <button
               type="button"
@@ -252,29 +244,11 @@ export default function Promo({ onOpenAiChat }) {
 
               <button
                 type="button"
-                className={`promo-pill ${activeCategory === 'credit' ? 'is-active' : ''}`}
-                onClick={() => setActiveCategory('credit')}
+                className={`promo-pill ${activeCategory === 'leasing' ? 'is-active' : ''}`}
+                onClick={() => setActiveCategory('leasing')}
               >
                 <RiPercentLine size={15} />
-                <span>Bunga 0% &amp; Kredit</span>
-              </button>
-
-              <button
-                type="button"
-                className={`promo-pill ${activeCategory === 'dp' ? 'is-active' : ''}`}
-                onClick={() => setActiveCategory('dp')}
-              >
-                <HiOutlineTag size={15} />
-                <span>DP Ringan</span>
-              </button>
-
-              <button
-                type="button"
-                className={`promo-pill ${activeCategory === 'tradein' ? 'is-active' : ''}`}
-                onClick={() => setActiveCategory('tradein')}
-              >
-                <RiCarLine size={15} />
-                <span>Tukar Tambah</span>
+                <span>Leasing</span>
               </button>
 
               <button
@@ -336,15 +310,51 @@ export default function Promo({ onOpenAiChat }) {
 
                 {/* Clean bottom action row */}
                 <div className="card-action-row">
-                  <a
-                    href={createWhatsAppLink(item)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-card-wa"
-                  >
-                    <RiWhatsappLine size={18} />
-                    <span>Klaim via WhatsApp</span>
-                  </a>
+                  {item.category === 'leasing' && (
+                    <Link
+                      to="/sales"
+                      className="btn-card-action btn-card-leasing"
+                    >
+                      <RiUserStarLine size={17} />
+                      <span>Pilih Sales Terbaik</span>
+                    </Link>
+                  )}
+
+                  {item.category === 'event' && (
+                    <button
+                      type="button"
+                      className="btn-card-action btn-card-event"
+                      onClick={() => {
+                        if (onOpenAiChat) {
+                          onOpenAiChat({
+                            id: item.id,
+                            title: `Registrasi Event: ${item.title}`
+                          })
+                        } else {
+                          window.dispatchEvent(
+                            new CustomEvent('sunny_ask_question', {
+                              detail: {
+                                query: `Halo Sunny, saya ingin registrasi dan mengikuti event: ${item.title}. Mohon info jadwal dan konfirmasi keikutsertaan saya.`
+                              }
+                            })
+                          )
+                        }
+                      }}
+                    >
+                      <HiOutlineCalendar size={17} />
+                      <span>Ikuti Event</span>
+                    </button>
+                  )}
+
+                  {item.category === 'service' && (
+                    <Link
+                      to="/booking"
+                      className="btn-card-action btn-card-service"
+                    >
+                      <HiOutlineWrenchScrewdriver size={17} />
+                      <span>Booking Servis</span>
+                    </Link>
+                  )}
 
                   <button
                     type="button"
@@ -399,15 +409,31 @@ export default function Promo({ onOpenAiChat }) {
             </div>
 
             <div className="modal-btn-row">
-              <a
-                href={createWhatsAppLink(selectedPromo)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-modal-wa"
+              <button
+                type="button"
+                className="btn-modal-sunny"
+                onClick={() => {
+                  const currentItem = selectedPromo
+                  setSelectedPromo(null)
+                  const queryText = `Halo Sunny, saya ingin menanyakan lebih detail mengenai program: ${currentItem.title} (${currentItem.categoryLabel}). Mohon informasi lengkap serta syarat dan ketentuannya.`
+
+                  if (onOpenAiChat) {
+                    onOpenAiChat({
+                      id: currentItem.id,
+                      title: currentItem.title
+                    })
+                  } else {
+                    window.dispatchEvent(
+                      new CustomEvent('sunny_ask_question', {
+                        detail: { query: queryText }
+                      })
+                    )
+                  }
+                }}
               >
-                <RiWhatsappLine size={19} />
-                <span>Konsultasikan Program Ini via WhatsApp</span>
-              </a>
+                <HiOutlineSparkles size={19} />
+                <span>Tanyakan Program / Event ke Sunny</span>
+              </button>
               <button
                 type="button"
                 className="btn-modal-back"
