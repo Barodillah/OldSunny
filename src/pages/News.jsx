@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef, useMemo } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import {
   HiOutlineCalendar,
   HiOutlineClock,
@@ -13,18 +13,51 @@ import {
   HiOutlineChevronRight,
   HiOutlineChatBubbleLeftRight
 } from 'react-icons/hi2'
-import {
-  NEWS_ARTICLES,
-  HIGHLIGHT_NEWS_ARTICLES,
-  NEWS_CATEGORIES
-} from '../data/newsData'
+import { NEWS_CATEGORIES } from '../data/newsData'
+import { getStoredArticles, fetchArticlesFromBackend } from '../utils/articleStorage'
 import './News.css'
 
 export default function News() {
+  const [searchParams] = useSearchParams()
   const [activeSlide, setActiveSlide] = useState(0)
   const [isCarouselPaused, setIsCarouselPaused] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('Semua')
+
+  // Reactive article list loaded from articleStorage
+  const [allArticles, setAllArticles] = useState(() => getStoredArticles())
+
+  useEffect(() => {
+    fetchArticlesFromBackend()
+    const handleUpdate = () => {
+      setAllArticles(getStoredArticles())
+    }
+    window.addEventListener('sunny_articles_updated', handleUpdate)
+    return () => window.removeEventListener('sunny_articles_updated', handleUpdate)
+  }, [])
+
+  // Only published articles are shown to visitors
+  const publishedArticles = useMemo(() => {
+    return allArticles.filter((a) => (a.status || 'published') === 'published')
+  }, [allArticles])
+
+  // Highlights for carousel
+  const highlightArticles = useMemo(() => {
+    const hl = publishedArticles.filter((a) => a.isHighlight)
+    return hl.length > 0 ? hl : publishedArticles.slice(0, 3)
+  }, [publishedArticles])
+
+  // Sync with URL query parameter (e.g. from tag clicks)
+  useEffect(() => {
+    const qParam = searchParams.get('q')
+    if (qParam !== null) {
+      setSearchQuery(qParam)
+    }
+    const catParam = searchParams.get('category')
+    if (catParam) {
+      setSelectedCategory(catParam)
+    }
+  }, [searchParams])
 
   // Touch swipe support for carousel
   const touchStartXRef = useRef(null)
@@ -32,23 +65,23 @@ export default function News() {
 
   // 1. Auto-loop Carousel every 4.5s (pauses when user hovers or interacts)
   useEffect(() => {
-    if (isCarouselPaused || HIGHLIGHT_NEWS_ARTICLES.length <= 1) return
+    if (isCarouselPaused || highlightArticles.length <= 1) return
 
     const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % HIGHLIGHT_NEWS_ARTICLES.length)
+      setActiveSlide((prev) => (prev + 1) % highlightArticles.length)
     }, 4500)
 
     return () => clearInterval(interval)
-  }, [isCarouselPaused])
+  }, [isCarouselPaused, highlightArticles.length])
 
   const handlePrevSlide = () => {
     setActiveSlide((prev) =>
-      prev === 0 ? HIGHLIGHT_NEWS_ARTICLES.length - 1 : prev - 1
+      prev === 0 ? highlightArticles.length - 1 : prev - 1
     )
   }
 
   const handleNextSlide = () => {
-    setActiveSlide((prev) => (prev + 1) % HIGHLIGHT_NEWS_ARTICLES.length)
+    setActiveSlide((prev) => (prev + 1) % highlightArticles.length)
   }
 
   // Touch Swipe handlers
@@ -75,7 +108,7 @@ export default function News() {
   }
 
   // 2. Filter and Search Logic
-  const filteredArticles = NEWS_ARTICLES.filter((article) => {
+  const filteredArticles = publishedArticles.filter((article) => {
     const matchesCategory =
       selectedCategory === 'Semua' || article.category === selectedCategory
 
@@ -86,7 +119,8 @@ export default function News() {
       article.summary.toLowerCase().includes(query) ||
       article.category.toLowerCase().includes(query) ||
       (article.author && article.author.toLowerCase().includes(query)) ||
-      (article.fullContent && article.fullContent.toLowerCase().includes(query))
+      (article.fullContent && article.fullContent.toLowerCase().includes(query)) ||
+      (article.tags && article.tags.some((t) => t.toLowerCase().includes(query)))
 
     return matchesCategory && matchesQuery
   })
@@ -94,9 +128,9 @@ export default function News() {
   // Category counts map for pills
   const categoryCounts = NEWS_CATEGORIES.reduce((acc, cat) => {
     if (cat === 'Semua') {
-      acc[cat] = NEWS_ARTICLES.length
+      acc[cat] = publishedArticles.length
     } else {
-      acc[cat] = NEWS_ARTICLES.filter((item) => item.category === cat).length
+      acc[cat] = publishedArticles.filter((item) => item.category === cat).length
     }
     return acc
   }, {})
@@ -108,36 +142,36 @@ export default function News() {
 
   return (
     <main className="news-page-wrapper">
-      <div className="news-page-container">
-        {/* ==================================================================
-            HERO PAGE CAROUSEL (INTEGRATED HIGHLIGHT & PAGE HEADER)
-            ================================================================== */}
-        <section
-          className="news-hero-carousel"
-          aria-label="Highlight Berita Utama dan Header News"
-          onMouseEnter={() => setIsCarouselPaused(true)}
-          onMouseLeave={() => setIsCarouselPaused(false)}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div className="news-hero-viewport">
-            {HIGHLIGHT_NEWS_ARTICLES.map((slide, index) => {
-              const isActive = index === activeSlide
-              return (
-                <div
-                  key={slide.id}
-                  className={`news-hero-slide ${isActive ? 'active' : ''}`}
-                  aria-hidden={!isActive}
-                >
-                  <img
-                    src={slide.imageUrl}
-                    alt={slide.title}
-                    className="news-hero-backdrop"
-                    loading={index === 0 ? 'eager' : 'lazy'}
-                  />
-                  <div className="news-hero-overlay"></div>
+      {/* ==================================================================
+          HERO PAGE CAROUSEL (FULL-WIDTH HERO & INTEGRATED PAGE HEADER)
+          ================================================================== */}
+      <section
+        className="news-hero-carousel"
+        aria-label="Highlight Berita Utama dan Header News"
+        onMouseEnter={() => setIsCarouselPaused(true)}
+        onMouseLeave={() => setIsCarouselPaused(false)}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div className="news-hero-viewport">
+          {highlightArticles.map((slide, index) => {
+            const isActive = index === activeSlide
+            return (
+              <div
+                key={slide.id}
+                className={`news-hero-slide ${isActive ? 'active' : ''}`}
+                aria-hidden={!isActive}
+              >
+                <img
+                  src={slide.imageUrl}
+                  alt={slide.title}
+                  className="news-hero-backdrop"
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                />
+                <div className="news-hero-overlay"></div>
 
+                <div className="news-hero-container">
                   <div className="news-hero-content-wrapper">
                     {/* Top Overline Header Bar within Hero */}
                     <div className="news-hero-top-bar">
@@ -151,7 +185,7 @@ export default function News() {
                       <div className="news-hero-counter-pill">
                         <span className="counter-current">0{activeSlide + 1}</span>
                         <span className="counter-sep">/</span>
-                        <span className="counter-total">0{HIGHLIGHT_NEWS_ARTICLES.length}</span>
+                        <span className="counter-total">0{highlightArticles.length}</span>
                       </div>
                     </div>
 
@@ -172,7 +206,7 @@ export default function News() {
 
                       <div className="news-hero-footer-row">
                         <Link
-                          to={`/news/${slide.id}`}
+                          to={`/news/${slide.slug || slide.id}`}
                           className="btn-news-hero-read"
                         >
                           <span>Baca Berita Lengkap</span>
@@ -202,14 +236,16 @@ export default function News() {
                     </div>
                   </div>
                 </div>
-              )
-            })}
-          </div>
+              </div>
+            )
+          })}
+        </div>
 
-          {/* Carousel Controls: Indicator Dots & Navigation Arrows */}
+        {/* Carousel Controls: Indicator Dots & Navigation Arrows */}
+        <div className="news-hero-controls-container">
           <div className="news-hero-controls">
             <div className="news-hero-dots" role="tablist" aria-label="Pilih slide highlight">
-              {HIGHLIGHT_NEWS_ARTICLES.map((item, dotIndex) => (
+              {highlightArticles.map((item, dotIndex) => (
                 <button
                   key={dotIndex}
                   type="button"
@@ -240,8 +276,10 @@ export default function News() {
               </button>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
+      <div className="news-page-container">
         {/* ==================================================================
             SEARCH AND CATEGORY FILTER SECTION
             ================================================================== */}
@@ -299,7 +337,7 @@ export default function News() {
           <div className="news-results-status-bar">
             <span className="news-results-count">
               Menampilkan <strong>{filteredArticles.length}</strong> dari{' '}
-              {NEWS_ARTICLES.length} artikel
+              {publishedArticles.length} artikel
             </span>
 
             {searchQuery && (
@@ -328,7 +366,7 @@ export default function News() {
               return (
                 <Link
                   key={article.id}
-                  to={`/news/${article.id}`}
+                  to={`/news/${article.slug || article.id}`}
                   className="news-article-card"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                   aria-label={`Baca artikel: ${article.title}`}

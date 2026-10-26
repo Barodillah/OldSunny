@@ -28,14 +28,14 @@ const MASCOT_EXPRESSIONS = [
     id: 'senang',
     label: 'Konsultasi Ramah',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad09424ada3f7.54954850.png',
-    bubbleNote: 'Halo! Sampaikan kebutuhan mobil & nomor WhatsApp Anda, Sunny bantu tuntas!',
+    bubbleNote: 'Halo! Ada yang bisa Sunny bantu seputar mobil Mitsubishi hari ini?',
     badge: 'Konsultasi 24 Jam'
   },
   {
     id: 'berfikir',
     label: 'Hitung Kredit',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad09424acedb0.44157863.png',
-    bubbleNote: 'Mau promo OTR & simulasi DP? Sebutkan tipe unit & tinggalkan no WhatsApp Anda!',
+    bubbleNote: 'Mau info promo OTR & simulasi DP ringan? Sebutkan unit impian Anda ya!',
     badge: 'Kalkulator Kredit'
   },
   {
@@ -49,7 +49,7 @@ const MASCOT_EXPRESSIONS = [
     id: 'berempati',
     label: 'Bantuan Darurat',
     imageUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad09424ad3533.63395686.png',
-    bubbleNote: 'Kendaraan kendala di jalan? Tuliskan lokasi & no WhatsApp untuk bantuan darurat!',
+    bubbleNote: 'Kendaraan kendala di jalan? Beritahu lokasi Anda, tim darurat siap bantu!',
     badge: 'Service on Road 24 Jam'
   }
 ]
@@ -160,7 +160,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
       {
         id: 'init-1',
         sender: 'ai',
-        text: 'Halo! Saya **Sunny**, asisten pintar 24 jam resmi dari **PT Sun Star Prima Motor - Margahayu** (Bekasi Timur).\n\nSilakan sampaikan **kebutuhan spesifik Anda** (misal: tipe unit impian, jadwal booking servis, keluhan bodi & cat, atau kendala darurat) serta **nomor WhatsApp aktif**, agar Sunny dan konsultan resmi kami dapat segera memberikan rincian promo, simulasi kredit, atau konfirmasi tercepat untuk Anda!',
+        text: 'Halo! Saya **Sunny**, asisten pintar 24 jam resmi dari **PT Sun Star Prima Motor - Margahayu** (Bekasi Timur).\n\nAda yang bisa Sunny bantu untuk Anda hari ini? Mulai dari **cek promo unit baru, simulasi DP & angsuran, reservasi jadwal bengkel, perbaikan bodi & cat, hingga info suku cadang**, Sunny siap membantu Anda dengan senang hati!\n\nSilakan pilih topik cepat di bawah atau ketik langsung pertanyaan Anda ya 😊',
         quickReplies: DEFAULT_QUICK_REPLIES
       }
     ]
@@ -363,7 +363,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
       {
         id: `init-${Date.now()}`,
         sender: 'ai',
-        text: 'Halo kembali! Percakapan baru telah dimulai.\n\nSampaikan **tujuan / kebutuhan Anda** (tipe kendaraan, tanggal booking servis, sparepart, atau kendala darurat) beserta **nomor WhatsApp aktif**, agar Sunny dapat segera mencocokkan solusi terbaik & menghubungkan Anda dengan konsultan resmi.',
+        text: 'Halo kembali! Percakapan baru telah dimulai 😊\n\nAda yang bisa Sunny bantu hari ini? Anda dapat bertanya santai seputar **informasi mobil impian, promo diskon, simulasi kredit, booking servis bengkel, hingga perbaikan bodi & cat**.\n\nSilakan sampaikan apa yang ingin Anda ketahui, Sunny siap bantu dengan senang hati!',
         quickReplies: DEFAULT_QUICK_REPLIES
       }
     ]
@@ -1145,7 +1145,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
                 ref={inputRef}
                 type="text"
                 className="chat-input-field"
-                placeholder="Tulis kebutuhan mobil & no WhatsApp (misal: Mau Pajero 0812xxx)..."
+                placeholder="Tulis pesan atau pertanyaan Anda (misal: Mau tanya promo Xforce)..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 disabled={isLoading}

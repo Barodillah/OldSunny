@@ -37,6 +37,9 @@ import PortalOrganization from './portal/pages/PortalOrganization.jsx'
 import PortalSales from './portal/pages/PortalSales.jsx'
 import PortalInactive from './portal/pages/PortalInactive.jsx'
 import PortalSalesRate from './portal/pages/PortalSalesRate.jsx'
+import PortalKnowledgePlaceholder from './portal/pages/PortalKnowledgePlaceholder.jsx'
+import PortalArticles from './portal/pages/PortalArticles.jsx'
+import PortalArticleEditor from './portal/pages/PortalArticleEditor.jsx'
 
 function App() {
   const [selectedAiService, setSelectedAiService] = useState(null)
@@ -65,6 +68,14 @@ function App() {
             <Route path="employees/organization" element={<PortalOrganization />} />
             <Route path="employees/sales" element={<PortalSales />} />
             <Route path="employees/inactive" element={<PortalInactive />} />
+            <Route path="knowledge" element={<Navigate to="/portal/knowledge/price-list" replace />} />
+            <Route path="knowledge/price-list" element={<PortalKnowledgePlaceholder title="Price List" />} />
+            <Route path="knowledge/accessories" element={<PortalKnowledgePlaceholder title="Aksesoris" />} />
+            <Route path="knowledge/sparepart" element={<PortalKnowledgePlaceholder title="Sparepart" />} />
+            <Route path="knowledge/promo-event" element={<PortalKnowledgePlaceholder title="Promo & Event" />} />
+            <Route path="articles" element={<PortalArticles />} />
+            <Route path="articles/create" element={<PortalArticleEditor />} />
+            <Route path="articles/edit/:id" element={<PortalArticleEditor />} />
             <Route path="sales-rate" element={<PortalSalesRate />} />
             <Route path="users" element={<PortalUsers />} />
           </Route>
@@ -95,8 +106,8 @@ function App() {
               <Route path="/about" element={<Organization />} />
               <Route path="/services" element={<Facilities onOpenAiChat={(topic) => setSelectedAiService(topic)} />} />
               <Route path="/news" element={<News />} />
-              <Route path="/news/:id" element={<ArticleDetail />} />
-              <Route path="/article/:id" element={<ArticleDetail />} />
+              <Route path="/news/:slug" element={<ArticleDetail />} />
+              <Route path="/article/:slug" element={<ArticleDetail />} />
               <Route path="/contact" element={<Contact onOpenAiChat={(topic) => setSelectedAiService(topic)} />} />
 
               {/* Explicit & Catch-All Error Pages */}

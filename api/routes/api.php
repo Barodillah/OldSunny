@@ -367,3 +367,36 @@ Route::delete('/sales/{id}', [EmployeeController::class, 'deleteSales']);
 // 3. Inactive Archive (Employees + Sales)
 Route::get('/inactive', [EmployeeController::class, 'getInactiveRecords']);
 Route::get('/inactive-records', [EmployeeController::class, 'getInactiveRecords']);
+
+/*
+|--------------------------------------------------------------------------
+| Articles, Views, Likes, & Comments Management Routes
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\ArticleController;
+
+// 1. Articles Public & Portal
+Route::get('/articles', [ArticleController::class, 'index']);
+Route::post('/articles', [ArticleController::class, 'store']);
+Route::post('/articles/generate-ai', [ArticleController::class, 'generateWithAi']);
+Route::get('/articles/comments/all', [ArticleController::class, 'getAllComments']);
+Route::patch('/articles/comments/{commentId}/approve', [ArticleController::class, 'approveComment']);
+Route::patch('/articles/comments/{commentId}/reject', [ArticleController::class, 'rejectComment']);
+Route::delete('/articles/comments/{commentId}', [ArticleController::class, 'deleteComment']);
+
+Route::get('/articles/{idOrSlug}', [ArticleController::class, 'show']);
+Route::match(['put', 'patch'], '/articles/{id}', [ArticleController::class, 'update']);
+Route::delete('/articles/{id}', [ArticleController::class, 'destroy']);
+Route::patch('/articles/{id}/status', [ArticleController::class, 'toggleStatus']);
+
+// 2. View Analytics & Tracking
+Route::post('/articles/{idOrSlug}/view', [ArticleController::class, 'recordView']);
+Route::get('/articles/{idOrSlug}/analytics', [ArticleController::class, 'getViewAnalytics']);
+
+// 3. Likes
+Route::post('/articles/{idOrSlug}/like', [ArticleController::class, 'toggleLike']);
+
+// 4. Comments
+Route::get('/articles/{idOrSlug}/comments', [ArticleController::class, 'getComments']);
+Route::post('/articles/{idOrSlug}/comments', [ArticleController::class, 'storeComment']);
+

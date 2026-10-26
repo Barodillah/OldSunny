@@ -426,7 +426,11 @@ export default function Navbar({ onOpenEmergency }) {
             type="button"
             className="minimal-action-btn emergency-circle-btn"
             title="Hotline Bantuan Darurat 24 Jam"
-            onClick={onOpenEmergency}
+            onClick={() => {
+              setIsOpen(false)
+              setActiveMegaMenu(null)
+              if (onOpenEmergency) onOpenEmergency()
+            }}
           >
             <HiOutlinePhone size={17} />
           </button>

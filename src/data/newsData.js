@@ -29,7 +29,8 @@ export const NEWS_ARTICLES = [
       '4 Mode berkendara adaptif: Normal, Wet, Gravel, dan Mud',
       'Garansi baterai resmi pabrikan 8 tahun atau 160.000 KM',
       'Gratis biaya jasa servis dan suku cadang orisinal hingga 50.000 KM'
-    ]
+    ],
+    tags: ['New XForce Hybrid', 'SUV Hybrid', 'Mitsubishi Motors', 'Promo Mobil Baru', 'Garansi Baterai', 'Bekasi Timur']
   },
   {
     id: 2,
@@ -58,7 +59,8 @@ export const NEWS_ARTICLES = [
       'Jaminan 100% suku cadang asli berbarcode resmi pabrikan',
       'Riwayat servis otomatis tercatat di data terpadu nasional',
       'Pembersihan sistem rem dan rotasi ban presisi 4 roda'
-    ]
+    ],
+    tags: ['Servis Berkala', 'Perawatan Mobil', 'Garansi Resmi', 'Bengkel Mitsubishi', 'Tips Otomotif', '10.000 KM']
   },
   {
     id: 3,
@@ -88,7 +90,8 @@ export const NEWS_ARTICLES = [
       'Dilarang mentransfer dana ke rekening pribadi perorangan staf sales',
       'Pembayaran tunai hanya sah di kasir resmi dengan bukti kwitansi bercap basah',
       'Hotline verifikasi 24 jam siap mengonfirmasi status rekening dan staf sales'
-    ]
+    ],
+    tags: ['Keamanan Transaksi', 'Virtual Account Resmi', 'Anti Fraud', 'Rekening Resmi Perusahaan', 'BCA 3425419999', 'Tips Konsumen']
   },
   {
     id: 4,
@@ -117,7 +120,8 @@ export const NEWS_ARTICLES = [
       'Kids Zone aman berlantai busa higienis dan koleksi puluhan board game',
       'Monitor CCTV langsung untuk transparansi proses pengerjaan servis',
       'Ruang istirahat khusus bean bag untuk rehat yang tenang'
-    ]
+    ],
+    tags: ['Fasilitas Dealer', 'Standar H.O.M.E', 'Cafe Dealer', 'Kids Zone', 'CCTV Bengkel', 'Sun Margahayu']
   },
   {
     id: 5,
@@ -146,7 +150,8 @@ export const NEWS_ARTICLES = [
       'Unit reaksi cepat motor untuk jump-start aki dan ganti ban serep di tempat',
       'Waktu respon cepat dengan estimasi tiba di bawah 45 menit di wilayah Bekasi',
       'Siaga 24 jam setiap hari termasuk akhir pekan dan libur nasional'
-    ]
+    ],
+    tags: ['Layanan Darurat', 'Service on Road', 'Aki Drop', 'Ganti Ban Serep', 'Bantuan 24 Jam', 'Bekasi']
   },
   {
     id: 6,
@@ -175,7 +180,8 @@ export const NEWS_ARTICLES = [
       'Laporan diagnosa kondisi komponen dikirim langsung ke WhatsApp',
       'Diskon spesial 10% untuk oli mesin orisinal MMGO dan filter',
       'Kuota 50 kendaraan per hari dengan reservasi terlebih dahulu'
-    ]
+    ],
+    tags: ['Promo Servis', 'Inspeksi 15 Titik Gratis', 'Oli MMGO', 'Liburan Aman', 'Perawatan Mesin']
   },
   {
     id: 7,
@@ -204,7 +210,8 @@ export const NEWS_ARTICLES = [
       'Paket servis gratis berkala dan suku cadang orisinal hingga 50.000 KM',
       'Garansi mesin dan kelistrikan diakui di seluruh bengkel resmi se-Indonesia',
       'Skema pembiayaan transparan bekerjasama dengan leasing terdaftar OJK'
-    ]
+    ],
+    tags: ['Dealer Resmi', 'Legalitas Faktur', 'Smart Package', 'Garansi Nasional', 'Mobil Baru']
   },
   {
     id: 8,
@@ -233,7 +240,8 @@ export const NEWS_ARTICLES = [
       'Bilik oven steril bertekanan positif bebas partikel debu',
       'Formulasi cat water-based ramah lingkungan berdaya kilau tahan lama',
       'Garansi pengerjaan cat 6 bulan dan rekanan asuransi terpercaya'
-    ]
+    ],
+    tags: ['Body & Paint', 'Bengkel Bodi', 'Cat Water-Based', 'Oven Steril', 'Klaim Asuransi', 'Garansi Cat']
   }
 ]
 

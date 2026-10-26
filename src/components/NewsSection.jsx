@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -8,13 +8,37 @@ import {
   HiOutlineArrowRight,
   HiOutlineArrowUpRight
 } from 'react-icons/hi2'
-import { LATEST_HOMEPAGE_ARTICLES as LATEST_NEWS_ARTICLES } from '../data/newsData'
+import { getStoredArticles, fetchArticlesFromBackend } from '../utils/articleStorage'
+import { LATEST_HOMEPAGE_ARTICLES } from '../data/newsData'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function NewsSection() {
   const sectionRef = useRef(null)
   const cardsGridRef = useRef(null)
+
+  const [articles, setArticles] = useState(() => {
+    try {
+      const stored = getStoredArticles()
+      const pub = stored.filter((a) => (a.status || 'published') === 'published')
+      return pub.length > 0 ? pub.slice(0, 3) : LATEST_HOMEPAGE_ARTICLES
+    } catch {
+      return LATEST_HOMEPAGE_ARTICLES
+    }
+  })
+
+  useEffect(() => {
+    fetchArticlesFromBackend()
+    const handleUpdate = () => {
+      const stored = getStoredArticles()
+      const pub = stored.filter((a) => (a.status || 'published') === 'published')
+      if (pub.length > 0) {
+        setArticles(pub.slice(0, 3))
+      }
+    }
+    window.addEventListener('sunny_articles_updated', handleUpdate)
+    return () => window.removeEventListener('sunny_articles_updated', handleUpdate)
+  }, [])
 
   // GSAP ScrollTrigger Entrance Animation
   useEffect(() => {
@@ -75,12 +99,12 @@ export default function NewsSection() {
 
         {/* 3 ARTIKEL TERBARU GRID */}
         <div ref={cardsGridRef} className="news-articles-grid">
-          {LATEST_NEWS_ARTICLES.map((article) => {
+          {articles.map((article) => {
             const isYellow = article.categoryTheme === 'yellow'
             return (
               <Link
                 key={article.id}
-                to={`/news/${article.id}`}
+                to={`/news/${article.slug || article.id}`}
                 className="news-article-card"
                 style={{ textDecoration: 'none', color: 'inherit' }}
                 aria-label={`Baca artikel: ${article.title}`}

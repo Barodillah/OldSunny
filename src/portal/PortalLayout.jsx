@@ -13,7 +13,9 @@ import {
   HiOutlineClipboardDocumentList,
   HiOutlineChevronDown,
   HiOutlineUserGroup,
-  HiOutlineChartBarSquare
+  HiOutlineChartBarSquare,
+  HiOutlineBookOpen,
+  HiOutlineNewspaper
 } from 'react-icons/hi2'
 import './PortalLayout.css'
 
@@ -111,6 +113,9 @@ export default function PortalLayout() {
   const isEmployeeActive = location.pathname.startsWith('/portal/employees')
   const [isEmployeeSubmenuOpen, setIsEmployeeSubmenuOpen] = useState(false)
 
+  const isKnowledgeActive = location.pathname.startsWith('/portal/knowledge')
+  const [isKnowledgeSubmenuOpen, setIsKnowledgeSubmenuOpen] = useState(false)
+
   // Auto-close leads submenu when navigating away from portal leads
   useEffect(() => {
     if (location.pathname.startsWith('/portal/leads')) {
@@ -126,6 +131,15 @@ export default function PortalLayout() {
       setIsEmployeeSubmenuOpen(true)
     } else {
       setIsEmployeeSubmenuOpen(false)
+    }
+  }, [location.pathname])
+
+  // Auto-close knowledge submenu when navigating away from portal knowledge
+  useEffect(() => {
+    if (location.pathname.startsWith('/portal/knowledge')) {
+      setIsKnowledgeSubmenuOpen(true)
+    } else {
+      setIsKnowledgeSubmenuOpen(false)
     }
   }, [location.pathname])
 
@@ -145,6 +159,13 @@ export default function PortalLayout() {
     { label: 'Non aktif', path: '/portal/employees/inactive' },
   ]
 
+  const PUBLIC_KNOWLEDGE_SUBMENU = [
+    { label: 'Price List', path: '/portal/knowledge/price-list' },
+    { label: 'Aksesoris', path: '/portal/knowledge/accessories' },
+    { label: 'Sparepart', path: '/portal/knowledge/sparepart' },
+    { label: 'Promo & Event', path: '/portal/knowledge/promo-event' },
+  ]
+
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/portal/login" state={{ from: location }} replace />
@@ -156,9 +177,16 @@ export default function PortalLayout() {
   }
 
   const getPageTitle = () => {
+    if (location.pathname.includes('/knowledge/price-list')) return 'Public Knowledge - Price List'
+    if (location.pathname.includes('/knowledge/accessories')) return 'Public Knowledge - Aksesoris'
+    if (location.pathname.includes('/knowledge/sparepart')) return 'Public Knowledge - Sparepart'
+    if (location.pathname.includes('/knowledge/promo-event')) return 'Public Knowledge - Promo & Event'
     if (location.pathname.includes('/employees/organization')) return 'Struktur Organisasi Dealer'
     if (location.pathname.includes('/employees/sales')) return 'Manajemen Sales'
     if (location.pathname.includes('/employees/inactive')) return 'Arsip Nonaktif (Employee & Sales)'
+    if (location.pathname.includes('/articles/create')) return 'Tulis Artikel Baru'
+    if (location.pathname.includes('/articles/edit')) return 'Edit Artikel'
+    if (location.pathname.includes('/articles')) return 'Manajemen Artikel & Berita'
     if (location.pathname.includes('/sales-rate')) return 'Sales Rate & Kinerja Sales'
     if (location.pathname.includes('/leads')) return 'Manajemen Leads (Sunny AI)'
     if (location.pathname.includes('/users')) return 'Manajemen Pengguna'
@@ -331,13 +359,66 @@ export default function PortalLayout() {
                             onClick={() => setIsMobileSidebarOpen(false)}
                           >
                             <span className="subnav-indicator-dot" />
-                            <span>{sub.label}</span>
+                            <span className="subnav-item-label">{sub.label}</span>
                           </Link>
                         </li>
                       )
                     })}
                   </ul>
                 )}
+              </li>
+
+              {/* Public Knowledge Dropdown Submenu */}
+              <li className={`portal-nav-group ${isKnowledgeActive ? 'has-active-child' : ''}`}>
+                <button
+                  type="button"
+                  className={`portal-nav-parent-row ${isKnowledgeActive ? 'is-active' : ''}`}
+                  onClick={() => setIsKnowledgeSubmenuOpen(prev => !prev)}
+                  aria-expanded={isKnowledgeSubmenuOpen}
+                  aria-label="Buka atau Tutup Submenu Public Knowledge"
+                >
+                  <div className="portal-nav-parent-label">
+                    <HiOutlineBookOpen size={19} className="nav-item-icon" />
+                    <span>Public Knowledge</span>
+                  </div>
+
+                  <span className={`portal-nav-toggle-icon ${isKnowledgeSubmenuOpen ? 'is-open' : ''}`}>
+                    <HiOutlineChevronDown size={14} />
+                  </span>
+                </button>
+
+                {isKnowledgeSubmenuOpen && (
+                  <ul className="portal-subnav-list">
+                    {PUBLIC_KNOWLEDGE_SUBMENU.map((sub) => {
+                      const isSubActive = location.pathname === sub.path
+
+                      return (
+                        <li key={sub.path}>
+                          <Link
+                            to={sub.path}
+                            className={`portal-subnav-item ${isSubActive ? 'is-active' : ''}`}
+                            onClick={() => setIsMobileSidebarOpen(false)}
+                          >
+                            <span className="subnav-indicator-dot" />
+                            <span className="subnav-item-label">{sub.label}</span>
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+              </li>
+
+              {/* Artikel (Single Nav Link) */}
+              <li>
+                <NavLink
+                  to="/portal/articles"
+                  className={({ isActive }) => `portal-nav-item ${isActive || location.pathname.startsWith('/portal/articles') ? 'is-active' : ''}`}
+                  onClick={() => setIsMobileSidebarOpen(false)}
+                >
+                  <HiOutlineNewspaper size={19} className="nav-item-icon" />
+                  <span>Artikel</span>
+                </NavLink>
               </li>
 
               {/* Sales Rate */}

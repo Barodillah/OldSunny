@@ -23,19 +23,18 @@
 .news-hero-carousel {
   position: relative;
   width: 100%;
-  border-radius: 28px;
   overflow: hidden;
   background: #090D1A;
-  margin-top: 1.75rem;
+  margin-top: 0;
   margin-bottom: 2.75rem;
-  box-shadow: 0 25px 65px -15px rgba(15, 23, 42, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 16px 40px -12px rgba(15, 23, 42, 0.12);
 }
 
 .news-hero-viewport {
   position: relative;
   width: 100%;
-  min-height: clamp(500px, 60vh, 590px);
+  min-height: clamp(640px, 80vh, 860px);
 }
 
 .news-hero-slide {
@@ -73,21 +72,32 @@
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(9, 13, 26, 0.78) 0%,
-    rgba(9, 13, 26, 0.45) 28%,
-    rgba(9, 13, 26, 0.88) 75%,
+    rgba(9, 13, 26, 0.72) 0%,
+    rgba(9, 13, 26, 0.35) 26%,
+    rgba(9, 13, 26, 0.82) 70%,
     rgba(9, 13, 26, 0.98) 100%
   );
   z-index: 1;
 }
 
-.news-hero-content-wrapper {
+.news-hero-container {
   position: relative;
   z-index: 2;
   width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
   height: 100%;
-  min-height: clamp(500px, 60vh, 590px);
-  padding: 2.5rem 3.5rem 3.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.news-hero-content-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: clamp(640px, 80vh, 860px);
+  padding: 4rem 0 4.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -305,14 +315,26 @@
 }
 
 /* Navigation Controls (Arrows & Dots) */
-.news-hero-controls {
+.news-hero-controls-container {
   position: absolute;
-  bottom: 2.75rem;
-  right: 3.5rem;
+  bottom: 4.25rem;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.news-hero-controls {
+  pointer-events: auto;
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  z-index: 3;
 }
 
 .news-hero-dots {
@@ -669,13 +691,17 @@
    RESPONSIVE MEDIA QUERIES (DESKTOP, TABLET, MOBILE)
    ========================================================================== */
 @media (max-width: 990px) {
-  .news-hero-content-wrapper {
-    padding: 2.25rem 2rem 5rem;
+  .news-hero-viewport {
+    min-height: clamp(560px, 72vh, 700px);
   }
 
-  .news-hero-controls {
-    bottom: 1.5rem;
-    right: 2rem;
+  .news-hero-content-wrapper {
+    min-height: clamp(560px, 72vh, 700px);
+    padding: 2.75rem 0 5.25rem;
+  }
+
+  .news-hero-controls-container {
+    bottom: 2rem;
   }
 }
 
@@ -690,18 +716,22 @@
 
   /* Hero Carousel on mobile */
   .news-hero-carousel {
-    border-radius: 20px;
-    margin-top: 1rem;
+    border-radius: 0;
+    margin-top: 0;
     margin-bottom: 1.75rem;
   }
 
   .news-hero-viewport {
-    min-height: 520px;
+    min-height: 560px;
+  }
+
+  .news-hero-container {
+    padding: 0 1rem;
   }
 
   .news-hero-content-wrapper {
-    min-height: 520px;
-    padding: 1.5rem 1.25rem 5rem;
+    min-height: 560px;
+    padding: 2rem 0 5.5rem;
   }
 
   .news-hero-top-bar {
@@ -763,10 +793,13 @@
     gap: 6px;
   }
 
-  .news-hero-controls {
+  .news-hero-controls-container {
     bottom: 1.25rem;
-    right: 1.25rem;
-    left: 1.25rem;
+    padding: 0 1rem;
+  }
+
+  .news-hero-controls {
+    width: 100%;
     justify-content: space-between;
   }
 

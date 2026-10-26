@@ -8,7 +8,7 @@
   background-color: rgba(15, 23, 42, 0.72);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  z-index: 100010; /* Higher than SunnyCustomerChatHistoryModal (100000) */
+  z-index: 100110; /* Higher than SunnyCustomerChatHistoryModal (100100) */
   display: flex;
   align-items: center;
   justify-content: center;

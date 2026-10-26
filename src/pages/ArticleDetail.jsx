@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import {
   HiOutlineCalendar,
@@ -13,30 +13,322 @@ import {
   HiOutlineBookmark,
   HiOutlineShieldCheck,
   HiOutlineLightBulb,
-  HiOutlineDocumentText
+  HiOutlineDocumentText,
+  HiOutlineTag,
+  HiOutlineEye,
+  HiHeart,
+  HiOutlineHeart,
+  HiOutlineChatBubbleLeft,
+  HiOutlineXMark,
+  HiOutlineUser,
+  HiOutlinePhoto
 } from 'react-icons/hi2'
-import { RiWhatsappLine, RiTwitterXLine } from 'react-icons/ri'
-import { NEWS_ARTICLES } from '../data/newsData'
+import { RiWhatsappLine, RiTwitterXLine, RiSendPlane2Line } from 'react-icons/ri'
+import { SiThreads } from 'react-icons/si'
+import {
+  getStoredArticles,
+  recordArticleView,
+  toggleArticleLike,
+  fetchArticleComments,
+  submitArticleComment,
+  fetchArticlesFromBackend
+} from '../utils/articleStorage'
 import './ArticleDetail.css'
 
+// ============================================================================
+// MARKDOWN PARSER UTILITIES FOR ARTICLE BODY
+// ============================================================================
+
+// Escape HTML entities to prevent XSS injection
+const escapeHtml = (str) => {
+  if (!str) return ''
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
+// Format inline markdown (bold, italic, inline code, links, and embedded images)
+const formatInline = (text) => {
+  if (!text) return ''
+  let formatted = escapeHtml(text)
+
+  // Markdown Custom Image syntax: [img:url] or [img:url|caption]
+  formatted = formatted.replace(
+    /\[img:(https?:\/\/[^\]|]+)(?:\|([^\]]*))?\]/gi,
+    (match, url, caption) => {
+      const cleanUrl = url.trim()
+      const cleanCaption = caption ? caption.trim() : ''
+      return `<figure class="article-body-figure"><div class="article-figure-img-wrap"><img src="${cleanUrl}" alt="${cleanCaption || 'Gambar Artikel'}" class="article-body-image" loading="lazy" /></div>${cleanCaption ? `<figcaption class="article-body-figcaption"><span>${cleanCaption}</span></figcaption>` : ''}</figure>`
+    }
+  )
+
+  // Bold: **text** or __text__
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+  formatted = formatted.replace(/__(.*?)__/g, '<strong>$1</strong>')
+
+  // Italic: *text* or _text_
+  formatted = formatted.replace(/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
+  formatted = formatted.replace(/(?<!_)_(?!_)(.*?)(?<!_)_(?!_)/g, '<em>$1</em>')
+
+  // Inline Code: `code`
+  formatted = formatted.replace(/`([^`]+)`/g, '<code class="article-inline-code">$1</code>')
+
+  // Links: [label](url)
+  formatted = formatted.replace(
+    /\[(.*?)\]\(((?:https?:\/\/|tel:|mailto:|wa\.me|\/).*?)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer" class="article-inline-link">$1</a>'
+  )
+
+  return formatted
+}
+
+// Parse markdown content into structured blocks (headings, tables, quotes, lists, images, paragraphs)
+const parseMarkdownArticleContent = (rawMarkdown) => {
+  if (!rawMarkdown) return []
+
+  const rawBlocks = String(rawMarkdown)
+    .split(/\n{2,}/)
+    .map((b) => b.trim())
+    .filter(Boolean)
+
+  const elements = []
+
+  const isTableSeparator = (line) => {
+    return line.includes('|') && /^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?\s*$/.test(line)
+  }
+
+  const parseRowCells = (line) => {
+    let clean = line.trim()
+    if (clean.startsWith('|')) clean = clean.substring(1)
+    if (clean.endsWith('|')) clean = clean.substring(0, clean.length - 1)
+    return clean.split('|').map((c) => c.trim())
+  }
+
+  const parseHeading = (line) => {
+    if (/^####\s+/.test(line)) {
+      return { level: 4, text: line.replace(/^####\s+/, '').trim() }
+    }
+    if (/^###\s+/.test(line)) {
+      return { level: 3, text: line.replace(/^###\s+/, '').trim() }
+    }
+    if (/^##\s+/.test(line)) {
+      return { level: 2, text: line.replace(/^##\s+/, '').trim() }
+    }
+    if (/^#\s+/.test(line)) {
+      return { level: 2, text: line.replace(/^#\s+/, '').trim() }
+    }
+    return null
+  }
+
+  const parseImageLine = (line) => {
+    const match = line.trim().match(/^\[img:(https?:\/\/[^\]|]+)(?:\|([^\]]*))?\]$/i)
+    if (!match) return null
+    return {
+      url: match[1].trim(),
+      caption: match[2]?.trim() || ''
+    }
+  }
+
+  rawBlocks.forEach((block) => {
+    const lines = block
+      .split('\n')
+      .map((l) => l.trim())
+      .filter(Boolean)
+
+    if (lines.length === 0) return
+
+    // 1. Table Block Detection
+    const sepIdx = lines.findIndex(isTableSeparator)
+    if (sepIdx > 0) {
+      const headerCells = parseRowCells(lines[0])
+      const bodyRows = lines
+        .slice(sepIdx + 1)
+        .filter((l) => l.includes('|'))
+        .map(parseRowCells)
+
+      elements.push({
+        type: 'table',
+        headers: headerCells,
+        rows: bodyRows
+      })
+      return
+    }
+
+    // 2. Blockquote Detection (line starts with >)
+    if (lines[0].startsWith('>')) {
+      const quoteRaw = lines
+        .map((l) => l.replace(/^>\s*/, '').trim())
+        .filter(Boolean)
+        .join(' ')
+
+      const citeParts = quoteRaw.split(/\s+[—–-]{1,2}\s+/)
+      const quoteText = citeParts[0].replace(/^["']|["']$/g, '').trim()
+      const quoteAuthor = citeParts[1]?.trim() || null
+
+      elements.push({
+        type: 'quote',
+        quoteText,
+        quoteAuthor
+      })
+      return
+    }
+
+    // 3. Single-line Image Block [img:url] or [img:url|caption]
+    if (lines.length === 1) {
+      const imgData = parseImageLine(lines[0])
+      if (imgData) {
+        elements.push({
+          type: 'image',
+          url: imgData.url,
+          caption: imgData.caption
+        })
+        return
+      }
+    }
+
+    // 4. Single-line Heading
+    if (lines.length === 1) {
+      const heading = parseHeading(lines[0])
+      if (heading) {
+        elements.push({
+          type: 'heading',
+          ...heading
+        })
+        return
+      }
+    }
+
+    // 5. Mixed lines: Headings, Images, Bullet Lists, Numbered Lists, Paragraphs
+    let currentList = null
+    let listKind = null // 'ul' | 'ol'
+
+    lines.forEach((line) => {
+      const imgData = parseImageLine(line)
+      if (imgData) {
+        if (currentList) {
+          elements.push({ type: listKind, items: currentList })
+          currentList = null
+          listKind = null
+        }
+        elements.push({
+          type: 'image',
+          url: imgData.url,
+          caption: imgData.caption
+        })
+        return
+      }
+
+      const heading = parseHeading(line)
+      if (heading) {
+        if (currentList) {
+          elements.push({ type: listKind, items: currentList })
+          currentList = null
+          listKind = null
+        }
+        elements.push({ type: 'heading', ...heading })
+        return
+      }
+
+      const isBullet = /^[•\-\*]\s+/.test(line)
+      const isNumbered = /^\d+[\.\)]\s+/.test(line)
+
+      if (isBullet) {
+        if (currentList && listKind !== 'ul') {
+          elements.push({ type: listKind, items: currentList })
+          currentList = null
+        }
+        if (!currentList) {
+          currentList = []
+          listKind = 'ul'
+        }
+        currentList.push(line.replace(/^[•\-\*]\s+/, ''))
+      } else if (isNumbered) {
+        if (currentList && listKind !== 'ol') {
+          elements.push({ type: listKind, items: currentList })
+          currentList = null
+        }
+        if (!currentList) {
+          currentList = []
+          listKind = 'ol'
+        }
+        currentList.push(line.replace(/^\d+[\.\)]\s+/, ''))
+      } else {
+        if (currentList) {
+          elements.push({ type: listKind, items: currentList })
+          currentList = null
+          listKind = null
+        }
+        const lastEl = elements[elements.length - 1]
+        if (lastEl && lastEl.type === 'p') {
+          lastEl.text += ' ' + line
+        } else {
+          elements.push({ type: 'p', text: line })
+        }
+      }
+    })
+
+    if (currentList) {
+      elements.push({ type: listKind, items: currentList })
+    }
+  })
+
+  return elements
+}
+
 export default function ArticleDetail() {
-  const { id } = useParams()
+  const { slug, id } = useParams()
+  const articleSlug = slug || id
   const navigate = useNavigate()
   const articleContentRef = useRef(null)
+  const commentTextareaRef = useRef(null)
+  const commentsSectionRef = useRef(null)
 
   const [readingProgress, setReadingProgress] = useState(0)
   const [isCopied, setIsCopied] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
 
-  // Find article by id or slug
-  const article = NEWS_ARTICLES.find(
-    (item) => String(item.id) === String(id) || item.slug === id
-  )
+  // Views, Likes, & Comments State
+  const [viewCount, setViewCount] = useState(0)
+  const [isLiked, setIsLiked] = useState(false)
+  const [likeCount, setLikeCount] = useState(0)
+  const [comments, setComments] = useState([])
+  const [commentText, setCommentText] = useState('')
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false)
+  const [authorChoice, setAuthorChoice] = useState('anon') // 'anon' | 'name'
+  const [customName, setCustomName] = useState('')
+
+  // Reactive article list loaded from articleStorage
+  const [articleList, setArticleList] = useState(() => getStoredArticles())
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setArticleList(getStoredArticles())
+    }
+    window.addEventListener('sunny_articles_updated', handleUpdate)
+    return () => window.removeEventListener('sunny_articles_updated', handleUpdate)
+  }, [])
+
+  // Find article by slug (primary) or id (fallback)
+  const article = useMemo(() => {
+    return articleList.find(
+      (item) => item.slug === articleSlug || String(item.id) === String(articleSlug)
+    )
+  }, [articleList, articleSlug])
+
+  // If accessed by ID, replace URL with canonical slug URL
+  useEffect(() => {
+    if (article?.slug && articleSlug && String(article.id) === String(articleSlug) && articleSlug !== article.slug) {
+      navigate(`/news/${article.slug}`, { replace: true })
+    }
+  }, [article, articleSlug, navigate])
 
   // Scroll to top on article change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
-  }, [id])
+  }, [articleSlug])
 
   // Track Reading Progress as user scrolls through the article container
   useEffect(() => {
@@ -73,6 +365,53 @@ export default function ArticleDetail() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [id])
 
+  // Initial backend sync
+  useEffect(() => {
+    fetchArticlesFromBackend()
+  }, [])
+
+  // Views counter tracking with backend telemetry & session de-duplication
+  useEffect(() => {
+    if (!article?.id) return
+    const sessionKey = `sunny_article_viewed_${article.id}`
+
+    // Set initial view count from article
+    setViewCount(article.viewsCount || article.views_count || 1)
+
+    if (!sessionStorage.getItem(sessionKey)) {
+      sessionStorage.setItem(sessionKey, 'true')
+      recordArticleView(article.id).then((res) => {
+        if (res?.views_count) {
+          setViewCount(res.views_count)
+        }
+      })
+    }
+  }, [article?.id, article?.viewsCount, article?.views_count])
+
+  // Likes tracking
+  useEffect(() => {
+    if (!article?.id) return
+    const likedKey = `sunny_article_liked_${article.id}`
+    setIsLiked(localStorage.getItem(likedKey) === 'true')
+    setLikeCount(article.likesCount || article.likes_count || 0)
+  }, [article?.id, article?.likesCount, article?.likes_count])
+
+  // Comments loading from backend
+  useEffect(() => {
+    if (!article?.id) return
+    fetchArticleComments(article.id).then((data) => {
+      if (Array.isArray(data)) {
+        setComments(data.map(c => ({
+          id: c.id,
+          name: c.name,
+          isAnon: Boolean(c.is_anon),
+          text: c.comment || c.text,
+          createdAt: c.created_at
+        })))
+      }
+    })
+  }, [article?.id])
+
   // Share Handlers
   const handleCopyLink = () => {
     navigator.clipboard?.writeText(window.location.href)
@@ -97,10 +436,274 @@ export default function ArticleDetail() {
     )
   }
 
-  // Related Articles (excluding current article)
-  const relatedArticles = NEWS_ARTICLES.filter(
-    (item) => item.id !== (article?.id || 0)
-  ).slice(0, 3)
+  const handleShareThreads = () => {
+    if (!article) return
+    const text = `${article.title} - Baca selengkapnya di Mitsubishi Sun Margahayu: ${window.location.href}`
+    window.open(`https://www.threads.net/intent/post?text=${encodeURIComponent(text)}`, '_blank')
+  }
+
+  // Like Toggle
+  const handleToggleLike = async () => {
+    if (!article?.id) return
+    const likedKey = `sunny_article_liked_${article.id}`
+    const nextLiked = !isLiked
+    setIsLiked(nextLiked)
+    setLikeCount(prev => nextLiked ? prev + 1 : Math.max(0, prev - 1))
+    localStorage.setItem(likedKey, String(nextLiked))
+
+    const res = await toggleArticleLike(article.id)
+    if (res && typeof res.likes_count === 'number') {
+      setLikeCount(res.likes_count)
+      setIsLiked(res.is_liked)
+    }
+  }
+
+  // Scroll to Comment Form & Focus Textarea
+  const handleScrollToComments = () => {
+    commentsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setTimeout(() => {
+      commentTextareaRef.current?.focus()
+    }, 450)
+  }
+
+  // Comment Modal & Submission
+  const handleOpenCommentModal = (e) => {
+    if (e) e.preventDefault()
+    if (!commentText.trim()) {
+      commentTextareaRef.current?.focus()
+      return
+    }
+    setIsCommentModalOpen(true)
+  }
+
+  const handleConfirmSubmitComment = async () => {
+    if (!commentText.trim() || !article?.id) return
+    const finalName = authorChoice === 'name' && customName.trim()
+      ? customName.trim()
+      : 'Anonim'
+
+    const payload = {
+      name: finalName,
+      is_anon: authorChoice === 'anon',
+      comment: commentText.trim()
+    }
+
+    const tempComment = {
+      id: Date.now(),
+      name: finalName,
+      isAnon: authorChoice === 'anon',
+      text: commentText.trim(),
+      createdAt: new Date().toISOString()
+    }
+
+    setComments(prev => [tempComment, ...prev])
+    setCommentText('')
+    setIsCommentModalOpen(false)
+    setCustomName('')
+    setAuthorChoice('anon')
+
+    // Submit to Laravel backend
+    const saved = await submitArticleComment(article.id, payload)
+    if (saved) {
+      setComments(prev => prev.map(c => c.id === tempComment.id ? {
+        id: saved.id,
+        name: saved.name,
+        isAnon: Boolean(saved.is_anon),
+        text: saved.comment,
+        createdAt: saved.created_at
+      } : c))
+    }
+  }
+
+  // Reusable Interaction Grid (Used in mobile above comments & desktop in sidebar)
+  const renderInteractionGrid = (isMobile = false) => (
+    <div className={`sidebar-widget-card share-widget-card ${isMobile ? 'share-card-mobile' : 'share-card-desktop'}`}>
+      <h4 className="sidebar-widget-heading">Bagikan & Interaksi</h4>
+      <div className="sidebar-share-grid">
+        <button
+          type="button"
+          className={`btn-sidebar-grid ${isCopied ? 'copied' : ''}`}
+          onClick={handleCopyLink}
+          title="Salin Tautan Artikel"
+        >
+          <HiOutlineClipboardDocumentCheck size={16} />
+          <span>{isCopied ? 'Tersalin' : 'Salin'}</span>
+        </button>
+
+        <button
+          type="button"
+          className="btn-sidebar-grid btn-grid-wa"
+          onClick={handleShareWhatsApp}
+          title="Bagikan via WhatsApp"
+        >
+          <RiWhatsappLine size={16} />
+          <span>WhatsApp</span>
+        </button>
+
+        <button
+          type="button"
+          className="btn-sidebar-grid btn-grid-tw"
+          onClick={handleShareTwitter}
+          title="Bagikan via X (Twitter)"
+        >
+          <RiTwitterXLine size={15} />
+          <span>X / Twitter</span>
+        </button>
+
+        <button
+          type="button"
+          className="btn-sidebar-grid btn-grid-threads"
+          onClick={handleShareThreads}
+          title="Bagikan via Threads"
+        >
+          <SiThreads size={15} />
+          <span>Threads</span>
+        </button>
+
+        <button
+          type="button"
+          className={`btn-sidebar-grid btn-grid-like ${isLiked ? 'liked' : ''}`}
+          onClick={handleToggleLike}
+          title={isLiked ? 'Batal Suka' : 'Sukai Artikel'}
+          aria-label={`Sukai artikel, saat ini ${likeCount} suka`}
+        >
+          {isLiked ? (
+            <HiHeart size={18} className="icon-like-active" />
+          ) : (
+            <HiOutlineHeart size={18} />
+          )}
+          <span className="grid-count">{likeCount}</span>
+        </button>
+
+        <button
+          type="button"
+          className="btn-sidebar-grid btn-grid-comment"
+          onClick={handleScrollToComments}
+          title="Tulis dan lihat komentar artikel"
+          aria-label={`Lihat komentar, saat ini ${comments.length} komentar`}
+        >
+          <HiOutlineChatBubbleLeft size={18} />
+          <span className="grid-count">{comments.length}</span>
+        </button>
+      </div>
+    </div>
+  )
+
+  // Dynamic CTA configuration based on article category & content
+  const ctaConfig = useMemo(() => {
+    const cat = (article?.category || '').toLowerCase()
+    const title = article?.title || 'Artikel ini'
+
+    // 1. Rilis Unit Baru / Mobil Baru / Spesifikasi / Test Drive
+    if (
+      cat.includes('rilis') ||
+      cat.includes('unit') ||
+      cat.includes('mobil') ||
+      cat.includes('hybrid') ||
+      cat.includes('spesifikasi') ||
+      cat.includes('xforce') ||
+      cat.includes('pajero') ||
+      cat.includes('xpander')
+    ) {
+      const unitName = title.includes('XForce')
+        ? 'New XForce'
+        : title.includes('Pajero')
+        ? 'Pajero Sport'
+        : title.includes('Xpander')
+        ? 'New Xpander'
+        : 'Unit Ini'
+      return {
+        tag: 'KONSULTASI UNIT & TEST DRIVE',
+        title: `Tertarik dengan ${unitName} atau Ingin Jadwal Test Drive?`,
+        desc: 'Konsultasikan ketersediaan unit, promo diskon OTR, atau jadwalkan sesi test drive langsung bersama Sunny AI.',
+        buttonText: 'Tanya Sunny AI tentang Unit Ini',
+        prompt: `Halo Sunny, saya sedang membaca ulasan "${title}". Boleh minta info detail spesifikasi, ketersediaan unit, promo diskon OTR, dan jadwal test drive di dealer Sun Margahayu?`
+      }
+    }
+
+    // 2. Tips & Perawatan / Servis / Bengkel / Sparepart
+    if (
+      cat.includes('tips') ||
+      cat.includes('rawat') ||
+      cat.includes('servis') ||
+      cat.includes('bengkel') ||
+      cat.includes('oli') ||
+      cat.includes('mesin') ||
+      cat.includes('bodi') ||
+      cat.includes('body')
+    ) {
+      return {
+        tag: 'BENGKEL & SERVIS RESMI',
+        title: 'Ingin Booking Servis atau Konsultasi Kendala Kendaraan?',
+        desc: 'Dapatkan estimasi biaya servis berkala, konsultasi suku cadang orisinal, atau booking antrean bengkel resmi secara instan.',
+        buttonText: 'Konsultasi Servis via Sunny AI',
+        prompt: `Halo Sunny, terkait artikel "${title}", saya ingin konsultasi perawatan berkala dan booking jadwal servis di bengkel resmi Sun Margahayu.`
+      }
+    }
+
+    // 3. Promo & Program / Kredit / Diskon / Cicilan
+    if (
+      cat.includes('promo') ||
+      cat.includes('program') ||
+      cat.includes('kredit') ||
+      cat.includes('diskon') ||
+      cat.includes('harga') ||
+      cat.includes('cicil') ||
+      cat.includes('dp')
+    ) {
+      return {
+        tag: 'PROMO & SIMULASI KREDIT',
+        title: 'Mau Hitung Simulasi DP Ringan & Promo Terbaru?',
+        desc: 'Ketahui rincian paket bunga 0%, diskon OTR spesial, dan perhitungan cicilan bulanan yang sesuai anggaran Anda.',
+        buttonText: 'Hitung Simulasi via Sunny AI',
+        prompt: `Halo Sunny, saya tertarik dengan promo di artikel "${title}". Bisakah bantu hitungkan simulasi kredit DP ringan dan rincian diskon OTR bulan ini?`
+      }
+    }
+
+    // 4. Edukasi & Keamanan / Proteksi / Rekening Dealer
+    if (
+      cat.includes('edukasi') ||
+      cat.includes('aman') ||
+      cat.includes('keamanan') ||
+      cat.includes('proteksi') ||
+      cat.includes('resmi') ||
+      cat.includes('rekening')
+    ) {
+      return {
+        tag: 'PROTEKSI & KEAMANAN DEALER',
+        title: 'Butuh Verifikasi Rekening atau Transaksi Resmi?',
+        desc: 'Pastikan seluruh pembayaran dan SPK Anda terverifikasi langsung atas nama PT Sun Star Prima Motor untuk keamanan mutlak.',
+        buttonText: 'Verifikasi Transaksi via Sunny AI',
+        prompt: `Halo Sunny, setelah membaca "${title}", saya ingin verifikasi nomor rekening resmi dealer dan prosedur transaksi aman di PT Sun Star Prima Motor.`
+      }
+    }
+
+    // 5. Default / Standar Layanan / Lainnya
+    return {
+      tag: 'KONSULTASI RESMI 24/7',
+      title: `Ada Pertanyaan Seputar ${article?.category || 'Layanan Dealer'}?`,
+      desc: 'Asisten virtual Sunny siap memberikan informasi produk, jadwal operasional bengkel, atau bantuan darurat 24 jam kapan pun Anda butuhkan.',
+      buttonText: 'Tanya Sunny AI Sekarang',
+      prompt: `Halo Sunny, saya sedang membaca artikel "${title}" (Kategori: ${article?.category || 'Umum'}). Boleh bantu informasi lebih lanjut mengenai hal ini?`
+    }
+  }, [article])
+
+  // Dispatch question directly to AIAssistantFloating
+  const handleAskSunnyAI = () => {
+    if (!ctaConfig?.prompt) return
+    window.dispatchEvent(
+      new CustomEvent('sunny_ask_question', {
+        detail: { query: ctaConfig.prompt }
+      })
+    )
+  }
+
+  // Related Articles (excluding current article, published only)
+  const relatedArticles = useMemo(() => {
+    return articleList
+      .filter((item) => (item.status || 'published') === 'published' && String(item.id) !== String(article?.id || 0))
+      .slice(0, 3)
+  }, [articleList, article])
 
   // If article not found
   if (!article) {
@@ -224,47 +827,13 @@ export default function ArticleDetail() {
                 </span>
               </div>
 
-              {/* Action Utilities: Share & Bookmark */}
+              {/* Action Utilities: View Counter & Bookmark */}
               <div className="article-action-buttons">
-                <button
-                  type="button"
-                  className={`btn-action-util ${isCopied ? 'copied' : ''}`}
-                  onClick={handleCopyLink}
-                  title="Salin Tautan Artikel"
-                  aria-label="Salin tautan artikel"
-                >
-                  {isCopied ? (
-                    <>
-                      <HiOutlineClipboardDocumentCheck size={16} />
-                      <span className="action-label">Tersalin!</span>
-                    </>
-                  ) : (
-                    <>
-                      <HiOutlineShare size={16} />
-                      <span className="action-label">Bagikan</span>
-                    </>
-                  )}
-                </button>
-
-                <button
-                  type="button"
-                  className="btn-action-util btn-share-wa"
-                  onClick={handleShareWhatsApp}
-                  title="Bagikan via WhatsApp"
-                  aria-label="Bagikan via WhatsApp"
-                >
-                  <RiWhatsappLine size={16} />
-                </button>
-
-                <button
-                  type="button"
-                  className="btn-action-util btn-share-tw"
-                  onClick={handleShareTwitter}
-                  title="Bagikan via X / Twitter"
-                  aria-label="Bagikan via Twitter"
-                >
-                  <RiTwitterXLine size={15} />
-                </button>
+                <div className="article-views-counter" title="Total pembaca artikel ini">
+                  <HiOutlineEye size={17} className="views-icon" />
+                  <span className="views-count">{(viewCount || 0).toLocaleString('id-ID')}</span>
+                  <span className="views-label">dilihat</span>
+                </div>
 
                 <button
                   type="button"
@@ -327,42 +896,173 @@ export default function ArticleDetail() {
               </aside>
             )}
 
-            {/* Editorial Article Prose Body */}
+            {/* Editorial Article Prose Body with Comprehensive Markdown Parser */}
             <section className="article-prose-body">
-              {article.paragraphs && article.paragraphs.length > 0 ? (
-                article.paragraphs.map((paragraph, idx) => (
-                  <p key={idx} className="article-body-p">
-                    {paragraph}
-                  </p>
-                ))
-              ) : (
-                <p className="article-body-p">
-                  {article.fullContent || article.summary}
-                </p>
-              )}
+              {(() => {
+                const rawMarkdown =
+                  article.fullContent ||
+                  (Array.isArray(article.paragraphs) && article.paragraphs.length > 0
+                    ? article.paragraphs.join('\n\n')
+                    : '') ||
+                  article.summary ||
+                  ''
 
-              {/* Expert Quote Callout */}
-              {article.expertQuote && (
-                <blockquote className="article-quote-block">
-                  <p className="quote-text">"{article.expertQuote}"</p>
-                  <cite className="quote-author">
-                    — {article.author}, {article.authorRole}
-                  </cite>
-                </blockquote>
-              )}
+                const elements = parseMarkdownArticleContent(rawMarkdown)
+                const hasQuoteInBody = elements.some((el) => el.type === 'quote')
 
-              {/* Pro-Tip Box */}
-              <div className="article-protip-box">
-                <div className="protip-icon-badge">
-                  <HiOutlineLightBulb size={20} />
-                </div>
-                <div className="protip-content">
-                  <h4>Tips dari Staf Dealer Mitsubishi Sun:</h4>
-                  <p>
-                    Simpan nomor kontak resmi customer care dan verifikasi seluruh transaksi hanya melalui rekening Virtual Account perusahaan untuk perlindungan maksimal.
-                  </p>
-                </div>
-              </div>
+                return (
+                  <>
+                    {elements.map((el, idx) => {
+                      if (el.type === 'heading') {
+                        if (el.level === 3) {
+                          return (
+                            <h3
+                              key={idx}
+                              className="article-body-h3"
+                              dangerouslySetInnerHTML={{ __html: formatInline(el.text) }}
+                            />
+                          )
+                        }
+                        if (el.level === 4) {
+                          return (
+                            <h4
+                              key={idx}
+                              className="article-body-h4"
+                              dangerouslySetInnerHTML={{ __html: formatInline(el.text) }}
+                            />
+                          )
+                        }
+                        return (
+                          <h2
+                            key={idx}
+                            className="article-body-h2"
+                            dangerouslySetInnerHTML={{ __html: formatInline(el.text) }}
+                          />
+                        )
+                      }
+
+                      if (el.type === 'image') {
+                        return (
+                          <figure key={idx} className="article-body-figure">
+                            <div className="article-figure-img-wrap">
+                              <img
+                                src={el.url}
+                                alt={el.caption || 'Ilustrasi Artikel Sun Star Prima Motor'}
+                                className="article-body-image"
+                                loading="lazy"
+                              />
+                            </div>
+                            {el.caption && (
+                              <figcaption className="article-body-figcaption">
+                                <HiOutlinePhoto size={15} className="figcaption-icon" />
+                                <span>{el.caption}</span>
+                              </figcaption>
+                            )}
+                          </figure>
+                        )
+                      }
+
+                      if (el.type === 'table') {
+                        return (
+                          <div key={idx} className="article-table-responsive">
+                            <table className="article-content-table">
+                              {el.headers.length > 0 && (
+                                <thead>
+                                  <tr>
+                                    {el.headers.map((h, hIdx) => (
+                                      <th
+                                        key={hIdx}
+                                        dangerouslySetInnerHTML={{ __html: formatInline(h) }}
+                                      />
+                                    ))}
+                                  </tr>
+                                </thead>
+                              )}
+                              <tbody>
+                                {el.rows.map((rowCells, rIdx) => (
+                                  <tr key={rIdx}>
+                                    {rowCells.map((cell, cIdx) => (
+                                      <td
+                                        key={cIdx}
+                                        dangerouslySetInnerHTML={{ __html: formatInline(cell) }}
+                                      />
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        )
+                      }
+
+                      if (el.type === 'quote') {
+                        return (
+                          <blockquote key={idx} className="article-quote-block">
+                            <p
+                              className="quote-text"
+                              dangerouslySetInnerHTML={{ __html: `"${formatInline(el.quoteText)}"` }}
+                            />
+                            {el.quoteAuthor && (
+                              <cite
+                                className="quote-author"
+                                dangerouslySetInnerHTML={{ __html: `— ${formatInline(el.quoteAuthor)}` }}
+                              />
+                            )}
+                          </blockquote>
+                        )
+                      }
+
+                      if (el.type === 'ul') {
+                        return (
+                          <ul key={idx} className="article-body-ul">
+                            {el.items.map((it, iIdx) => (
+                              <li
+                                key={iIdx}
+                                dangerouslySetInnerHTML={{ __html: formatInline(it) }}
+                              />
+                            ))}
+                          </ul>
+                        )
+                      }
+
+                      if (el.type === 'ol') {
+                        return (
+                          <ol key={idx} className="article-body-ol">
+                            {el.items.map((it, iIdx) => (
+                              <li
+                                key={iIdx}
+                                dangerouslySetInnerHTML={{ __html: formatInline(it) }}
+                              />
+                            ))}
+                          </ol>
+                        )
+                      }
+
+                      if (el.type === 'p') {
+                        return (
+                          <p
+                            key={idx}
+                            className="article-body-p"
+                            dangerouslySetInnerHTML={{ __html: formatInline(el.text) }}
+                          />
+                        )
+                      }
+
+                      return null
+                    })}
+
+                    {/* Legacy Expert Quote fallback (only if no markdown > blockquote was used) */}
+                    {article.expertQuote && !hasQuoteInBody && (
+                      <blockquote className="article-quote-block">
+                        <p className="quote-text">"{article.expertQuote}"</p>
+                        <cite className="quote-author">
+                          — {article.author}, {article.authorRole}
+                        </cite>
+                      </blockquote>
+                    )}
+                  </>
+                )
+              })()}
             </section>
 
             {/* Author Credential & Trust Banner */}
@@ -384,18 +1084,131 @@ export default function ArticleDetail() {
               </div>
             </section>
 
-            {/* Consultation / Contact Banner */}
-            <section className="article-cta-box">
-              <div className="cta-box-text">
-                <h3>Ingin Konsultasi Lebih Lanjut Seputar Informasi Ini?</h3>
-                <p>
-                  Konsultan penjualan dan teknisi bengkel kami siap menjawab pertanyaan Anda mengenai pemesanan unit, estimasi biaya servis, atau verifikasi promo.
-                </p>
+            {/* Article Tags Section */}
+            <section className="article-tags-section" aria-label="Tag dan Topik Terkait">
+              <div className="article-tags-header">
+                <HiOutlineTag size={18} className="article-tags-icon" />
+                <span className="article-tags-title">Topik Terkait:</span>
               </div>
-              <Link to="/contact" className="btn-article-cta-contact">
-                <HiOutlineChatBubbleLeftRight size={18} />
-                <span>Hubungi Customer Care</span>
-              </Link>
+              <div className="article-tags-list">
+                {(article.tags && article.tags.length > 0
+                  ? article.tags
+                  : [
+                    article.category,
+                    article.highlightBadge || 'Berita Resmi',
+                    'Mitsubishi Motors',
+                    'Sun Margahayu',
+                    'Dealer Resmi'
+                  ]
+                ).map((tag, idx) => (
+                  <Link
+                    key={idx}
+                    to={`/news?q=${encodeURIComponent(tag)}`}
+                    className="article-tag-item"
+                  >
+                    <span className="tag-hash">#</span>
+                    <span>{tag}</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            {/* Mobile Interaction Grid (Placed directly above Comments Section on Mobile) */}
+            {renderInteractionGrid(true)}
+
+            {/* ==========================================================
+                COMMENTS SECTION
+                ========================================================== */}
+            <section
+              className="article-comments-section"
+              id="comments-section"
+              ref={commentsSectionRef}
+              aria-label="Kolom Komentar Artikel"
+            >
+              {/* Header: Red chat bubble icon + Komentar (N) */}
+              <div className="comments-section-header">
+                <HiOutlineChatBubbleLeft className="comments-header-icon" size={24} />
+                <h3 className="comments-header-title">
+                  Komentar ({comments.length})
+                </h3>
+              </div>
+
+              {/* Input Row: Avatar "You" + Rounded Textarea Box with Paper Airplane Send Button */}
+              <form className="comment-form-box" onSubmit={handleOpenCommentModal}>
+                <div className="comment-user-avatar">
+                  <span>You</span>
+                </div>
+
+                <div className="comment-textarea-wrap">
+                  <textarea
+                    ref={commentTextareaRef}
+                    className="comment-textarea"
+                    placeholder="Tulis komentar Anda..."
+                    rows={2}
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                        handleOpenCommentModal(e)
+                      }
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    className={`btn-send-comment ${commentText.trim() ? 'active' : ''}`}
+                    title="Kirim Komentar"
+                    aria-label="Kirim Komentar"
+                    disabled={!commentText.trim()}
+                  >
+                    <RiSendPlane2Line size={20} />
+                  </button>
+                </div>
+              </form>
+
+              {/* Comments Display: Empty State or List */}
+              {comments.length === 0 ? (
+                <div className="comments-empty-state">
+                  <p>Belum ada komentar. Jadilah yang pertama!</p>
+                </div>
+              ) : (
+                <div className="comments-list">
+                  {comments.map((item) => (
+                    <div key={item.id} className="comment-item-card">
+                      <div className={`comment-author-avatar ${item.isAnon ? 'anon' : ''}`}>
+                        <span>
+                          {item.isAnon
+                            ? 'AN'
+                            : (item.name ? item.name.charAt(0).toUpperCase() : 'U')}
+                        </span>
+                      </div>
+                      <div className="comment-item-body">
+                        <div className="comment-item-header">
+                          <span className="comment-author-name">{item.name}</span>
+                          <span className={`comment-badge ${item.isAnon ? 'badge-anon' : 'badge-reader'}`}>
+                            {item.isAnon ? 'Anonim' : 'Pembaca'}
+                          </span>
+                          <span className="comment-dot">•</span>
+                          <span className="comment-time">
+                            {(() => {
+                              try {
+                                const d = new Date(item.createdAt)
+                                return d.toLocaleDateString('id-ID', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  year: 'numeric'
+                                })
+                              } catch {
+                                return 'Baru saja'
+                              }
+                            })()}
+                          </span>
+                        </div>
+                        <p className="comment-item-text">{item.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </section>
           </div>
 
@@ -422,48 +1235,23 @@ export default function ArticleDetail() {
                 </span>
               </div>
 
-              {/* Quick Actions Card */}
-              <div className="sidebar-widget-card">
-                <h4 className="sidebar-widget-heading">Bagikan Artikel</h4>
-                <div className="sidebar-share-buttons">
-                  <button
-                    type="button"
-                    className={`btn-sidebar-share ${isCopied ? 'copied' : ''}`}
-                    onClick={handleCopyLink}
-                  >
-                    <HiOutlineClipboardDocumentCheck size={16} />
-                    <span>{isCopied ? 'Tersalin ke Clipboard!' : 'Salin Tautan'}</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-sidebar-share btn-sidebar-wa"
-                    onClick={handleShareWhatsApp}
-                  >
-                    <RiWhatsappLine size={16} />
-                    <span>Bagikan WhatsApp</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-sidebar-share btn-sidebar-tw"
-                    onClick={handleShareTwitter}
-                  >
-                    <RiTwitterXLine size={15} />
-                    <span>Bagikan X / Twitter</span>
-                  </button>
-                </div>
-              </div>
+              {/* Quick Actions Card: 2-Column Grid (Desktop Sidebar) */}
+              {renderInteractionGrid(false)}
 
-              {/* Quick Dealer Contact Card */}
+              {/* Quick Dealer Contact Card - Dynamic by Article Category & Contextual AI Prompt */}
               <div className="sidebar-widget-card sidebar-dealer-card">
-                <span className="sidebar-dealer-tag">LAYANAN DEALER RESMI</span>
-                <h4 className="sidebar-dealer-title">Butuh Jadwal Servis atau Test Drive?</h4>
-                <p className="sidebar-dealer-desc">
-                  Konsultan sales dan service advisor kami siap melayani Anda secara responsif.
-                </p>
-                <Link to="/contact" className="btn-sidebar-dealer-action">
-                  <HiOutlineChatBubbleLeftRight size={16} />
-                  <span>Hubungi Tim Dealer</span>
-                </Link>
+                <span className="sidebar-dealer-tag">{ctaConfig.tag}</span>
+                <h4 className="sidebar-dealer-title">{ctaConfig.title}</h4>
+                <p className="sidebar-dealer-desc">{ctaConfig.desc}</p>
+                <button
+                  type="button"
+                  className="btn-sidebar-dealer-action"
+                  onClick={handleAskSunnyAI}
+                  title="Tanyakan langsung ke Asisten Virtual Sunny AI"
+                >
+                  <HiOutlineSparkles size={16} />
+                  <span>{ctaConfig.buttonText}</span>
+                </button>
               </div>
             </div>
           </aside>
@@ -490,7 +1278,7 @@ export default function ArticleDetail() {
               return (
                 <Link
                   key={rel.id}
-                  to={`/news/${rel.id}`}
+                  to={`/news/${rel.slug || rel.id}`}
                   className="news-article-card"
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
@@ -503,9 +1291,8 @@ export default function ArticleDetail() {
                     />
                     <div className="news-card-overlay"></div>
                     <span
-                      className={`news-category-tag ${
-                        relIsYellow ? 'tag-yellow' : 'tag-red'
-                      }`}
+                      className={`news-category-tag ${relIsYellow ? 'tag-yellow' : 'tag-red'
+                        }`}
                     >
                       {rel.category}
                     </span>
@@ -540,6 +1327,133 @@ export default function ArticleDetail() {
           </div>
         </section>
       </div>
+
+      {/* ================================================================
+          MODAL PILIHAN IDENTITAS KOMENTAR (ANONIM ATAU MASUKKAN NAMA)
+          ================================================================ */}
+      {isCommentModalOpen && (
+        <div
+          className="comment-modal-backdrop"
+          onClick={() => setIsCommentModalOpen(false)}
+        >
+          <div
+            className="comment-modal-card"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="comment-modal-header">
+              <div>
+                <h4 className="comment-modal-title">Kirim Komentar</h4>
+                <p className="comment-modal-subtitle">
+                  Pilih bagaimana identitas Anda ingin ditampilkan
+                </p>
+              </div>
+              <button
+                type="button"
+                className="btn-close-comment-modal"
+                onClick={() => setIsCommentModalOpen(false)}
+                aria-label="Tutup modal"
+              >
+                <HiOutlineXMark size={20} />
+              </button>
+            </div>
+
+            <div className="comment-identity-choices">
+              {/* Option 1: Anonim */}
+              <label
+                className={`choice-card ${authorChoice === 'anon' ? 'selected' : ''}`}
+                onClick={() => setAuthorChoice('anon')}
+              >
+                <input
+                  type="radio"
+                  name="authorChoice"
+                  value="anon"
+                  checked={authorChoice === 'anon'}
+                  onChange={() => setAuthorChoice('anon')}
+                />
+                <div className="choice-info">
+                  <div className="choice-title-row">
+                    <span className="choice-title">Kirim sebagai Anonim</span>
+                    {authorChoice === 'anon' && <span className="choice-pill">Dipilih</span>}
+                  </div>
+                  <span className="choice-desc">
+                    Nama Anda tidak akan ditampilkan kepada publik. Identitas tetap rahasia.
+                  </span>
+                </div>
+              </label>
+
+              {/* Option 2: Masukkan Nama */}
+              <label
+                className={`choice-card ${authorChoice === 'name' ? 'selected' : ''}`}
+                onClick={() => setAuthorChoice('name')}
+              >
+                <input
+                  type="radio"
+                  name="authorChoice"
+                  value="name"
+                  checked={authorChoice === 'name'}
+                  onChange={() => setAuthorChoice('name')}
+                />
+                <div className="choice-info">
+                  <div className="choice-title-row">
+                    <span className="choice-title">Masukkan Nama</span>
+                    {authorChoice === 'name' && <span className="choice-pill">Dipilih</span>}
+                  </div>
+                  <span className="choice-desc">
+                    Tampilkan nama panggilan atau nama lengkap Anda pada kolom komentar.
+                  </span>
+                </div>
+              </label>
+
+              {/* Name Input Field (Shown when 'name' is selected) */}
+              {authorChoice === 'name' && (
+                <div className="comment-name-input-group">
+                  <label htmlFor="custom-author-name">Nama Pengirim:</label>
+                  <div className="name-input-wrap">
+                    <HiOutlineUser size={16} className="name-input-icon" />
+                    <input
+                      id="custom-author-name"
+                      type="text"
+                      className="name-input-field"
+                      placeholder="Contoh: Budi Santoso / Denny K."
+                      value={customName}
+                      onChange={(e) => setCustomName(e.target.value)}
+                      autoFocus
+                      maxLength={40}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Comment Preview snippet */}
+            <div className="comment-preview-box">
+              <span className="preview-label">Isi Komentar:</span>
+              <p className="preview-content">"{commentText}"</p>
+            </div>
+
+            <div className="comment-modal-actions">
+              <button
+                type="button"
+                className="btn-comment-modal-cancel"
+                onClick={() => setIsCommentModalOpen(false)}
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                className="btn-comment-modal-submit"
+                onClick={handleConfirmSubmitComment}
+                disabled={authorChoice === 'name' && !customName.trim()}
+              >
+                <RiSendPlane2Line size={16} />
+                <span>Kirim Sekarang</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </article>
   )
 }

@@ -350,15 +350,6 @@ export default function Vehicles() {
             {/* Quick Contact Info Strip */}
             <div className="hud-contact-strip">
               <span>Jl. Ir. H. Juanda No. 35 Bulak Kapal, Bekasi Timur</span>
-              <a href="tel:02188347777">📞 (021) 8834 7777</a>
-              <a
-                href="https://wa.me/6281318747300?text=Halo%20CS%20Sales%20Mitsubishi%20Sun%20Margahayu%2C%20saya%20ingin%20konsultasi%20kendaraan%20baru"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Hubungi CS Sales via WhatsApp"
-              >
-                💬 WA: 0813-1874-7300
-              </a>
             </div>
 
             {/* HIGHLIGHT MINI CARD: NEW XFORCE (Requested) */}
