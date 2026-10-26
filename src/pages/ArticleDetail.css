@@ -54,7 +54,10 @@
 }
 
 .reading-pill-icon {
-  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #FDC700;
 }
 
 .reading-pill-text {
@@ -447,7 +450,10 @@
 }
 
 .sidebar-widget-icon {
-  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #E3000C;
 }
 
 .sidebar-widget-title {

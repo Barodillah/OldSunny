@@ -21,7 +21,8 @@ import {
   HiOutlineChatBubbleLeft,
   HiOutlineXMark,
   HiOutlineUser,
-  HiOutlinePhoto
+  HiOutlinePhoto,
+  HiOutlineBookOpen
 } from 'react-icons/hi2'
 import { RiWhatsappLine, RiTwitterXLine, RiSendPlane2Line } from 'react-icons/ri'
 import { SiThreads } from 'react-icons/si'
@@ -747,7 +748,9 @@ export default function ArticleDetail() {
 
       {/* Floating Reading Progress Pill for Mobile & Tablet */}
       <div className={`floating-reading-pill ${readingProgress > 5 ? 'visible' : ''}`}>
-        <span className="reading-pill-icon">📖</span>
+        <span className="reading-pill-icon">
+          <HiOutlineBookOpen size={16} />
+        </span>
         <span className="reading-pill-text">
           {readingProgress === 100 ? 'Selesai Dibaca' : `${readingProgress}% Selesai`}
         </span>
@@ -1218,7 +1221,9 @@ export default function ArticleDetail() {
               {/* Reading Progress Card */}
               <div className="sidebar-widget-card sidebar-progress-card">
                 <div className="sidebar-widget-header">
-                  <span className="sidebar-widget-icon">📖</span>
+                  <span className="sidebar-widget-icon">
+                    <HiOutlineBookOpen size={18} />
+                  </span>
                   <span className="sidebar-widget-title">Progres Baca</span>
                   <span className="sidebar-progress-badge">{readingProgress}%</span>
                 </div>
