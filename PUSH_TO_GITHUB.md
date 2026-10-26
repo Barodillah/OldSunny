@@ -2,8 +2,8 @@
 
 Ketika pengguna meminta Anda untuk melakukan "Push ke GitHub" atau mengeksekusi proses Git, Anda **WAJIB** mengikuti panduan instruksi di bawah ini dengan akurat:
 
-## 1. Keamanan Data (Penting!)
-- **Abaikan `.env`**: Selalu pastikan file `.env`, kredensial, atau kunci API apa pun (seperti `MAIL_PASSWORD`, `VITE_OPENROUTER_API_KEY`) **TIDAK** ikut dimasukkan ke dalam panggung commit (staging). Pastikan `.gitignore` sudah bekerja dengan benar.
+## 1. Pengelolaan File `.env`
+- **Sesuai Izin Pengguna**: File `.env` diperbolehkan diikutsertakan dalam commit dan push jika diminta pengguna (sinkronisasi antar PC Kantor / PC Rumah). Jika GitHub Push Protection memblokir secret, gunakan tautan unblock verifikasi dari GitHub untuk mengizinkannya.
 
 ## 2. Penyusunan Pesan Commit
 Anda harus menyusun pesan commit yang terdiri dari **Judul** dan **Deskripsi Detail**.
