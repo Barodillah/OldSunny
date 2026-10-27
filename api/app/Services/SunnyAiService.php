@@ -16,10 +16,22 @@ class SunnyAiService
     }
 
     /**
-     * Get knowledge data from JSON files or future DB storage
+     * Get knowledge data from Database (KnowledgeItem) or fallback to JSON files
      */
     public function getKnowledge(string $key): ?array
     {
+        // 1. Coba ambil knowledge dinamis dari tabel MySQL knowledge_items
+        try {
+            $normalizedKey = str_replace('-', '_', strtolower(trim($key)));
+            $dbItem = \App\Models\KnowledgeItem::where('key', $normalizedKey)->where('is_active', true)->first();
+            if ($dbItem && !empty($dbItem->payload)) {
+                return is_array($dbItem->payload) ? $dbItem->payload : (json_decode($dbItem->payload, true) ?: []);
+            }
+        } catch (\Throwable $e) {
+            // Abaikan error koneksi / tabel dan lanjut ke file fallback
+        }
+
+        // 2. Fallback ke file JSON lokal
         $fileMap = [
             'dealer' => 'dealer_info.json',
             'body_paint' => 'body_paint.json',
@@ -81,7 +93,7 @@ class SunnyAiService
         $priceList = $this->getKnowledge('price_list') ?? [];
         $promo = $this->getKnowledge('promo') ?? [];
         $sparepart = $this->getKnowledge('sparepart') ?? [];
-        $aksesoris = $this->getKnowledge('aksesoris') ?? [];
+        $aksesoris = $this->getKnowledge('accessories') ?? ($this->getKnowledge('aksesoris') ?? []);
         $simulasi = $this->getKnowledge('simulasi_kredit') ?? [];
         $perawatan = $this->getKnowledge('perawatan') ?? [];
         $acSoft = $this->getKnowledge('soft_selling_ac') ?? [];
@@ -92,11 +104,18 @@ class SunnyAiService
         $priceSnippet = "";
         if (!empty($priceList['passenger_car'])) {
             foreach ($priceList['passenger_car'] as $model => $data) {
-                $mName = strtoupper(str_replace('_', ' ', $model));
+                $mName = !empty($data['name']) ? $data['name'] : strtoupper(str_replace('_', ' ', $model));
                 $priceSnippet .= "\n**{$mName}**\n";
                 if (!empty($data['items'])) {
                     foreach ($data['items'] as $item) {
                         $priceSnippet .= "- {$item['type']}: Rp " . number_format($item['price'], 0, ',', '.') . "\n";
+                    }
+                }
+                if (!empty($data['additional_cost']) && is_array($data['additional_cost'])) {
+                    $priceSnippet .= "  Biaya Tambahan OTR:\n";
+                    foreach ($data['additional_cost'] as $costName => $costPrice) {
+                        $cLabel = ucwords(str_replace('_', ' ', $costName));
+                        $priceSnippet .= "  • {$cLabel}: +Rp " . number_format($costPrice, 0, ',', '.') . "\n";
                     }
                 }
             }
@@ -118,9 +137,51 @@ class SunnyAiService
 
         // Build sparepart snippet
         $sparepartSnippet = "";
+        if (!empty($sparepart['metadata']['catatan_penting'])) {
+            $sparepartSnippet .= "Pedoman Kompatibilitas Suku Cadang:\n";
+            foreach ($sparepart['metadata']['catatan_penting'] as $note) {
+                $sparepartSnippet .= "• {$note}\n";
+            }
+            $sparepartSnippet .= "\n";
+        }
         if (!empty($sparepart['spare_parts'])) {
-            foreach (array_slice($sparepart['spare_parts'], 0, 30) as $part) {
-                $sparepartSnippet .= "- [{$part['kategori']}] {$part['nomor_part']} — {$part['nama']} (Rp " . number_format($part['harga_satuan'], 0, ',', '.') . ") | Untuk: " . implode(', ', $part['digunakan_pada']) . "\n";
+            foreach ($sparepart['spare_parts'] as $part) {
+                $statusNote = ($part['status'] ?? '') === 'always_available' ? ' [Fast Moving/Always Ready]' : '';
+                $sparepartSnippet .= "- [{$part['kategori']}] {$part['nomor_part']} — {$part['nama']} (Rp " . number_format($part['harga_satuan'], 0, ',', '.') . "){$statusNote} | Model: " . implode(', ', $part['digunakan_pada']) . "\n";
+            }
+        }
+
+        // Build aksesoris snippet
+        $aksesorisSnippet = "";
+        $accList = $aksesoris['mitsubishi_accessories'] ?? $aksesoris;
+        if (!empty($accList) && is_array($accList)) {
+            foreach ($accList as $vModel => $cats) {
+                if (!is_array($cats)) continue;
+                $aksesorisSnippet .= "\n**Model: {$vModel}**\n";
+                // Paket
+                if (!empty($cats['paket_aksesoris'])) {
+                    $aksesorisSnippet .= "• Paket Bundle:\n";
+                    foreach (array_slice($cats['paket_aksesoris'], 0, 5) as $pkg) {
+                        $pPrice = !empty($pkg['price']) ? ' (Rp ' . number_format($pkg['price'], 0, ',', '.') . ')' : '';
+                        $aksesorisSnippet .= "  - {$pkg['item']}{$pPrice}\n";
+                    }
+                }
+                // Exterior
+                if (!empty($cats['exterior'])) {
+                    $aksesorisSnippet .= "• Eksterior:\n";
+                    foreach (array_slice($cats['exterior'], 0, 6) as $acc) {
+                        $aPrice = !empty($acc['price']) ? ' (Rp ' . number_format($acc['price'], 0, ',', '.') . ')' : '';
+                        $aksesorisSnippet .= "  - {$acc['item']}{$aPrice}\n";
+                    }
+                }
+                // Interior
+                if (!empty($cats['interior'])) {
+                    $aksesorisSnippet .= "• Interior:\n";
+                    foreach (array_slice($cats['interior'], 0, 5) as $acc) {
+                        $aPrice = !empty($acc['price']) ? ' (Rp ' . number_format($acc['price'], 0, ',', '.') . ')' : '';
+                        $aksesorisSnippet .= "  - {$acc['item']}{$aPrice}\n";
+                    }
+                }
             }
         }
 
@@ -133,6 +194,40 @@ class SunnyAiService
         $bpSnippet .= "- Rekanan Asuransi Resmi: Garda Oto, Sompo, Zurich/Adira, ACA, Sinarmas, Tokio Marine, Jasindo, Allianz, dll. Layanan klaim dibantu end-to-end sampai SPK terbit.\n";
         $bpSnippet .= "- Garansi Pengecatan Resmi: 6 Bulan.\n";
         $bpSnippet .= "- Estimasi Biaya Mandiri: Per panel Rp 750.000 – Rp 1.250.000, spot repair lecet Rp 350.000 – Rp 500.000, poles bodi menyeluruh mulai Rp 1.500.000.\n";
+
+        // Build promo & event snippet from database / knowledge
+        $promoSnippet = "";
+        try {
+            $promoList = \App\Models\Promo::where('is_active', true)->orderBy('sort_order')->get();
+            if ($promoList->isEmpty()) {
+                $promoKI = $this->getKnowledge('promo_event') ?? $this->getKnowledge('promo');
+                $items = is_array($promoKI) ? ($promoKI['promos'] ?? $promoKI) : [];
+            } else {
+                $items = $promoList;
+            }
+
+            foreach ($items as $p) {
+                $pTitle = is_object($p) ? $p->title : ($p['title'] ?? '');
+                $pCat = is_object($p) ? ($p->category_label ?: ucfirst($p->category)) : ($p['category_label'] ?? ucfirst($p['category'] ?? ''));
+                $pVehicles = is_object($p) ? $p->target_vehicles : ($p['target_vehicles'] ?? '');
+                $pValidity = is_object($p) ? $p->validity : ($p['validity'] ?? '');
+                $pHighlight = is_object($p) ? $p->highlight : ($p['highlight'] ?? '');
+                $pLink = is_object($p) ? $p->action_link : ($p['action_link'] ?? '');
+                $pLinkActive = is_object($p) ? $p->action_link_active : ($p['action_link_active'] ?? false);
+                $pLabel = is_object($p) ? $p->action_button_label : ($p['action_button_label'] ?? '');
+
+                $promoSnippet .= "\n**[{$pCat}] {$pTitle}**\n";
+                if ($pVehicles) $promoSnippet .= "• Berlaku Untuk: {$pVehicles}\n";
+                if ($pValidity) $promoSnippet .= "• Periode: {$pValidity}\n";
+                if ($pHighlight) $promoSnippet .= "• Ringkasan: {$pHighlight}\n";
+                if ($pLinkActive && !empty($pLink)) {
+                    $lbl = !empty($pLabel) ? $pLabel : 'Form Pendaftaran / Klaim';
+                    $promoSnippet .= "• Link Akses Langsung ({$lbl}): {$pLink}\n";
+                }
+            }
+        } catch (\Throwable $e) {
+            // Silently fallback
+        }
 
         return <<<PROMPT
 Kamu adalah **Sunny**, Asisten Pintar 24 Jam resmi dari **PT Sun Star Prima Motor - Margahayu** (Dealer Resmi Mitsubishi Motors & Fuso 3S + Authorized Body & Paint di Bekasi Timur).
@@ -276,6 +371,12 @@ JANGAN PERNAH bersikap kaku atau memaksa. Bicaralah selayaknya konsultan ramah y
 
 ### 3. CONTOH SUKU CADANG FAST MOVING RESMI (MMGO)
 {$sparepartSnippet}
+
+### 4. KATALOG AKSESORIS RESMI MITSUBISHI (GENUINE ACCESSORIES)
+{$aksesorisSnippet}
+
+### 5. PROGRAM PROMO & EVENT SPESIAL BERJALAN SAAT INI
+{$promoSnippet}
 
 PROMPT;
     }

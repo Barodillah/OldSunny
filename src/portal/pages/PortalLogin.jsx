@@ -148,7 +148,7 @@ export default function PortalLogin() {
         <div className="portal-login-header">
           <div className="portal-brand-row">
             <img
-              src="https://bewhy.id/wp-content/uploads/url_6acf112141e379.21076281.webp"
+              src="https://cssunmotor.com/wp-content/uploads/url_6ae03aca9c4102.54906789.webp"
               alt="Logo Sunny"
               className="portal-login-logo"
               onError={(e) => {
@@ -162,7 +162,7 @@ export default function PortalLogin() {
           </div>
           <h1 className="portal-login-title">Masuk ke Portal Internal</h1>
           <p className="portal-login-desc">
-            Sistem manajemen operasional terpadu, pemantauan SPK/PKT, dan verifikasi staf resmi.
+            Sistem manajemen operasional terpadu, pemantauan Leads, dan verifikasi staf resmi.
           </p>
         </div>
 
@@ -218,7 +218,7 @@ export default function PortalLogin() {
                   setIsForgotModalOpen(true)
                 }}
               >
-                Lupa sandi? (Reset via OTP)
+                Lupa sandi?
               </button>
             </div>
             <div className="portal-input-wrapper">

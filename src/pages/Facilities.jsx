@@ -7,10 +7,38 @@ import {
   HiOutlineArrowLeft,
   HiOutlineCheck,
   HiOutlineChatBubbleLeftRight,
-  HiOutlineQuestionMarkCircle
+  HiOutlineQuestionMarkCircle,
+  HiOutlineChevronDown
 } from 'react-icons/hi2'
 import GoogleReviewsEmbed from '../components/GoogleReviewsEmbed.jsx'
 import './Facilities.css'
+
+const FACILITY_FAQS = [
+  {
+    id: 'faq-free',
+    question: 'Apakah seluruh fasilitas ini gratis digunakan?',
+    answer:
+      'Ya, seluruh fasilitas seperti Shuttle Service, Voucher Noah Coffee, Kids Zone Playground, Snack Corner, dan area kerja Wi-Fi 6 dapat dinikmati 100% gratis oleh setiap pelanggan showroom dan bengkel resmi Sun Margahayu.'
+  },
+  {
+    id: 'faq-shuttle',
+    question: 'Bagaimana cara memesan layanan Shuttle Service?',
+    answer:
+      'Anda cukup menginformasikan rencana perjalanan Anda ke Service Advisor saat melakukan registrasi servis kendaraan, atau menanyakannya lebih awal ke Asisten AI Sunny. Staf kami akan menyiapkan pengemudi dan armada shuttle.'
+  },
+  {
+    id: 'faq-hours',
+    question: 'Berapa jam operasional Playground & Cafe Lounge?',
+    answer:
+      'Fasilitas ramah keluarga dan lounge buka setiap hari mengikuti jadwal operasional bengkel resmi Sun Margahayu, mulai pukul 08.00 hingga 17.00 WIB.'
+  },
+  {
+    id: 'faq-work',
+    question: 'Apakah ada area kerja yang tenang untuk meeting online?',
+    answer:
+      'Tersedia meja kerja Work From Anywhere yang nyaman dengan colokan listrik universal di setiap kursi, koneksi Wi-Fi 6 berkecepatan tinggi, dan pencahayaan yang mendukung produktivitas kerja Anda.'
+  }
+]
 
 export default function Facilities({ onOpenAiChat }) {
   // Playground & Cafe gallery items
@@ -27,12 +55,12 @@ export default function Facilities({ onOpenAiChat }) {
     },
     {
       id: 'kids-zone-1',
-      title: 'Kids Zone Mandi Bola Ceria',
+      title: 'Kids Zone',
       category: 'Arena Anak',
       badge: 'Aman & Bersih',
       image: 'https://bewhy.id/wp-content/uploads/asset_6acd9f98731b62.64802432.jpeg',
       description:
-        'Kolam mandi bola berwarna cerah dengan matras pelindung benturan empuk, dirancang khusus untuk kenyamanan dan keceriaan si buah hati.',
+        'Kids zone dengan matras pelindung benturan empuk, dirancang khusus untuk kenyamanan dan keceriaan si buah hati.',
       highlights: ['Lantai busa peredam empuk', 'Bola plastik food-grade higienis', 'Zona bermain luas & terbuka'],
     },
     {
@@ -189,6 +217,11 @@ export default function Facilities({ onOpenAiChat }) {
   const [activePerkIndex, setActivePerkIndex] = useState(0)
   const [isPlaygroundPaused, setIsPlaygroundPaused] = useState(false)
   const [isPerkPaused, setIsPerkPaused] = useState(false)
+  const [openFaqId, setOpenFaqId] = useState('faq-free')
+
+  const toggleFaq = (id) => {
+    setOpenFaqId((prev) => (prev === id ? null : id))
+  }
 
   // 1. Auto-rotate Playground & Cafe slider every 3 seconds (infinite loop)
   useEffect(() => {
@@ -634,46 +667,42 @@ export default function Facilities({ onOpenAiChat }) {
             </p>
           </div>
 
-          <div className="fac-faq-grid">
-            <div className="fac-faq-item">
-              <h3 className="fac-faq-q">
-                <HiOutlineQuestionMarkCircle size={20} className="faq-icon" />
-                <span>Apakah seluruh fasilitas ini gratis digunakan?</span>
-              </h3>
-              <p className="fac-faq-a">
-                Ya, seluruh fasilitas seperti Shuttle Service, Voucher Noah Coffee, Kids Zone Playground, Snack Corner, dan area kerja Wi-Fi 6 dapat dinikmati 100% gratis oleh setiap pelanggan showroom dan bengkel resmi Sun Margahayu.
-              </p>
-            </div>
+          <div className="fac-faq-grid" role="region" aria-label="Accordion Pertanyaan Umum Fasilitas">
+            {FACILITY_FAQS.map((faq) => {
+              const isOpen = openFaqId === faq.id
+              return (
+                <div
+                  key={faq.id}
+                  className={`fac-faq-item ${isOpen ? 'is-open' : ''}`}
+                >
+                  <button
+                    type="button"
+                    className="fac-faq-trigger"
+                    onClick={() => toggleFaq(faq.id)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${faq.id}`}
+                    id={`faq-trigger-${faq.id}`}
+                  >
+                    <div className="fac-faq-q">
+                      <HiOutlineQuestionMarkCircle size={20} className="faq-icon" />
+                      <span>{faq.question}</span>
+                    </div>
+                    <HiOutlineChevronDown className="fac-faq-chevron" aria-hidden="true" />
+                  </button>
 
-            <div className="fac-faq-item">
-              <h3 className="fac-faq-q">
-                <HiOutlineQuestionMarkCircle size={20} className="faq-icon" />
-                <span>Bagaimana cara memesan layanan Shuttle Service?</span>
-              </h3>
-              <p className="fac-faq-a">
-                Anda cukup menginformasikan rencana perjalanan Anda ke Service Advisor saat melakukan registrasi servis kendaraan, atau menanyakannya lebih awal ke Asisten AI Sunny. Staf kami akan menyiapkan pengemudi dan armada shuttle.
-              </p>
-            </div>
-
-            <div className="fac-faq-item">
-              <h3 className="fac-faq-q">
-                <HiOutlineQuestionMarkCircle size={20} className="faq-icon" />
-                <span>Berapa jam operasional Playground & Cafe Lounge?</span>
-              </h3>
-              <p className="fac-faq-a">
-                Fasilitas ramah keluarga dan lounge buka setiap hari mengikuti jadwal operasional bengkel resmi Sun Margahayu, mulai pukul 08.00 hingga 17.00 WIB.
-              </p>
-            </div>
-
-            <div className="fac-faq-item">
-              <h3 className="fac-faq-q">
-                <HiOutlineQuestionMarkCircle size={20} className="faq-icon" />
-                <span>Apakah ada area kerja yang tenang untuk meeting online?</span>
-              </h3>
-              <p className="fac-faq-a">
-                Tersedia meja kerja Work From Anywhere yang nyaman dengan colokan listrik universal di setiap kursi, koneksi Wi-Fi 6 berkecepatan tinggi, dan pencahayaan yang mendukung produktivitas kerja Anda.
-              </p>
-            </div>
+                  <div
+                    id={`faq-answer-${faq.id}`}
+                    className="fac-faq-collapse"
+                    role="region"
+                    aria-labelledby={`faq-trigger-${faq.id}`}
+                  >
+                    <div className="fac-faq-collapse-inner">
+                      <p className="fac-faq-a">{faq.answer}</p>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
 
           {/* Bottom Action Footer */}

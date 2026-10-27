@@ -165,7 +165,7 @@ export default function ServicesSection({ onOpenAiWithService }) {
       statusNote: 'Garansi Kelistrikan Tetap Aman',
       icon: HiOutlineSparkles,
       accent: 'sunset',
-      imageUrl: 'https://bewhy.id/wp-content/uploads/url_6ab0a091597dd8.89523512.webp',
+      imageUrl: 'https://cssunmotor.com/wp-content/uploads/url_6ae06595127852.82425066.webp',
       summary: 'Pilihan aksesoris resmi untuk meningkatkan kenyamanan, estetika, dan fungsionalitas kendaraan tanpa menggugurkan garansi pabrik.',
       details: [
         'Kaca film tolak panas tinggi, dashcam integrasi, dan audio premium OEM',

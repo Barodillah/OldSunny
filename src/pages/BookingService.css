@@ -1137,20 +1137,22 @@
   margin-bottom: 1.25rem;
 }
 
-.success-title {
+.success-card .success-title {
   font-size: 1.35rem;
   font-weight: 800;
   color: #0f172a;
   margin: 0 0 0.5rem 0;
   letter-spacing: -0.015em;
+  text-align: center;
 }
 
-.success-desc {
+.success-card .success-desc {
   font-size: 0.88rem;
   color: #475569;
   line-height: 1.5;
-  margin: 0 0 1.5rem 0;
+  margin: 0 auto 1.5rem auto;
   max-width: 480px;
+  text-align: center;
 }
 
 .success-summary-box {

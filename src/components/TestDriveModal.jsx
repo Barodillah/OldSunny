@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
   HiOutlineCalendarDays,
   HiOutlineXMark,
@@ -8,12 +8,83 @@ import {
   HiOutlineMapPin,
   HiOutlineCheck,
   HiOutlineArrowPath,
-  HiArrowRight
+  HiOutlineClock,
+  HiArrowRight,
+  HiOutlineChevronLeft,
+  HiOutlineChevronRight,
+  HiOutlineArrowLeft
 } from 'react-icons/hi2'
 import { RiSteering2Line } from 'react-icons/ri'
 import { getActiveSessionId } from '../utils/sunnySessionStorage.js'
+import './TestDriveModal.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+
+// Showroom Working Hours Time Slots:
+// Senin - Sabtu: 08:30 - 18:00 WIB (slot: 09:00 - 17:00)
+const WEEKDAY_SLOTS = ['09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00']
+// Minggu: 09:00 - 16:30 WIB (slot: 09:30 - 15:30)
+const SUNDAY_SLOTS = ['09:30', '10:30', '11:30', '13:30', '14:30', '15:30']
+
+const MONTH_NAMES_ID = [
+  'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+  'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+]
+const DAY_NAMES_ID = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+
+const toYYYYMMDD = (d) => {
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+const formatDisplayDateIndo = (dateStr, fullMonth = false) => {
+  if (!dateStr) return ''
+  const parts = dateStr.split('-').map(Number)
+  if (parts.length !== 3) return dateStr
+  const [y, m, d] = parts
+  const dt = new Date(y, m - 1, d)
+  const monthName = fullMonth ? MONTH_NAMES_ID[dt.getMonth()] : MONTH_NAMES_ID[dt.getMonth()].substring(0, 3)
+  return `${DAY_NAMES_ID[dt.getDay()]}, ${dt.getDate()} ${monthName} ${dt.getFullYear()}`
+}
+
+const formatDisplayDateTime = (dateTimeStr) => {
+  if (!dateTimeStr) return ''
+  const [datePart, timePart] = dateTimeStr.split('T')
+  const dateFormatted = formatDisplayDateIndo(datePart, false)
+  return timePart ? `${dateFormatted} • Pukul ${timePart} WIB` : dateFormatted
+}
+
+const getAvailableSlots = (dateStr) => {
+  if (!dateStr) return []
+  const parts = dateStr.split('-').map(Number)
+  if (parts.length !== 3) return []
+  const targetDate = new Date(parts[0], parts[1] - 1, parts[2])
+  const isSunday = targetDate.getDay() === 0
+  const rawSlots = isSunday ? SUNDAY_SLOTS : WEEKDAY_SLOTS
+
+  const now = new Date()
+  const todayStr = toYYYYMMDD(now)
+  const isToday = dateStr === todayStr
+
+  return rawSlots.map((timeStr) => {
+    let isPassed = false
+    if (isToday) {
+      const [slotH, slotM] = timeStr.split(':').map(Number)
+      const slotTimeDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), slotH, slotM)
+      // Buffer 30 menit dari sekarang untuk persiapan unit & wiraniaga
+      const minAvailableTime = new Date(now.getTime() + 30 * 60 * 1000)
+      if (slotTimeDate < minAvailableTime) {
+        isPassed = true
+      }
+    }
+    return {
+      time: timeStr,
+      isPassed
+    }
+  })
+}
 
 // Helper format IDR currency if vehicle only has raw minPrice
 const formatIDR = (val) => {
@@ -52,32 +123,146 @@ export default function TestDriveModal({
     preferredDate: '',
   })
 
-  // Reset state when opening a new vehicle or closing
+  // Calendar & Time Picker Modal State
+  const [isPickerModalOpen, setIsPickerModalOpen] = useState(false)
+  const [pickerStep, setPickerStep] = useState('calendar') // 'calendar' | 'time'
+  const [calendarMonth, setCalendarMonth] = useState(() => {
+    const d = new Date()
+    return new Date(d.getFullYear(), d.getMonth(), 1)
+  })
+  const [selectedDate, setSelectedDate] = useState('')
+  const [selectedTime, setSelectedTime] = useState('')
+
+  const now = new Date()
+  const todayStr = toYYYYMMDD(now)
+
+  // Reset & inisialisasi state saat modal dibuka
   useEffect(() => {
     if (isOpen) {
       setFormSuccess(false)
       setErrorMessage('')
       setIsSubmitting(false)
+      setIsPickerModalOpen(false)
+      setPickerStep('calendar')
+
+      const curDate = new Date()
+      setCalendarMonth(new Date(curDate.getFullYear(), curDate.getMonth(), 1))
+
+      const tStr = toYYYYMMDD(curDate)
+      const nextDay = new Date(curDate)
+      nextDay.setDate(curDate.getDate() + 1)
+      const tNextStr = toYYYYMMDD(nextDay)
+
+      // Cek apakah slot hari ini masih ada yang belum lewat
+      const todaySlots = getAvailableSlots(tStr)
+      const hasSlotToday = todaySlots.some((s) => !s.isPassed)
+
+      const initialDate = hasSlotToday ? tStr : tNextStr
+      const slots = getAvailableSlots(initialDate)
+      const firstValidSlot = slots.find((s) => !s.isPassed)?.time || '10:00'
+
+      setSelectedDate(initialDate)
+      setSelectedTime(firstValidSlot)
       setFormData({
         name: '',
         phone: '',
         locationType: 'home',
-        preferredDate: '',
+        preferredDate: `${initialDate}T${firstValidSlot}`
       })
     }
   }, [isOpen, vehicle])
+
+  // Calendar Navigation
+  const handlePrevMonth = () => {
+    setCalendarMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))
+  }
+
+  const handleNextMonth = () => {
+    setCalendarMonth((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))
+  }
+
+  const isPrevDisabled = useMemo(() => {
+    return (
+      calendarMonth.getFullYear() < now.getFullYear() ||
+      (calendarMonth.getFullYear() === now.getFullYear() && calendarMonth.getMonth() <= now.getMonth())
+    )
+  }, [calendarMonth, now])
+
+  const isNextDisabled = useMemo(() => {
+    const maxMonth = new Date(now.getFullYear(), now.getMonth() + 4, 1)
+    return calendarMonth >= maxMonth
+  }, [calendarMonth, now])
+
+  // Grid dates calculation
+  const calendarDays = useMemo(() => {
+    const year = calendarMonth.getFullYear()
+    const month = calendarMonth.getMonth()
+    const firstDayIndex = new Date(year, month, 1).getDay() // 0 = Sunday
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+    const blanks = Array.from({ length: firstDayIndex }, (_, i) => ({
+      key: `blank-${i}`,
+      isBlank: true
+    }))
+
+    const days = Array.from({ length: daysInMonth }, (_, i) => {
+      const dayNum = i + 1
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`
+      const isPast = dateStr < todayStr
+      const isToday = dateStr === todayStr
+      const isSelected = dateStr === selectedDate
+      const isSunday = new Date(year, month, dayNum).getDay() === 0
+
+      return {
+        key: dateStr,
+        dateStr,
+        dayNum,
+        isPast,
+        isToday,
+        isSelected,
+        isSunday,
+        isBlank: false
+      }
+    })
+
+    return [...blanks, ...days]
+  }, [calendarMonth, todayStr, selectedDate])
+
+  // Step 1: Ketika tanggal dipilih di kalender, langsung buka modal pilihan jam saja!
+  const handleDateClick = (dateStr) => {
+    setSelectedDate(dateStr)
+    setPickerStep('time')
+  }
+
+  // Step 2: Slot waktu untuk tanggal terpilih
+  const availableSlots = useMemo(() => getAvailableSlots(selectedDate), [selectedDate])
+
+  // Ketika jam dipilih, simpan ke form dan tutup modal kalender/jam
+  const handleTimeClick = (timeStr) => {
+    setSelectedTime(timeStr)
+    const combined = `${selectedDate}T${timeStr}`
+    setFormData((prev) => ({
+      ...prev,
+      preferredDate: combined
+    }))
+    setIsPickerModalOpen(false)
+  }
 
   // ESC key listener
   useEffect(() => {
     if (!isOpen) return
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && !isSubmitting) {
-        onClose()
+        if (isPickerModalOpen) {
+          setIsPickerModalOpen(false)
+        } else {
+          onClose()
+        }
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, isSubmitting, onClose])
+  }, [isOpen, isSubmitting, isPickerModalOpen, onClose])
 
   if (!isOpen || !vehicle) return null
 
@@ -300,25 +485,59 @@ export default function TestDriveModal({
                     disabled={isSubmitting}
                   >
                     <HiOutlineShieldCheck size={16} />
-                    <span>Di Showroom Sun Margahayu</span>
+                    <span>Di Showroom</span>
                   </button>
                 </div>
               </div>
 
+              {/* Trigger Input Card untuk Calendar & Time Modal */}
               <div className="form-group">
-                <label htmlFor="td-date" className="form-label">
-                  Rencana Tanggal & Waktu
-                </label>
-                <div className="input-with-icon">
-                  <HiOutlineCalendarDays size={18} className="input-prefix-icon" />
-                  <input
-                    id="td-date"
-                    type="datetime-local"
-                    className="form-input has-prefix"
-                    value={formData.preferredDate}
-                    onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
-                    disabled={isSubmitting}
-                  />
+                <div className="td-schedule-header">
+                  <label className="form-label" style={{ margin: 0 }}>
+                    Rencana Tanggal & Waktu Uji Jalan *
+                  </label>
+                  <span className="td-schedule-badge">
+                    <HiOutlineClock size={13} />
+                    <span>Sesuai Jam Kerja Showroom</span>
+                  </span>
+                </div>
+
+                <div
+                  className={`td-schedule-trigger-card ${formData.preferredDate ? 'is-filled' : ''}`}
+                  onClick={() => {
+                    if (selectedDate) {
+                      const parts = selectedDate.split('-').map(Number)
+                      if (parts.length === 3) {
+                        setCalendarMonth(new Date(parts[0], parts[1] - 1, 1))
+                      }
+                    }
+                    setPickerStep('calendar')
+                    setIsPickerModalOpen(true)
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Pilih tanggal dan jam uji jalan dari kalender"
+                >
+                  <div className="td-schedule-trigger-left">
+                    <div className="td-schedule-trigger-icon">
+                      <HiOutlineCalendarDays size={22} />
+                    </div>
+                    <div className="td-schedule-trigger-info">
+                      <div className="td-schedule-selected-title">
+                        {formData.preferredDate
+                          ? formatDisplayDateTime(formData.preferredDate)
+                          : 'Pilih Tanggal & Jam Test Drive'}
+                      </div>
+                      <div className="td-schedule-selected-sub">
+                        {formData.preferredDate
+                          ? 'Senin – Sabtu: 08.30–18.00 • Minggu: 09.00–16.30 WIB'
+                          : 'Ketuk untuk membuka kalender interaktif'}
+                      </div>
+                    </div>
+                  </div>
+                  <span className="td-schedule-trigger-badge">
+                    {formData.preferredDate ? 'Ubah' : 'Pilih'}
+                  </span>
                 </div>
               </div>
 
@@ -385,6 +604,187 @@ export default function TestDriveModal({
           )}
         </div>
       </div>
+
+      {/* Sub-Modal: Calendar & Time Picker Interaktif */}
+      {isPickerModalOpen && (
+        <div
+          className="td-calendar-modal-backdrop"
+          onClick={() => setIsPickerModalOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="td-picker-title"
+        >
+          <div
+            className="td-calendar-modal-dialog"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {pickerStep === 'calendar' ? (
+              <div className="td-cal-view">
+                {/* Header Kalender */}
+                <div className="td-cal-header">
+                  <div>
+                    <h4 id="td-picker-title" className="td-cal-title">Pilih Tanggal Test Drive</h4>
+                    <p className="td-cal-subtitle">Geser bulan untuk memilih tanggal uji jalan yang diinginkan</p>
+                  </div>
+                  <button
+                    type="button"
+                    className="td-cal-close-btn"
+                    onClick={() => setIsPickerModalOpen(false)}
+                    aria-label="Tutup Kalender"
+                  >
+                    <HiOutlineXMark size={18} />
+                  </button>
+                </div>
+
+                {/* Navigasi Geser Bulan */}
+                <div className="td-month-nav-row">
+                  <button
+                    type="button"
+                    className="td-month-nav-btn"
+                    onClick={handlePrevMonth}
+                    disabled={isPrevDisabled}
+                    aria-label="Bulan Sebelumnya"
+                    title={isPrevDisabled ? 'Tidak dapat memilih bulan masa lalu' : 'Bulan Sebelumnya'}
+                  >
+                    <HiOutlineChevronLeft size={18} />
+                  </button>
+                  <div className="td-month-nav-label">
+                    {MONTH_NAMES_ID[calendarMonth.getMonth()]} {calendarMonth.getFullYear()}
+                  </div>
+                  <button
+                    type="button"
+                    className="td-month-nav-btn"
+                    onClick={handleNextMonth}
+                    disabled={isNextDisabled}
+                    aria-label="Bulan Berikutnya"
+                    title={isNextDisabled ? 'Batas maksimal 3 bulan ke depan' : 'Bulan Berikutnya'}
+                  >
+                    <HiOutlineChevronRight size={18} />
+                  </button>
+                </div>
+
+                {/* Header Hari dalam Seminggu */}
+                <div className="td-cal-weekdays-grid">
+                  {['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'].map((d, idx) => (
+                    <div key={d} className={`td-cal-weekday-cell ${idx === 0 ? 'is-sunday' : ''}`}>
+                      {d}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Grid Tanggal Kalender */}
+                <div className="td-cal-days-grid">
+                  {calendarDays.map((cell) => {
+                    if (cell.isBlank) {
+                      return <div key={cell.key} className="td-cal-day-cell is-blank" />
+                    }
+                    return (
+                      <button
+                        key={cell.key}
+                        type="button"
+                        className={`td-cal-day-cell ${cell.isSelected ? 'is-selected' : ''} ${cell.isToday ? 'is-today' : ''} ${cell.isSunday ? 'is-sunday' : ''}`}
+                        disabled={cell.isPast}
+                        onClick={() => handleDateClick(cell.dateStr)}
+                        title={cell.isPast ? 'Tanggal telah lewat' : formatDisplayDateIndo(cell.dateStr, true)}
+                      >
+                        <span className="td-day-num">{cell.dayNum}</span>
+                        {cell.isToday && !cell.isSelected && <span className="td-today-dot" title="Hari ini" />}
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {/* Petunjuk Bawah Kalender */}
+                <div className="td-cal-footer-hint">
+                  <HiOutlineClock size={15} color="#E3000C" />
+                  <span>Pilih tanggal di atas untuk lanjut ke pilihan jam showroom</span>
+                </div>
+              </div>
+            ) : (
+              <div className="td-time-view">
+                {/* Header Modal Pilihan Jam Saja */}
+                <div className="td-cal-header">
+                  <button
+                    type="button"
+                    className="td-modal-back-btn"
+                    onClick={() => setPickerStep('calendar')}
+                    aria-label="Kembali ke kalender"
+                  >
+                    <HiOutlineArrowLeft size={16} />
+                    <span>Ganti Tanggal</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="td-cal-close-btn"
+                    onClick={() => setIsPickerModalOpen(false)}
+                    aria-label="Tutup Pilihan Jam"
+                  >
+                    <HiOutlineXMark size={18} />
+                  </button>
+                </div>
+
+                {/* Banner Tanggal yang Dipilih */}
+                <div className="td-time-selected-banner">
+                  <div className="td-time-banner-icon">
+                    <HiOutlineCalendarDays size={20} />
+                  </div>
+                  <div>
+                    <div className="td-time-banner-date">
+                      {formatDisplayDateIndo(selectedDate, true)}
+                    </div>
+                    <div className="td-time-banner-hours">
+                      {selectedDate && new Date(selectedDate.replace(/-/g, '/')).getDay() === 0
+                        ? 'Jam Operasional Minggu: 09.00 – 16.30 WIB'
+                        : 'Jam Operasional Senin – Sabtu: 08.30 – 18.00 WIB'}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="td-time-section-title">
+                  <HiOutlineClock size={16} color="#E3000C" />
+                  <span>Pilih Jam Kunjungan Uji Jalan:</span>
+                </div>
+
+                {availableSlots.length > 0 && availableSlots.every((s) => s.isPassed) ? (
+                  <div className="td-time-all-passed-alert">
+                    <p>Semua slot operasional uji jalan hari ini telah selesai.</p>
+                    <button
+                      type="button"
+                      className="td-btn-pick-another-date"
+                      onClick={() => setPickerStep('calendar')}
+                    >
+                      ← Pilih Tanggal Lain
+                    </button>
+                  </div>
+                ) : (
+                  <div className="td-time-options-grid">
+                    {availableSlots.map((slot) => {
+                      const isSelected = selectedTime === slot.time
+                      return (
+                        <button
+                          key={slot.time}
+                          type="button"
+                          className={`td-time-option-card ${isSelected ? 'is-selected' : ''}`}
+                          onClick={() => handleTimeClick(slot.time)}
+                          disabled={slot.isPassed}
+                          title={slot.isPassed ? 'Waktu telah lewat untuk hari ini' : `Pukul ${slot.time} WIB`}
+                        >
+                          <span className="td-slot-hour">{slot.time}</span>
+                          <span className="td-slot-wib">WIB</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+
+                <div className="td-time-footer-note">
+                  <span>Wiraniaga resmi siap menyambut & menyiapkan unit {vehicleName} sesuai jam pilihan Anda.</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

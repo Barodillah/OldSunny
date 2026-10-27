@@ -7681,6 +7681,115 @@
   transform: rotate(90deg);
 }
 
+/* Drawer Category Tabs Bar */
+.warning-drawer-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 3.5rem;
+  background: #FFFFFF;
+  border-bottom: 1px solid #E2E8F0;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.warning-drawer-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+}
+
+.warning-drawer-tab {
+  padding: 0.45rem 1rem;
+  border: 1px solid #E2E8F0;
+  background: #F8FAFC;
+  color: #64748B;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.warning-drawer-tab:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.warning-drawer-tab.is-active {
+  background: #0F172A;
+  color: #FFFFFF;
+  border-color: #0F172A;
+}
+
+.warning-drawer-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  color: #475569;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.warning-drawer-refresh-btn:hover:not(:disabled) {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.warning-drawer-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spin-fast {
+  animation: spin 0.8s linear infinite;
+}
+
+.inactive-card-cat-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.64rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.inactive-card-cat-badge.badge-sales {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+}
+
+.inactive-card-cat-badge.badge-employee {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+
+.inactive-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  gap: 0.85rem;
+  color: #64748B;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
 /* Drawer Search & Count Bar */
 .warning-drawer-search-wrap {
   display: flex;
@@ -7990,6 +8099,7 @@
     height: 36px;
   }
 
+  .warning-drawer-tabs,
   .warning-drawer-search-wrap,
   .warning-drawer-body,
   .warning-drawer-footer {

@@ -50,7 +50,7 @@ export default function Footer() {
           <div className="footer-clean-col footer-col-brand">
             <Link to="/" className="footer-brand-logo" aria-label="Kembali ke Beranda Sun Margahayu">
               <img
-                src="https://bewhy.id/wp-content/uploads/url_6acf112141e379.21076281.webp"
+                src="https://cssunmotor.com/wp-content/uploads/url_6ae03aca9c4102.54906789.webp"
                 onError={(e) => {
                   e.currentTarget.src = '/logo-brand.webp'
                 }}
@@ -96,7 +96,7 @@ export default function Footer() {
               </a>
 
               <a
-                href="https://maps.google.com/?q=Jl.+Ir.+H.+Juanda+No.+35+Bulak+Kapal+Bekasi+Timur"
+                href="https://maps.app.goo.gl/avtswtfZ9g7sTkcZ6"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-maps-link"

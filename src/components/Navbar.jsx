@@ -303,7 +303,7 @@ export default function Navbar({ onOpenEmergency }) {
         {/* Brand Logo with supplied image */}
         <Link to="/" className="minimal-brand" onClick={() => scrollToSection('hero')}>
           <img
-            src="https://bewhy.id/wp-content/uploads/url_6acf112141e379.21076281.webp"
+            src="https://cssunmotor.com/wp-content/uploads/url_6ae03aca9c4102.54906789.webp"
             onError={(e) => {
               e.currentTarget.src = '/logo-brand.webp'
             }}

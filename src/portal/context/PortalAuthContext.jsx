@@ -127,10 +127,10 @@ export function PortalAuthProvider({ children }) {
         }
       }
     } catch (err) {
-      console.error('Koneksi ke backend MySQL gagal:', err)
+      console.error('Koneksi ke backend gagal:', err)
       return {
         success: false,
-        message: 'Tidak dapat terhubung ke server database MySQL. Pastikan koneksi internet atau server backend aktif.'
+        message: 'Tidak dapat terhubung ke server. Silakan periksa koneksi internet Anda atau coba beberapa saat lagi.'
       }
     }
   }
@@ -185,7 +185,7 @@ export function PortalAuthProvider({ children }) {
       }
     } catch (err) {
       console.error('Request OTP error:', err)
-      return { success: false, message: 'Gagal menghubungi server database OTP.' }
+      return { success: false, message: 'Gagal menghubungi server. Silakan coba beberapa saat lagi.' }
     }
   }
 
@@ -219,7 +219,7 @@ export function PortalAuthProvider({ children }) {
       }
     } catch (err) {
       console.error('Verify OTP error:', err)
-      return { success: false, message: 'Terjadi kesalahan saat memverifikasi OTP ke database.' }
+      return { success: false, message: 'Terjadi kesalahan saat memverifikasi OTP. Silakan coba lagi.' }
     }
   }
 
@@ -241,12 +241,12 @@ export function PortalAuthProvider({ children }) {
         refreshUsersFromDb()
         return { success: true, user: data.data }
       } else {
-        alert(data.message || 'Gagal menambahkan pengguna ke database.')
+        alert(data.message || 'Gagal menambahkan pengguna.')
         return { success: false, message: data.message }
       }
     } catch (err) {
       console.error('Add user error:', err)
-      return { success: false, message: 'Gagal terhubung ke database.' }
+      return { success: false, message: 'Gagal terhubung ke layanan server.' }
     }
   }
 
@@ -300,11 +300,11 @@ export function PortalAuthProvider({ children }) {
         refreshUsersFromDb()
         return { success: true }
       } else {
-        return { success: false, message: data.message || 'Gagal menghapus pengguna dari database.' }
+        return { success: false, message: data.message || 'Gagal menghapus pengguna.' }
       }
     } catch (err) {
       console.error('Delete user error:', err)
-      return { success: false, message: 'Gagal terhubung ke server database.' }
+      return { success: false, message: 'Gagal terhubung ke server.' }
     }
   }
 

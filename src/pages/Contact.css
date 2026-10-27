@@ -809,7 +809,11 @@
   border: 1.5px solid #86EFAC;
   border-radius: 20px;
   padding: 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+  width: 100%;
   animation: fadeIn 0.3s ease;
 }
 
@@ -837,24 +841,30 @@
   margin: 0 auto 1.25rem;
 }
 
-.success-title {
+.form-success-box .success-title {
   font-size: 1.5rem;
   font-weight: 800;
   color: #14532D;
   margin-bottom: 0.5rem;
+  text-align: center;
+  width: 100%;
 }
 
-.success-desc {
+.form-success-box .success-desc {
   font-size: 0.95rem;
   color: #166534;
   line-height: 1.6;
-  max-width: 500px;
-  margin: 0 auto 1.75rem;
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto 1.75rem auto !important;
+  text-align: center !important;
 }
 
-.success-actions-wrap {
+.form-success-box .success-actions-wrap {
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
   gap: 1rem;
   flex-wrap: wrap;
 }

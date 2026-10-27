@@ -211,7 +211,7 @@ export default function PortalLayout() {
           <div className="portal-sidebar-brand">
             <Link to="/portal" className="portal-brand-link" onClick={() => setIsMobileSidebarOpen(false)}>
               <img
-                src="https://bewhy.id/wp-content/uploads/url_6acf112141e379.21076281.webp"
+                src="https://cssunmotor.com/wp-content/uploads/url_6ae03aca9c4102.54906789.webp"
                 alt="Logo Sunny"
                 className="portal-sidebar-logo"
                 onError={(e) => {

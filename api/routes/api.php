@@ -400,3 +400,45 @@ Route::post('/articles/{idOrSlug}/like', [ArticleController::class, 'toggleLike'
 Route::get('/articles/{idOrSlug}/comments', [ArticleController::class, 'getComments']);
 Route::post('/articles/{idOrSlug}/comments', [ArticleController::class, 'storeComment']);
 
+/*
+|--------------------------------------------------------------------------
+| Newsletter / Email Subscription Routes
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\NewsletterSubscriberController;
+
+Route::post('/newsletter/subscribe', [NewsletterSubscriberController::class, 'subscribe']);
+Route::get('/newsletter/subscribers', [NewsletterSubscriberController::class, 'index']);
+Route::delete('/newsletter/subscribers/{id}', [NewsletterSubscriberController::class, 'destroy']);
+
+/*
+|--------------------------------------------------------------------------
+| Knowledge Base Management Routes (Price List, Aksesoris, Sparepart, etc.)
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\KnowledgeController;
+
+Route::get('/knowledge/{key}', [KnowledgeController::class, 'show']);
+Route::post('/knowledge/{key}', [KnowledgeController::class, 'update']);
+Route::match(['put', 'patch'], '/knowledge/{key}', [KnowledgeController::class, 'update']);
+Route::post('/knowledge/{key}/reset', [KnowledgeController::class, 'reset']);
+
+/*
+|--------------------------------------------------------------------------
+| Promo & Event Management Routes
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\PromoController;
+
+Route::get('/promos', [PromoController::class, 'index']);
+Route::get('/portal/promos', [PromoController::class, 'portalIndex']);
+Route::post('/portal/promos', [PromoController::class, 'store']);
+Route::put('/portal/promos/{id}', [PromoController::class, 'update']);
+Route::patch('/portal/promos/{id}/toggle-link', [PromoController::class, 'toggleActionLink']);
+Route::delete('/portal/promos/{id}', [PromoController::class, 'destroy']);
+Route::post('/portal/promos/reorder', [PromoController::class, 'reorder']);
+Route::post('/portal/promos/reset', [PromoController::class, 'reset']);
+
+
+
+

@@ -1,7 +1,7 @@
 {
     "extended_smart_package": {
         "benefits": {
-            "cost_saving": "Hingga 27% dibandingkan tanpa paket",
+            "cost_saving": "Hingga 25% dibandingkan tanpa paket",
             "free_services": [
                 "Gratis penggantian suku cadang (sesuai ketentuan)",
                 "Gratis biaya jasa (sesuai ketentuan)"
@@ -19,76 +19,96 @@
                 "Xpander Cross",
                 "Xforce"
             ],
-            "effective_date": "2025-11-01",
+            "effective_date": "2026-07-01",
             "prices_excluding_vat": [
                 {
+                    "type": "1XPM",
+                    "before": 1250000,
+                    "after": 1250000,
+                    "increase": 0
+                },
+                {
                     "type": "2XPM",
-                    "before": 1800000,
-                    "after": 1800000,
+                    "before": 2150000,
+                    "after": 2150000,
                     "increase": 0
                 },
                 {
                     "type": "4XPM",
-                    "before": 3330000,
-                    "after": 3350000,
-                    "increase": 20000
+                    "before": 4100000,
+                    "after": 4100000,
+                    "increase": 0
                 },
                 {
                     "type": "6XPM",
-                    "before": 4800000,
-                    "after": 4856500,
-                    "increase": 56500
+                    "before": 6000000,
+                    "after": 6000000,
+                    "increase": 0
                 }
             ],
             "prices_including_vat": [
                 {
+                    "type": "1XPM",
+                    "before": 1387500,
+                    "after": 1387500,
+                    "increase": 0
+                },
+                {
                     "type": "2XPM",
-                    "before": 1998000,
-                    "after": 1998000,
+                    "before": 2386500,
+                    "after": 2386500,
                     "increase": 0
                 },
                 {
                     "type": "4XPM",
-                    "before": 3696300,
-                    "after": 3718500,
-                    "increase": 22200
+                    "before": 4551000,
+                    "after": 4551000,
+                    "increase": 0
                 },
                 {
                     "type": "6XPM",
-                    "before": 5328000,
-                    "after": 5390715,
-                    "increase": 62715
+                    "before": 6660000,
+                    "after": 6660000,
+                    "increase": 0
                 }
             ]
         },
         "pajero_sport": {
-            "effective_date": "2024-01-01",
+            "effective_date": "2026-07-01",
             "prices_excluding_vat": [
                 {
+                    "type": "1XPM",
+                    "price": 2250000
+                },
+                {
                     "type": "2XPM",
-                    "price": 3530000
+                    "price": 4200000
                 },
                 {
                     "type": "4XPM",
-                    "price": 6670000
+                    "price": 8200000
                 },
                 {
                     "type": "6XPM",
-                    "price": 9690000
+                    "price": 12000000
                 }
             ],
             "prices_including_vat": [
                 {
+                    "type": "1XPM",
+                    "price": 2497500
+                },
+                {
                     "type": "2XPM",
-                    "price": 3918300
+                    "price": 4662000
                 },
                 {
                     "type": "4XPM",
-                    "price": 7403700
+                    "price": 9142000
                 },
                 {
                     "type": "6XPM",
-                    "price": 10755900
+                    "price": 13320000
                 }
             ]
         }

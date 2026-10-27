@@ -26,8 +26,8 @@ import accessoriesData from '../../aksesoris.json'
 import AccessoryOrderModal from '../components/AccessoryOrderModal.jsx'
 import './Accessories.css'
 
-const RAW_ACCESSORIES = accessoriesData.mitsubishi_accessories || {}
-const VEHICLE_KEYS = Object.keys(RAW_ACCESSORIES)
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+const DEFAULT_ACCESSORIES = accessoriesData.mitsubishi_accessories || {}
 
 // Helper format IDR
 const formatIDR = (val) => {
@@ -86,7 +86,45 @@ const VEHICLE_META = {
 export default function Accessories({ onOpenAiChat }) {
   const location = useLocation()
 
-  const [activeVehicle, setActiveVehicle] = useState(VEHICLE_KEYS[0] || 'Destinator')
+  const [accessoriesState, setAccessoriesState] = useState(DEFAULT_ACCESSORIES)
+  const vehicleKeys = useMemo(() => Object.keys(accessoriesState), [accessoriesState])
+  const [activeVehicle, setActiveVehicle] = useState('Destinator')
+
+  // Real-time dynamic fetch from Knowledge API
+  useEffect(() => {
+    let isMounted = true
+    const fetchLiveAccessories = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/knowledge/accessories`, {
+          headers: { Accept: 'application/json' }
+        })
+        if (res.ok) {
+          const json = await res.json()
+          if (json.success && json.data) {
+            const acc = json.data.mitsubishi_accessories || json.data
+            if (acc && typeof acc === 'object' && Object.keys(acc).length > 0 && isMounted) {
+              setAccessoriesState(acc)
+            }
+          }
+        }
+      } catch (err) {
+        // Silently fallback to DEFAULT_ACCESSORIES
+      }
+    }
+
+    fetchLiveAccessories()
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  // Sync activeVehicle when vehicleKeys change
+  useEffect(() => {
+    if (vehicleKeys.length > 0 && !vehicleKeys.includes(activeVehicle)) {
+      setActiveVehicle(vehicleKeys[0])
+    }
+  }, [vehicleKeys, activeVehicle])
+
   const [singleCategoryFilter, setSingleCategoryFilter] = useState('all') // 'all' | 'exterior' | 'interior'
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedModalItem, setSelectedModalItem] = useState(null)
@@ -215,8 +253,8 @@ export default function Accessories({ onOpenAiChat }) {
 
   // Get active vehicle accessories
   const activeVehicleData = useMemo(() => {
-    return RAW_ACCESSORIES[activeVehicle] || { exterior: [], interior: [], paket_aksesoris: [] }
-  }, [activeVehicle])
+    return accessoriesState[activeVehicle] || { exterior: [], interior: [], paket_aksesoris: [] }
+  }, [accessoriesState, activeVehicle])
 
   const activeVehicleInfo = VEHICLE_META[activeVehicle] || {
     name: activeVehicle.replace('_', ' '),
@@ -327,12 +365,12 @@ export default function Accessories({ onOpenAiChat }) {
       <section className="acc-tabs-section" aria-label="Pilih Model Kendaraan">
         <div className="acc-tabs-container">
           <div className="acc-tabs-bar" role="tablist">
-            {VEHICLE_KEYS.map((vKey) => {
-              const meta = VEHICLE_META[vKey] || { shortName: vKey, badge: 'OEM' }
+            {vehicleKeys.map((vKey) => {
+              const meta = VEHICLE_META[vKey] || { shortName: vKey.replace(/_/g, ' '), badge: 'OEM' }
               const isSelected = activeVehicle === vKey
-              const count = (RAW_ACCESSORIES[vKey]?.paket_aksesoris?.length || 0) +
-                (RAW_ACCESSORIES[vKey]?.exterior?.length || 0) +
-                (RAW_ACCESSORIES[vKey]?.interior?.length || 0)
+              const count = (accessoriesState[vKey]?.paket_aksesoris?.length || 0) +
+                (accessoriesState[vKey]?.exterior?.length || 0) +
+                (accessoriesState[vKey]?.interior?.length || 0)
 
               return (
                 <button

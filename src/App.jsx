@@ -38,6 +38,10 @@ import PortalSales from './portal/pages/PortalSales.jsx'
 import PortalInactive from './portal/pages/PortalInactive.jsx'
 import PortalSalesRate from './portal/pages/PortalSalesRate.jsx'
 import PortalKnowledgePlaceholder from './portal/pages/PortalKnowledgePlaceholder.jsx'
+import PortalPriceList from './portal/pages/PortalPriceList.jsx'
+import PortalAccessories from './portal/pages/PortalAccessories.jsx'
+import PortalSparepart from './portal/pages/PortalSparepart.jsx'
+import PortalPromoEvent from './portal/pages/PortalPromoEvent.jsx'
 import PortalArticles from './portal/pages/PortalArticles.jsx'
 import PortalArticleEditor from './portal/pages/PortalArticleEditor.jsx'
 
@@ -69,10 +73,10 @@ function App() {
             <Route path="employees/sales" element={<PortalSales />} />
             <Route path="employees/inactive" element={<PortalInactive />} />
             <Route path="knowledge" element={<Navigate to="/portal/knowledge/price-list" replace />} />
-            <Route path="knowledge/price-list" element={<PortalKnowledgePlaceholder title="Price List" />} />
-            <Route path="knowledge/accessories" element={<PortalKnowledgePlaceholder title="Aksesoris" />} />
-            <Route path="knowledge/sparepart" element={<PortalKnowledgePlaceholder title="Sparepart" />} />
-            <Route path="knowledge/promo-event" element={<PortalKnowledgePlaceholder title="Promo & Event" />} />
+            <Route path="knowledge/price-list" element={<PortalPriceList />} />
+            <Route path="knowledge/accessories" element={<PortalAccessories />} />
+            <Route path="knowledge/sparepart" element={<PortalSparepart />} />
+            <Route path="knowledge/promo-event" element={<PortalPromoEvent />} />
             <Route path="articles" element={<PortalArticles />} />
             <Route path="articles/create" element={<PortalArticleEditor />} />
             <Route path="articles/edit/:id" element={<PortalArticleEditor />} />

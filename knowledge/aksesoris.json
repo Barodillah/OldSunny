@@ -42,7 +42,7 @@
                 {
                     "item": "Dashcam",
                     "price": 4520000,
-                    "img": "/media/aksesoris/Destinator/Dashcam.jpg"
+                    "img": "https://cssunmotor.com/wp-content/uploads/url_6ae065ede21ad1.97322130.jpg"
                 },
                 {
                     "item": "Luggage Scuff Plate",
@@ -268,7 +268,7 @@
                 {
                     "item": "Dashcam Blackvue 1 Channel (Parking Mode)",
                     "price": 4520000,
-                    "img": "/media/aksesoris/Xpander-Cross/Dashcam-Blackvue-1-Channel-Parking-Mode.jpg"
+                    "img": "https://cssunmotor.com/wp-content/uploads/url_6ae065ede21ad1.97322130.jpg"
                 }
             ],
             "paket_aksesoris": [
@@ -427,7 +427,7 @@
                 {
                     "item": "Dashcam Blackvue 1 Channel (Parking Mode)",
                     "price": 4520000,
-                    "img": "/media/aksesoris/Xforce/Dashcam-Blackvue-1-Channel-Parking-Mode.jpg"
+                    "img": "https://cssunmotor.com/wp-content/uploads/url_6ae065ede21ad1.97322130.jpg"
                 },
                 {
                     "item": "Console Box Multitray Storage",
@@ -498,5 +498,9 @@
                 }
             ]
         }
+    },
+    "meta": {
+        "brand": "Mitsubishi Motors",
+        "last_sync": "2026-10-27T08:54:39.865Z"
     }
 }

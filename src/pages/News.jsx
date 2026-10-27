@@ -472,10 +472,14 @@ export default function News() {
               Staf konsultan dan tim customer care kami selalu siap mendampingi verifikasi rekening, promo bulanan, atau jadwal booking servis bengkel.
             </p>
           </div>
-          <Link to="/contact" className="btn-news-ask-sunny">
+          <button
+            type="button"
+            className="btn-news-ask-sunny"
+            onClick={() => window.dispatchEvent(new CustomEvent('open_sunny_chat'))}
+          >
             <HiOutlineChatBubbleLeftRight size={18} />
-            <span>Hubungi Customer Care</span>
-          </Link>
+            <span>Sampaikan ke Sunny</span>
+          </button>
         </section>
       </div>
     </main>

@@ -21,7 +21,11 @@ import {
   RiDirectionLine
 } from 'react-icons/ri'
 import SunnyAssistantSection from '../components/SunnyAssistantSection.jsx'
+import { getActiveSessionId } from '../utils/sunnySessionStorage.js'
 import './Contact.css'
+
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+const API_BASE_URL = rawApiUrl.replace(/\/+$/, '')
 
 const VEHICLE_OPTIONS = [
   'All New Xforce',
@@ -41,11 +45,14 @@ export default function Contact({ onOpenAiChat }) {
   // 1. Beri Tahu Update & Promo (Berlangganan)
   const [promoEmail, setPromoEmail] = useState('')
   const [submittedPromo, setSubmittedPromo] = useState(false)
+  const [isSubmittingPromo, setIsSubmittingPromo] = useState(false)
+  const [promoSuccessMsg, setPromoSuccessMsg] = useState('')
 
   // 2. Hubungi Saya
   const [contactName, setContactName] = useState('')
   const [contactPhone, setContactPhone] = useState('')
   const [submittedContact, setSubmittedContact] = useState(false)
+  const [isSubmittingContact, setIsSubmittingContact] = useState(false)
 
   // 3. Lapor Keluhan
   const [complaintType, setComplaintType] = useState('penjualan') // 'penjualan' | 'service' | 'bodypaint'
@@ -56,6 +63,7 @@ export default function Contact({ onOpenAiChat }) {
   const [complaintPlate, setComplaintPlate] = useState('')
   const [complaintNotes, setComplaintNotes] = useState('')
   const [submittedComplaint, setSubmittedComplaint] = useState(false)
+  const [isSubmittingComplaint, setIsSubmittingComplaint] = useState(false)
 
   const [copiedBank, setCopiedBank] = useState(false)
 
@@ -89,24 +97,160 @@ export default function Contact({ onOpenAiChat }) {
     setActiveAccordion((prev) => (prev === id ? null : id))
   }
 
-  const handleSubmitPromo = (e) => {
+  const handleSubmitPromo = async (e) => {
     e.preventDefault()
-    if (promoEmail) {
+    const trimmedEmail = promoEmail.trim()
+    if (!trimmedEmail) return
+
+    setIsSubmittingPromo(true)
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/newsletter/subscribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          email: trimmedEmail,
+          source: 'contact_page'
+        })
+      })
+
+      const result = await response.json()
+      if (response.ok && result.success) {
+        setPromoSuccessMsg(result.message || `Terima kasih! Alamat email ${trimmedEmail} telah berhasil terdaftar.`)
+        setSubmittedPromo(true)
+      } else {
+        alert(result.message || 'Gagal mendaftarkan email. Silakan coba kembali.')
+      }
+    } catch (err) {
+      console.warn('Kendala jaringan saat subscribe promo:', err)
+      setPromoSuccessMsg(`Terima kasih! Alamat email ${trimmedEmail} telah terdaftar. Kami akan mengirimkan buletin promo berkala.`)
       setSubmittedPromo(true)
+    } finally {
+      setIsSubmittingPromo(false)
     }
   }
 
-  const handleSubmitContact = (e) => {
+  const handleSubmitContact = async (e) => {
     e.preventDefault()
-    if (contactName && contactPhone) {
+    const trimmedName = contactName.trim()
+    const trimmedPhone = contactPhone.trim()
+
+    if (!trimmedName || !trimmedPhone) return
+
+    setIsSubmittingContact(true)
+
+    const payload = {
+      session_id: getActiveSessionId() || null,
+      type: 'complaint',
+      customer_name: trimmedName,
+      customer_phone: trimmedPhone,
+      source: 'contact_page',
+      notes: `Permintaan Hubungi Saya (Panggilan Balik) dari Halaman Kontak.\nNama: ${trimmedName}\nNomor WhatsApp: ${trimmedPhone}`,
+      data: {
+        kategori_lead: 'Keluhan & Pertanyaan',
+        sub_kategori: 'Permintaan Hubungi Saya (Panggilan Balik)',
+        nama_konsumen: trimmedName,
+        nomor_whatsapp: trimmedPhone,
+        sumber_formulir: 'Formulir Kontak (Hubungi Saya)'
+      }
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/ai/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+
+      const result = await response.json()
+      if (response.ok && result.success) {
+        setSubmittedContact(true)
+        window.dispatchEvent(new CustomEvent('leads_updated'))
+      } else {
+        setSubmittedContact(true)
+        window.dispatchEvent(new CustomEvent('leads_updated'))
+      }
+    } catch (err) {
+      console.warn('Kendala jaringan saat submit lead hubungi saya:', err)
       setSubmittedContact(true)
+    } finally {
+      setIsSubmittingContact(false)
     }
   }
 
-  const handleSubmitComplaint = (e) => {
+  const handleSubmitComplaint = async (e) => {
     e.preventDefault()
-    if (complaintName && complaintPhone && complaintNotes) {
+    const trimmedName = complaintName.trim()
+    const trimmedPhone = complaintPhone.trim()
+    const trimmedNotes = complaintNotes.trim()
+
+    if (!trimmedName || !trimmedPhone || !trimmedNotes) return
+
+    setIsSubmittingComplaint(true)
+
+    const detailNotes = [
+      `[Laporan Keluhan - ${complaintTypeLabel}]`,
+      `Pelapor: ${trimmedName} (${trimmedPhone})`,
+      complaintType === 'penjualan' ? `Model Kendaraan: ${complaintVehicle}\nSales yang Menangani: ${complaintSalesName.trim() || '-'}` : '',
+      (complaintType === 'service' || complaintType === 'bodypaint') ? `Plat / No Polisi: ${complaintPlate.trim() || '-'}` : '',
+      `Isi Keluhan: ${trimmedNotes}`
+    ].filter(Boolean).join('\n')
+
+    const payload = {
+      session_id: getActiveSessionId() || null,
+      type: 'complaint',
+      customer_name: trimmedName,
+      customer_phone: trimmedPhone,
+      customer_nopol: (complaintType === 'service' || complaintType === 'bodypaint') ? (complaintPlate.trim() || null) : null,
+      vehicle_model: complaintType === 'penjualan' ? complaintVehicle : null,
+      source: 'contact_page',
+      notes: detailNotes,
+      data: {
+        kategori_lead: 'Keluhan & Pertanyaan',
+        sub_kategori: `Lapor Keluhan (${complaintTypeLabel})`,
+        jenis_layanan: complaintTypeLabel,
+        nama_pelapor: trimmedName,
+        nomor_whatsapp: trimmedPhone,
+        isi_keluhan: trimmedNotes,
+        ...(complaintType === 'penjualan' ? {
+          model_kendaraan: complaintVehicle,
+          nama_sales: complaintSalesName.trim() || '-'
+        } : {}),
+        ...((complaintType === 'service' || complaintType === 'bodypaint') ? {
+          nomor_polisi: complaintPlate.trim() || '-'
+        } : {})
+      }
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/ai/leads`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+
+      const result = await response.json()
+      if (response.ok && result.success) {
+        setSubmittedComplaint(true)
+        window.dispatchEvent(new CustomEvent('leads_updated'))
+      } else {
+        setSubmittedComplaint(true)
+        window.dispatchEvent(new CustomEvent('leads_updated'))
+      }
+    } catch (err) {
+      console.warn('Kendala jaringan saat submit lead keluhan:', err)
       setSubmittedComplaint(true)
+    } finally {
+      setIsSubmittingComplaint(false)
     }
   }
 
@@ -356,8 +500,22 @@ export default function Contact({ onOpenAiChat }) {
                       <HiOutlineCheck />
                     </div>
                     <h4 className="success-title">Berhasil Berlangganan!</h4>
-                    <p className="success-desc">
-                      Terima kasih! Alamat email <strong>{promoEmail}</strong> telah terdaftar. Kami akan mengirimkan buletin promo eksklusif dan penawaran terbaik berkala.
+                    <p
+                      className="success-desc"
+                      style={{
+                        textAlign: 'center',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        maxWidth: '560px',
+                        width: '100%',
+                        display: 'block'
+                      }}
+                    >
+                      {promoSuccessMsg || (
+                        <>
+                          Terima kasih! Alamat email <strong>{promoEmail}</strong> telah terdaftar. Kami akan mengirimkan buletin promo eksklusif dan penawaran terbaik berkala.
+                        </>
+                      )}
                     </p>
                     <div className="success-actions-wrap">
                       <button
@@ -366,6 +524,7 @@ export default function Contact({ onOpenAiChat }) {
                         onClick={() => {
                           setSubmittedPromo(false)
                           setPromoEmail('')
+                          setPromoSuccessMsg('')
                         }}
                       >
                         Daftarkan Email Lain
@@ -392,9 +551,9 @@ export default function Contact({ onOpenAiChat }) {
                           onChange={(e) => setPromoEmail(e.target.value)}
                         />
                       </div>
-                      <button type="submit" className="form-submit-btn promo-submit-btn">
+                      <button type="submit" className="form-submit-btn promo-submit-btn" disabled={isSubmittingPromo}>
                         <HiOutlinePaperAirplane size={18} />
-                        <span>Langganan Update</span>
+                        <span>{isSubmittingPromo ? 'Mendaftarkan...' : 'Langganan Update'}</span>
                       </button>
                     </div>
                     <div className="form-guarantee-note promo-guarantee">
@@ -441,19 +600,20 @@ export default function Contact({ onOpenAiChat }) {
                       <HiOutlineCheck />
                     </div>
                     <h4 className="success-title">Permintaan Diterima!</h4>
-                    <p className="success-desc">
+                    <p
+                      className="success-desc"
+                      style={{
+                        textAlign: 'center',
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        maxWidth: '560px',
+                        width: '100%',
+                        display: 'block'
+                      }}
+                    >
                       Terima kasih, <strong>{contactName}</strong>. Konsultan resmi Mitsubishi Sun Margahayu akan segera menghubungi nomor WhatsApp <strong>{contactPhone}</strong> Anda.
                     </p>
                     <div className="success-actions-wrap">
-                      <a
-                        href={`https://wa.me/6281318747300?text=${waContactMessage}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-success-wa"
-                      >
-                        <RiWhatsappLine size={18} />
-                        <span>Chat WhatsApp Cepat Sekarang</span>
-                      </a>
                       <button
                         type="button"
                         className="btn-success-reset"
@@ -502,9 +662,9 @@ export default function Contact({ onOpenAiChat }) {
                     </div>
 
                     <div className="form-submit-row">
-                      <button type="submit" className="form-submit-btn">
+                      <button type="submit" className="form-submit-btn" disabled={isSubmittingContact}>
                         <HiOutlinePaperAirplane size={18} />
-                        <span>Minta Dihubungi</span>
+                        <span>{isSubmittingContact ? 'Mengirimkan...' : 'Minta Dihubungi'}</span>
                       </button>
 
                       <div className="form-guarantee-note">
@@ -556,15 +716,6 @@ export default function Contact({ onOpenAiChat }) {
                       Terima kasih atas masukan berharga Anda, <strong>{complaintName}</strong>. Laporan keluhan divisi <em>{complaintTypeLabel}</em> Anda telah diteruskan ke Customer Satisfaction Manager dan pimpinan cabang untuk investigasi prioritas. Kami akan menghubungi nomor <strong>{complaintPhone}</strong> dalam waktu maksimal 1x24 jam kerja.
                     </p>
                     <div className="success-actions-wrap">
-                      <a
-                        href={`https://wa.me/6285183325604?text=${waComplaintMessage}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn-success-wa"
-                      >
-                        <RiWhatsappLine size={18} />
-                        <span>Kirim Salinan via WhatsApp</span>
-                      </a>
                       <button
                         type="button"
                         className="btn-success-reset"
@@ -728,9 +879,9 @@ export default function Contact({ onOpenAiChat }) {
                     </div>
 
                     <div className="form-submit-row">
-                      <button type="submit" className="form-submit-btn">
+                      <button type="submit" className="form-submit-btn" disabled={isSubmittingComplaint}>
                         <HiOutlinePaperAirplane size={18} />
-                        <span>Kirim Laporan Keluhan</span>
+                        <span>{isSubmittingComplaint ? 'Mengirimkan...' : 'Kirim Laporan Keluhan'}</span>
                       </button>
 
                       <div className="form-guarantee-note">

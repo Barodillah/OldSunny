@@ -504,6 +504,19 @@
   box-shadow: 0 6px 16px rgba(220, 38, 38, 0.32);
 }
 
+.btn-card-action.btn-card-claim {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.28);
+}
+
+.btn-card-action.btn-card-claim:hover {
+  background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.38);
+}
+
 .btn-card-terms {
   display: inline-flex;
   align-items: center;

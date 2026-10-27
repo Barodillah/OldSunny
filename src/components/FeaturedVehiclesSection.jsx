@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   HiOutlineArrowRight,
@@ -7,9 +7,31 @@ import {
 import { RiSteering2Line, RiCarLine } from 'react-icons/ri'
 import TestDriveModal from './TestDriveModal.jsx'
 
-const FEATURED_VEHICLES = [
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+
+// Helper format IDR
+const formatIDR = (val) => {
+  if (!val) return 'Rp 0'
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0
+  }).format(val)
+}
+
+const PASSENGER_NAMES = {
+  new_xforce: { name: 'NEW XFORCE' },
+  destinator: { name: 'DESTINATOR' },
+  new_xpander_cross: { name: 'NEW XPANDER CROSS' },
+  new_xpander: { name: 'NEW XPANDER' },
+  new_pajero_sport: { name: 'NEW PAJERO SPORT' },
+  triton: { name: 'ALL NEW TRITON' },
+  l300: { name: 'COLT L300' }
+}
+
+const DEFAULT_FEATURED_VEHICLES = [
   {
-    id: 'new-xforce',
+    id: 'new_xforce',
     name: 'NEW XFORCE',
     priceFormatted: 'Rp 388.000.000',
     imageUrl: 'https://csdwindo.com/wp-content/uploads/newxforcetr.png',
@@ -21,7 +43,7 @@ const FEATURED_VEHICLES = [
     imageUrl: 'https://csdwindo.com/media/mmksi/destinator.png',
   },
   {
-    id: 'new-xpander-cross',
+    id: 'new_xpander_cross',
     name: 'NEW XPANDER CROSS',
     priceFormatted: 'Rp 348.000.000',
     imageUrl: 'https://csdwindo.com/media/mmksi/xpander_cross.webp',
@@ -29,7 +51,45 @@ const FEATURED_VEHICLES = [
 ]
 
 export default function FeaturedVehiclesSection({ onSelectTestDrive }) {
+  const [vehicles, setVehicles] = useState(DEFAULT_FEATURED_VEHICLES)
   const [activeModalVehicle, setActiveModalVehicle] = useState(null)
+
+  // Fetch dynamic price list & 3 featured models from Knowledge API
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/knowledge/price-list`)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          const d = json.data
+          const fModels = Array.isArray(d.featured_models) && d.featured_models.length === 3
+            ? d.featured_models
+            : (d.meta?.featured_models || [])
+
+          const pCars = d.passenger_car || {}
+          if (Array.isArray(fModels) && fModels.length === 3) {
+            const mapped = fModels.map((key) => {
+              const car = pCars[key] || {}
+              const meta = PASSENGER_NAMES[key] || { name: key.toUpperCase().replace(/_/g, ' ') }
+              const items = car.items || []
+              const prices = items.map((i) => i.price).filter(Boolean)
+              const minPrice = prices.length ? Math.min(...prices) : 0
+
+              return {
+                id: key,
+                name: car.name || meta.name,
+                priceFormatted: minPrice ? formatIDR(minPrice) : 'Harga Menyesuaikan',
+                imageUrl: car.image || 'https://csdwindo.com/wp-content/uploads/newxforcetr.png',
+                minPrice
+              }
+            })
+            setVehicles(mapped)
+          }
+        }
+      })
+      .catch((err) => {
+        // Silently keep default featured vehicles on network failure
+      })
+  }, [])
 
   const handleOpenTestDriveModal = (vehicle) => {
     setActiveModalVehicle(vehicle)
@@ -77,7 +137,7 @@ export default function FeaturedVehiclesSection({ onSelectTestDrive }) {
 
         {/* 3 Main Vehicles Grid (Clean & Focused) */}
         <div className="featured-vehicles-grid">
-          {FEATURED_VEHICLES.map((vehicle) => (
+          {vehicles.map((vehicle) => (
             <article key={vehicle.id} className="vehicle-card">
               {/* Visual Showcase */}
               <div className="vehicle-visual-wrapper">

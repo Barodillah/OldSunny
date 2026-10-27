@@ -10,8 +10,10 @@ import {
 } from 'react-icons/hi2'
 import { RiAwardLine, RiSteering2Line } from 'react-icons/ri'
 import TestDriveModal from '../components/TestDriveModal.jsx'
-import vehicleData from '../../vehicle-list.json'
+import defaultVehicleData from '../../vehicle-list.json'
 import './Vehicles.css'
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
 
 // Helper format IDR currency
 const formatIDR = (val) => {
@@ -43,6 +45,25 @@ export default function Vehicles() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedVehicle, setSelectedVehicle] = useState(null)
   const [testDriveVehicle, setTestDriveVehicle] = useState(null)
+  const [vehicleData, setVehicleData] = useState(defaultVehicleData)
+  const [featuredModels, setFeaturedModels] = useState(['new_xforce', 'destinator', 'new_xpander_cross'])
+
+  // Fetch dynamic price list from Knowledge API
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/knowledge/price-list`)
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          setVehicleData(json.data)
+          if (Array.isArray(json.data.featured_models) && json.data.featured_models.length === 3) {
+            setFeaturedModels(json.data.featured_models)
+          }
+        }
+      })
+      .catch(() => {
+        // Fallback to defaultVehicleData silently
+      })
+  }, [])
 
   // Scroll to top on mount
   useEffect(() => {
@@ -56,50 +77,44 @@ export default function Vehicles() {
       new_xforce: {
         name: 'New XFORCE',
         category: 'Compact SUV',
-        tagline: 'Infinite Comfort & Dynamic Tech',
-        isHighlight: true,
-        highlightBadge: '★ Highlight Model'
+        tagline: 'Infinite Comfort & Dynamic Tech'
       },
       destinator: {
         name: 'Destinator',
         category: 'Premium MPV',
-        tagline: 'Elegance & Refined Spaciousness',
-        isHighlight: false
+        tagline: 'Elegance & Refined Spaciousness'
       },
       new_xpander: {
         name: 'New Xpander',
         category: 'Family MPV',
-        tagline: 'Pilihan Utama Keluarga Indonesia',
-        isHighlight: false
+        tagline: 'Pilihan Utama Keluarga Indonesia'
       },
       new_xpander_cross: {
         name: 'New Xpander Cross',
         category: 'Crossover MPV',
-        tagline: 'Tangguh Berjiwa Petualang',
-        isHighlight: false
+        tagline: 'Tangguh Berjiwa Petualang'
       },
       new_pajero_sport: {
         name: 'New Pajero Sport',
         category: 'Prestige SUV 4x4',
-        tagline: 'Ikon Ketangguhan & Kemewahan Sejati',
-        isHighlight: false
+        tagline: 'Ikon Ketangguhan & Kemewahan Sejati'
       },
       triton: {
         name: 'All New Triton',
         category: 'Double & Single Cabin',
-        tagline: 'Tangguh di Medan Ekstrem & Fleksibel',
-        isHighlight: false
+        tagline: 'Tangguh di Medan Ekstrem & Fleksibel'
       },
       l300: {
         name: 'Colt L300',
         category: 'Niaga Legendaris',
-        tagline: 'Mitra Bisnis Tangguh & Efisien',
-        isHighlight: false
+        tagline: 'Mitra Bisnis Tangguh & Efisien'
       }
     }
 
-    // Put new_xforce first because it's the highlight
-    const order = ['new_xforce', 'new_pajero_sport', 'destinator', 'new_xpander', 'new_xpander_cross', 'triton', 'l300']
+    // Dynamic ordering: Put 3 featured models first, then default order, then any other keys
+    const defaultOrder = ['new_xforce', 'new_pajero_sport', 'destinator', 'new_xpander', 'new_xpander_cross', 'triton', 'l300']
+    const allKeys = Object.keys(raw)
+    const order = [...new Set([...featuredModels, ...defaultOrder, ...allKeys])].filter(k => raw[k])
 
     return order.map((key) => {
       const data = raw[key] || {}
@@ -109,14 +124,19 @@ export default function Vehicles() {
       const minPrice = prices.length ? Math.min(...prices) : 0
       const maxPrice = prices.length ? Math.max(...prices) : 0
 
+      const isHighlight = featuredModels.includes(key)
+      const highlightBadge = featuredModels[0] === key
+        ? '★ Highlight Model'
+        : (isHighlight ? '★ Model Favorit' : null)
+
       return {
         id: key,
         typeGroup: 'passenger',
-        name: meta.name,
-        category: meta.category,
-        tagline: meta.tagline,
-        isHighlight: meta.isHighlight || false,
-        highlightBadge: meta.highlightBadge || null,
+        name: data.name || meta.name,
+        category: data.category || meta.category,
+        tagline: data.tagline || meta.tagline || 'Inovasi Kenyamanan & Performa Mitsubishi',
+        isHighlight,
+        highlightBadge,
         image: data.image,
         items: items,
         additionalCost: data.additional_cost || null,
@@ -126,7 +146,7 @@ export default function Vehicles() {
         variantsPreview: items.map((i) => i.type).join(', ')
       }
     })
-  }, [])
+  }, [vehicleData, featuredModels])
 
   // Normalize Commercial Cars
   const commercialCars = useMemo(() => {
@@ -205,10 +225,10 @@ export default function Vehicles() {
         variantsPreview: flatItems.slice(0, 3).map((i) => i.type).join(', ') + (flatItems.length > 3 ? '...' : '')
       }
     })
-  }, [])
+  }, [vehicleData])
 
-  // Highlight Vehicle (New XFORCE)
-  const highlightVehicle = passengerCars.find((car) => car.id === 'new_xforce') || passengerCars[0]
+  // Highlight Vehicle (Top 1 of Featured Models)
+  const highlightVehicle = passengerCars.find((car) => car.id === featuredModels[0]) || passengerCars[0]
 
   // Filtered List based on active tab and search query
   const displayedCars = useMemo(() => {

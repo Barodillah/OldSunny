@@ -1,77 +1,42 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
   HiOutlineXMark,
-  HiOutlineArrowRight
+  HiOutlineArrowRight,
+  HiOutlineArrowPath,
+  HiOutlineMagnifyingGlass
 } from 'react-icons/hi2'
 import { RiUserUnfollowLine, RiWhatsappLine } from 'react-icons/ri'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const CURRENT_YEAR = new Date().getFullYear()
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
 
-// Daftar sampel sales & staf yang sudah tidak aktif / nonaktif resmi dengan foto
-const INACTIVE_STAFF_LIST = [
-  {
-    id: 'inact-1',
-    name: 'Agus Pratama',
-    formerRole: 'Senior Sales Consultant',
-    formerNik: 'SNY-SLS-0199',
-    inactiveDate: '15 Januari 2024',
-    reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Margahayu',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
-  },
-  {
-    id: 'inact-2',
-    name: 'Rizky Fauzi',
-    formerRole: 'Sales Executive',
-    formerNik: 'SNY-SLS-0284',
-    inactiveDate: '10 Agustus 2023',
-    reason: 'Resigned / Tidak lagi bekerja di Mitsubishi Sun Margahayu',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
-  },
-  {
-    id: 'inact-3',
-    name: 'Maya Anggraini',
-    formerRole: 'Telemarketing & CRM',
-    formerNik: 'SNY-SLS-0351',
-    inactiveDate: '28 November 2023',
-    reason: 'Habis Masa Kontrak Kerja',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
-  },
-  {
-    id: 'inact-4',
-    name: 'Hendra Saputra',
-    formerRole: 'Junior Sales Advisor',
-    formerNik: 'SNY-SLS-0490',
-    inactiveDate: '05 Maret 2024',
-    reason: 'Nonaktif / Surat Keputusan Direksi',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
-  },
-  {
-    id: 'inact-5',
-    name: 'Dedi Kurniawan',
-    formerRole: 'Sales Fleet & Commercial',
-    formerNik: 'SNY-SLS-0512',
-    inactiveDate: '20 Mei 2024',
-    reason: 'Resigned / Tidak lagi memiliki lisensi MMKSI',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
-  },
-  {
-    id: 'inact-6',
-    name: 'Siti Rahmawati',
-    formerRole: 'Counter Sales Staff',
-    formerNik: 'SNY-SLS-0628',
-    inactiveDate: '12 September 2024',
-    reason: 'Mutasi Luar Kota / Nonaktif dari Dealer',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
-  },
-]
+// Helper format tanggal Indonesia
+const formatDate = (dateStr) => {
+  if (!dateStr) return '-'
+  try {
+    const d = new Date(dateStr)
+    if (isNaN(d.getTime())) return dateStr
+    return d.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    })
+  } catch {
+    return dateStr
+  }
+}
 
 export default function WarningNoticeSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [staffList, setStaffList] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [activeCategoryTab, setActiveCategoryTab] = useState('all') // 'all' | 'sales' | 'employee'
+  const [counts, setCounts] = useState({ employees: 0, sales: 0, total: 0 })
 
   const sectionRef = useRef(null)
   const marqueeRef = useRef(null)
@@ -180,12 +145,80 @@ export default function WarningNoticeSection() {
     }
   }, [])
 
-  const filteredInactiveStaff = INACTIVE_STAFF_LIST.filter(
-    (item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.formerNik.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.formerRole.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  // Fetch dynamic inactive staff from backend API (synced with PortalInactive)
+  const fetchInactiveStaff = useCallback(async () => {
+    setLoading(true)
+    try {
+      const res = await fetch(`${API_BASE_URL}/inactive?type=all`)
+      const json = await res.json()
+      if (json.success && json.data) {
+        const employees = (json.data.employees || []).map((emp) => ({
+          id: `emp-${emp.id}`,
+          name: emp.name,
+          category: 'employee',
+          categoryBadge: 'Karyawan',
+          formerRole: emp.role || emp.badge || 'Karyawan Staf Dealer',
+          formerNik: emp.nik || '-',
+          inactiveDate: formatDate(emp.deactivated_at),
+          reason: emp.deactivated_reason || 'Resigned / Tidak lagi bekerja di dealer',
+          photoUrl: emp.photo_url || 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg'
+        }))
+
+        const sales = (json.data.sales || []).map((s) => ({
+          id: `sales-${s.id}`,
+          name: s.name,
+          category: 'sales',
+          categoryBadge: 'Sales',
+          formerRole: s.position || 'Sales Consultant',
+          formerNik: s.nik || '-',
+          inactiveDate: formatDate(s.deactivated_at),
+          reason: s.deactivated_reason || 'Resigned / Tidak lagi bekerja di dealer',
+          photoUrl: s.photo_url || 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg'
+        }))
+
+        const combined = [...sales, ...employees]
+        setStaffList(combined)
+        setCounts(json.counts || { employees: employees.length, sales: sales.length, total: combined.length })
+      }
+    } catch (err) {
+      console.error('Failed to load inactive staff from API:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchInactiveStaff()
+  }, [fetchInactiveStaff])
+
+  useEffect(() => {
+    if (isModalOpen) {
+      fetchInactiveStaff()
+    }
+  }, [isModalOpen, fetchInactiveStaff])
+
+  const filteredInactiveStaff = useMemo(() => {
+    return staffList.filter((item) => {
+      // 1. Category Tab Filter
+      if (activeCategoryTab !== 'all' && item.category !== activeCategoryTab) {
+        return false
+      }
+
+      // 2. Search Query Filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim()
+        const matchName = item.name?.toLowerCase().includes(q)
+        const matchNik = item.formerNik?.toLowerCase().includes(q)
+        const matchRole = item.formerRole?.toLowerCase().includes(q)
+        const matchReason = item.reason?.toLowerCase().includes(q)
+        if (!matchName && !matchNik && !matchRole && !matchReason) {
+          return false
+        }
+      }
+
+      return true
+    })
+  }, [staffList, activeCategoryTab, searchQuery])
 
   return (
     <section
@@ -272,7 +305,7 @@ export default function WarningNoticeSection() {
             <div className="warning-drawer-header">
               <div className="warning-drawer-title-group">
                 <h3 id="drawer-inactive-title" className="warning-drawer-heading">
-                  Daftar Sales & Karyawan Nonaktif
+                  Daftar Sales &amp; Karyawan Nonaktif
                 </h3>
                 <p className="warning-drawer-sub">
                   Pihak di bawah ini sudah tidak terafiliasi dengan PT Sun Star Prima Motor Margahayu. Segala bentuk transaksi, janji unit, maupun penerimaan uang di luar kasir resmi adalah <strong>tidak sah</strong>.
@@ -288,12 +321,51 @@ export default function WarningNoticeSection() {
               </button>
             </div>
 
+            {/* Drawer Category Tabs Bar */}
+            <div className="warning-drawer-tabs">
+              <div className="warning-drawer-pills">
+                <button
+                  type="button"
+                  className={`warning-drawer-tab ${activeCategoryTab === 'all' ? 'is-active' : ''}`}
+                  onClick={() => setActiveCategoryTab('all')}
+                >
+                  Semua ({counts.total || staffList.length})
+                </button>
+                <button
+                  type="button"
+                  className={`warning-drawer-tab ${activeCategoryTab === 'sales' ? 'is-active' : ''}`}
+                  onClick={() => setActiveCategoryTab('sales')}
+                >
+                  Sales ({counts.sales || staffList.filter((s) => s.category === 'sales').length})
+                </button>
+                <button
+                  type="button"
+                  className={`warning-drawer-tab ${activeCategoryTab === 'employee' ? 'is-active' : ''}`}
+                  onClick={() => setActiveCategoryTab('employee')}
+                >
+                  Karyawan &amp; Manajemen ({counts.employees || staffList.filter((s) => s.category === 'employee').length})
+                </button>
+              </div>
+
+              <button
+                type="button"
+                className="warning-drawer-refresh-btn"
+                onClick={fetchInactiveStaff}
+                disabled={loading}
+                title="Muat ulang data dari database dealer"
+              >
+                <HiOutlineArrowPath size={14} className={loading ? 'spin-fast' : ''} />
+                <span>Segarkan Data</span>
+              </button>
+            </div>
+
             {/* Drawer Search & Count Bar */}
             <div className="warning-drawer-search-wrap">
               <div className="warning-drawer-search-box">
+                <HiOutlineMagnifyingGlass size={18} className="search-icon" />
                 <input
                   type="text"
-                  placeholder="Cari berdasarkan nama mantan staf atau eks NIK..."
+                  placeholder="Cari berdasarkan nama mantan staf, eks NIK, atau posisi..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="warning-drawer-input"
@@ -309,11 +381,19 @@ export default function WarningNoticeSection() {
                   </button>
                 )}
               </div>
+              <div className="warning-drawer-count">
+                Menampilkan <strong>{filteredInactiveStaff.length}</strong> dari <strong>{staffList.length}</strong> data nonaktif
+              </div>
             </div>
 
             {/* Inactive Staff Cards Grid with Photos */}
             <div className="warning-drawer-body">
-              {filteredInactiveStaff.length > 0 ? (
+              {loading && staffList.length === 0 ? (
+                <div className="inactive-loading-state">
+                  <HiOutlineArrowPath size={32} className="spin-fast" />
+                  <p>Memuat arsip data personel nonaktif dari database...</p>
+                </div>
+              ) : filteredInactiveStaff.length > 0 ? (
                 <div className="inactive-staff-grid">
                   {filteredInactiveStaff.map((staff) => (
                     <div key={staff.id} className="inactive-staff-card">
@@ -323,6 +403,9 @@ export default function WarningNoticeSection() {
                           alt={staff.name}
                           className="inactive-card-avatar"
                           loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg'
+                          }}
                         />
                         <div className="inactive-card-status-badge">
                           NONAKTIF
@@ -331,6 +414,9 @@ export default function WarningNoticeSection() {
 
                       <div className="inactive-card-content">
                         <div className="inactive-card-header">
+                          <span className={`inactive-card-cat-badge badge-${staff.category}`}>
+                            {staff.categoryBadge}
+                          </span>
                           <h4 className="inactive-card-name">{staff.name}</h4>
                           <span className="inactive-card-nik">Eks NIK: <strong>{staff.formerNik}</strong></span>
                         </div>
@@ -355,7 +441,11 @@ export default function WarningNoticeSection() {
                 </div>
               ) : (
                 <div className="inactive-empty-state">
-                  <p>Tidak ada personel nonaktif yang sesuai dengan kata kunci "{searchQuery}".</p>
+                  <p>
+                    {searchQuery
+                      ? `Tidak ada personel nonaktif yang sesuai dengan kata kunci "${searchQuery}".`
+                      : 'Saat ini belum ada catatan staf atau sales yang dinonaktifkan.'}
+                  </p>
                 </div>
               )}
             </div>

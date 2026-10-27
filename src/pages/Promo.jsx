@@ -149,8 +149,11 @@ const PROMO_ITEMS = [
   }
 ]
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+
 export default function Promo({ onOpenAiChat }) {
   const location = useLocation()
+  const [promos, setPromos] = useState(PROMO_ITEMS)
   const [activeCategory, setActiveCategory] = useState('all')
   const [selectedPromo, setSelectedPromo] = useState(null)
 
@@ -158,15 +161,40 @@ export default function Promo({ onOpenAiChat }) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [location.pathname])
 
+  // Real-time dynamic fetch from API
+  useEffect(() => {
+    let isMounted = true
+    const fetchLivePromos = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/promos`, {
+          headers: { Accept: 'application/json' }
+        })
+        if (res.ok) {
+          const json = await res.json()
+          if (json.success && Array.isArray(json.data) && json.data.length > 0 && isMounted) {
+            setPromos(json.data)
+          }
+        }
+      } catch (err) {
+        // Silently fallback to PROMO_ITEMS
+      }
+    }
+
+    fetchLivePromos()
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
   // Filter items
   const filteredPromos = useMemo(() => {
-    if (activeCategory === 'all') return PROMO_ITEMS
-    return PROMO_ITEMS.filter((item) => item.category === activeCategory)
-  }, [activeCategory])
+    if (activeCategory === 'all') return promos
+    return promos.filter((item) => item.category === activeCategory)
+  }, [promos, activeCategory])
 
   // WhatsApp link generator
   const createWhatsAppLink = (item) => {
-    const text = `Halo Dealer Mitsubishi Sun Star Prima Motor Margahayu,\n\nSaya tertarik dengan penawaran:\n• Program: ${item.title}\n• Kategori: ${item.categoryLabel}\n• Unit: ${item.targetVehicles}\n\nMohon info simulasi detail dan persyaratan untuk klaim promo ini. Terima kasih!`
+    const text = `Halo Dealer Mitsubishi Sun Star Prima Motor Margahayu,\n\nSaya tertarik dengan penawaran:\n• Program: ${item.title}\n• Kategori: ${item.category_label || item.categoryLabel}\n• Unit: ${item.target_vehicles || item.targetVehicles}\n\nMohon info simulasi detail dan persyaratan untuk klaim promo ini. Terima kasih!`
     return `https://wa.me/6281318747300?text=${encodeURIComponent(text)}`
   }
 
@@ -239,7 +267,7 @@ export default function Promo({ onOpenAiChat }) {
                 onClick={() => setActiveCategory('all')}
               >
                 <HiOutlineSquares2X2 size={15} />
-                <span>Semua Promo ({PROMO_ITEMS.length})</span>
+                <span>Semua Promo ({promos.length})</span>
               </button>
 
               <button
@@ -277,96 +305,132 @@ export default function Promo({ onOpenAiChat }) {
 
           {/* Clean Card List */}
           <div className="promo-cards-grid">
-            {filteredPromos.map((item) => (
-              <article key={item.id} className="promo-clean-card">
-                <div className="card-top-row">
-                  <span className={`card-badge badge-${item.badgeTheme}`}>
-                    {item.badge}
-                  </span>
-                  <div className="card-validity">
-                    <HiOutlineCalendar size={14} className="cal-icon" />
-                    <span>{item.validity}</span>
+            {filteredPromos.map((item) => {
+              const bulletsList = Array.isArray(item.bullets) ? item.bullets : []
+              const badgeClass = item.badge_theme || item.badgeTheme || 'red'
+              const vehiclesText = item.target_vehicles || item.targetVehicles || ''
+              const hasActiveLink = Boolean(item.action_link_active && item.action_link)
+
+              return (
+                <article key={item.id} className="promo-clean-card">
+                  <div className="card-top-row">
+                    <span className={`card-badge badge-${badgeClass}`}>
+                      {item.badge}
+                    </span>
+                    <div className="card-validity">
+                      <HiOutlineCalendar size={14} className="cal-icon" />
+                      <span>{item.validity}</span>
+                    </div>
                   </div>
-                </div>
 
-                <h2 className="card-title">{item.title}</h2>
+                  <h2 className="card-title">{item.title}</h2>
 
-                <div className="card-vehicles-tag">
-                  <RiCarLine size={15} className="car-icon" />
-                  <span>{item.targetVehicles}</span>
-                </div>
-
-                <p className="card-highlight">{item.highlight}</p>
-
-                {/* Clean concise bullet points */}
-                <ul className="card-bullets-list">
-                  {item.bullets.map((bullet, bIdx) => (
-                    <li key={bIdx} className="bullet-item">
-                      <HiOutlineCheck size={15} className="check-icon" />
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Clean bottom action row */}
-                <div className="card-action-row">
-                  {item.category === 'leasing' && (
-                    <Link
-                      to="/sales"
-                      className="btn-card-action btn-card-leasing"
-                    >
-                      <RiUserStarLine size={17} />
-                      <span>Pilih Sales Terbaik</span>
-                    </Link>
+                  {vehiclesText && (
+                    <div className="card-vehicles-tag">
+                      <RiCarLine size={15} className="car-icon" />
+                      <span>{vehiclesText}</span>
+                    </div>
                   )}
 
-                  {item.category === 'event' && (
+                  <p className="card-highlight">{item.highlight}</p>
+
+                  {/* Clean concise bullet points */}
+                  {bulletsList.length > 0 && (
+                    <ul className="card-bullets-list">
+                      {bulletsList.map((bullet, bIdx) => (
+                        <li key={bIdx} className="bullet-item">
+                          <HiOutlineCheck size={15} className="check-icon" />
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {/* Clean bottom action row */}
+                  <div className="card-action-row">
+                    {item.category === 'leasing' && (
+                      <Link
+                        to="/sales"
+                        className="btn-card-action btn-card-leasing"
+                      >
+                        <RiUserStarLine size={17} />
+                        <span>{hasActiveLink ? 'Pilih Sales' : 'Pilih Sales Terbaik'}</span>
+                      </Link>
+                    )}
+
+                    {item.category === 'event' && (
+                      hasActiveLink ? (
+                        <a
+                          href={item.action_link}
+                          target={item.action_link.startsWith('http') ? '_blank' : '_self'}
+                          rel="noopener noreferrer"
+                          className="btn-card-action btn-card-event"
+                        >
+                          <HiOutlineCalendar size={17} />
+                          <span>{item.action_button_label || 'Ikuti Event'}</span>
+                        </a>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn-card-action btn-card-event"
+                          onClick={() => {
+                            if (onOpenAiChat) {
+                              onOpenAiChat({
+                                id: item.id,
+                                title: `Registrasi Event: ${item.title}`
+                              })
+                            } else {
+                              window.dispatchEvent(
+                                new CustomEvent('sunny_ask_question', {
+                                  detail: {
+                                    query: `Halo Sunny, saya ingin registrasi dan mengikuti event: ${item.title}. Mohon info jadwal dan konfirmasi keikutsertaan saya.`
+                                  }
+                                })
+                              )
+                            }
+                          }}
+                        >
+                          <HiOutlineCalendar size={17} />
+                          <span>{item.action_button_label || 'Ikuti Event'}</span>
+                        </button>
+                      )
+                    )}
+
+                    {item.category === 'service' && (
+                      <Link
+                        to="/booking"
+                        className="btn-card-action btn-card-service"
+                      >
+                        <HiOutlineWrenchScrewdriver size={17} />
+                        <span>{hasActiveLink ? 'Booking' : 'Booking Servis'}</span>
+                      </Link>
+                    )}
+
+                    {/* Tombol Klaim Promo jika action_link aktif (berada di antara tombol utama dan Syarat & Ketentuan) */}
+                    {item.category !== 'event' && hasActiveLink && (
+                      <a
+                        href={item.action_link}
+                        target={item.action_link.startsWith('http') ? '_blank' : '_self'}
+                        rel="noopener noreferrer"
+                        className="btn-card-action btn-card-claim"
+                      >
+                        <RiCoupon2Line size={17} />
+                        <span>{item.action_button_label || 'Klaim Promo'}</span>
+                      </a>
+                    )}
+
                     <button
                       type="button"
-                      className="btn-card-action btn-card-event"
-                      onClick={() => {
-                        if (onOpenAiChat) {
-                          onOpenAiChat({
-                            id: item.id,
-                            title: `Registrasi Event: ${item.title}`
-                          })
-                        } else {
-                          window.dispatchEvent(
-                            new CustomEvent('sunny_ask_question', {
-                              detail: {
-                                query: `Halo Sunny, saya ingin registrasi dan mengikuti event: ${item.title}. Mohon info jadwal dan konfirmasi keikutsertaan saya.`
-                              }
-                            })
-                          )
-                        }
-                      }}
+                      className="btn-card-terms"
+                      onClick={() => setSelectedPromo(item)}
                     >
-                      <HiOutlineCalendar size={17} />
-                      <span>Ikuti Event</span>
+                      <span>Syarat &amp; Ketentuan</span>
+                      <HiOutlineArrowRight size={14} />
                     </button>
-                  )}
-
-                  {item.category === 'service' && (
-                    <Link
-                      to="/booking"
-                      className="btn-card-action btn-card-service"
-                    >
-                      <HiOutlineWrenchScrewdriver size={17} />
-                      <span>Booking Servis</span>
-                    </Link>
-                  )}
-
-                  <button
-                    type="button"
-                    className="btn-card-terms"
-                    onClick={() => setSelectedPromo(item)}
-                  >
-                    <span>Syarat &amp; Ketentuan</span>
-                    <HiOutlineArrowRight size={14} />
-                  </button>
-                </div>
-              </article>
-            ))}
+                  </div>
+                </article>
+              )
+            })}
           </div>
         </div>
       </main>

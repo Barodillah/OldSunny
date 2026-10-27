@@ -1,0 +1,187 @@
+{
+    "meta": {
+        "title": "Master Data Promo & Event Mitsubishi Margahayu",
+        "last_sync": "2026-10-27T09:54:00.463443Z"
+    },
+    "promos": [
+        {
+            "id": 1,
+            "slug": "bunga-0-xforce-xpander",
+            "title": "Program Bunga 0% Tenor hingga 2 Tahun",
+            "category": "leasing",
+            "category_label": "Leasing",
+            "badge": "BUNGA 0%",
+            "badge_theme": "red",
+            "target_vehicles": "New XFORCE, New Xpander, Xpander Cross",
+            "validity": "Berlaku s/d Akhir Bulan Ini",
+            "highlight": "Dapatkan kemudahan kepemilikan mobil impian dengan angsuran bebas bunga...",
+            "bullets": [
+                "Bunga 0% s/d 2 Tahun via Dipo Star Finance",
+                "DP Ringan mulai 15%",
+                "Gratis Asuransi All Risk hingga 2 Tahun"
+            ],
+            "terms": [
+                "Khusus pembelian unit baru NIK tahun berjalan",
+                "Syarat & ketentuan pembiayaan berlaku"
+            ],
+            "action_link": "https://forms.gle/mitsubishi-margahayu-gathering",
+            "action_link_active": true,
+            "action_button_label": "Klaim",
+            "is_active": true,
+            "sort_order": 1,
+            "updated_by": "Admin Portal Margahayu",
+            "created_at": "2026-10-27T09:33:55.000000Z",
+            "updated_at": "2026-10-27T09:54:00.000000Z"
+        },
+        {
+            "id": 2,
+            "slug": "dp-ringan-xpander",
+            "title": "Paket DP Ringan Mulai Rp 15 Jutaan",
+            "category": "leasing",
+            "category_label": "Leasing",
+            "badge": "DP RINGAN",
+            "badge_theme": "dark",
+            "target_vehicles": "New Xpander & New Xpander Cross",
+            "validity": "Kuota Terbatas 25 Unit",
+            "highlight": "Bawa pulang MPV keluarga idaman dengan uang muka terjangkau dan cicilan fleksibel.",
+            "bullets": [
+                "Uang muka (DP) super ringan mulai Rp 15 jutaan",
+                "Pilihan tenor fleksibel panjang hingga 6 tahun",
+                "Proses persetujuan (approval) cepat 1x24 jam kerja"
+            ],
+            "terms": [
+                "Kelengkapan berkas data nasabah lengkap dan valid",
+                "Berlaku untuk seluruh varian New Xpander dan Xpander Cross",
+                "Unit siap kirim (ready stock) selama kuota alokasi tersedia"
+            ],
+            "action_link": "",
+            "action_link_active": false,
+            "action_button_label": "Klaim Promo",
+            "is_active": true,
+            "sort_order": 2,
+            "updated_by": null,
+            "created_at": "2026-10-27T09:33:55.000000Z",
+            "updated_at": "2026-10-27T09:54:00.000000Z"
+        },
+        {
+            "id": 3,
+            "slug": "subsidi-trade-in",
+            "title": "Subsidi Tukar Tambah (Trade-In) s/d Rp 10 Juta",
+            "category": "leasing",
+            "category_label": "Leasing",
+            "badge": "SUBSIDI TRADE-IN",
+            "badge_theme": "red",
+            "target_vehicles": "Semua Lini Mitsubishi Baru",
+            "validity": "Berlaku Setiap Hari",
+            "highlight": "Tukar mobil lama segala merk dengan harga appraisal pasar tertinggi plus subsidi langsung.",
+            "bullets": [
+                "Tambahan subsidi cashback langsung hingga Rp 10.000.000",
+                "Appraisal transparan di tempat oleh tim spesialis tersertifikasi",
+                "Proses tukar tambah cepat, mobil lama langsung jadi pengurang DP unit baru"
+            ],
+            "terms": [
+                "Mobil lama bebas dari indikasi bekas tabrakan berat atau banjir",
+                "Dokumen kendaraan lama (STNK, BPKB, faktur) lengkap dan sah",
+                "Berlaku untuk upgrade ke unit Xpander, Xpander Cross, XFORCE, atau Pajero Sport"
+            ],
+            "action_link": "",
+            "action_link_active": false,
+            "action_button_label": "Klaim Promo",
+            "is_active": true,
+            "sort_order": 3,
+            "updated_by": null,
+            "created_at": "2026-10-27T09:33:55.000000Z",
+            "updated_at": "2026-10-27T09:54:00.000000Z"
+        },
+        {
+            "id": 4,
+            "slug": "special-rate-pajero",
+            "title": "Special Rate & Paket Mewah New Pajero Sport",
+            "category": "leasing",
+            "category_label": "Leasing",
+            "badge": "SPECIAL RATE",
+            "badge_theme": "red",
+            "target_vehicles": "New Pajero Sport Dakar & Exceed",
+            "validity": "Berlaku s/d Akhir Bulan Ini",
+            "highlight": "Bunga rendah kompetitif mulai 2.5% dan paket bonus proteksi ekstra untuk SUV legendaris.",
+            "bullets": [
+                "Bunga ringan kompetitif mulai 2.5% p.a. tenor 1 tahun",
+                "Gratis paket Smart Package servis berkala & suku cadang hingga 50.000 KM / 4 tahun",
+                "Bonus kaca film V-Kool kelas VIP dan karpet bludru eksklusif"
+            ],
+            "terms": [
+                "Paket leasing resmi rekanan Sun Star Prima Motor",
+                "Berlaku untuk Pajero Sport Dakar 4x2, Dakar Ultimate, dan Exceed",
+                "Garansi mesin resmi APM tetap berlaku 3 tahun / 100.000 KM"
+            ],
+            "action_link": "",
+            "action_link_active": false,
+            "action_button_label": "Klaim Promo",
+            "is_active": true,
+            "sort_order": 4,
+            "updated_by": null,
+            "created_at": "2026-10-27T09:33:55.000000Z",
+            "updated_at": "2026-10-27T09:54:00.000000Z"
+        },
+        {
+            "id": 5,
+            "slug": "showroom-event-gathering",
+            "title": "Showroom Weekend Gathering & Test Drive Berhadiah",
+            "category": "event",
+            "category_label": "Event Showroom",
+            "badge": "EVENT DEALER",
+            "badge_theme": "dark",
+            "target_vehicles": "Semua Lini Mitsubishi",
+            "validity": "Sabtu & Minggu Ini (09.00 - 16.00 WIB)",
+            "highlight": "Kunjungi Showroom Mitsubishi Margahayu Bandung dan nikmati hidangan lezat...",
+            "bullets": [
+                "Test Drive XFORCE & New Pajero Sport berhadiah lucky dip",
+                "Lucky dip e-money s/d Rp 1 Juta",
+                "Door prize voucher belanja bagi SPK di tempat"
+            ],
+            "terms": [
+                "Wajib registrasi terlebih dahulu",
+                "Membawa SIM A aktif untuk test drive",
+                "Kuota terbatas 50 peserta per hari"
+            ],
+            "action_link": "https://forms.gle/mitsubishi-margahayu-gathering",
+            "action_link_active": true,
+            "action_button_label": "Daftar Event Sekarang",
+            "is_active": true,
+            "sort_order": 5,
+            "updated_by": "Admin Portal Margahayu",
+            "created_at": "2026-10-27T09:33:55.000000Z",
+            "updated_at": "2026-10-27T09:54:00.000000Z"
+        },
+        {
+            "id": 6,
+            "slug": "servis-oli-diskon",
+            "title": "Promo Servis Berkala & Diskon Sparepart 15%",
+            "category": "service",
+            "category_label": "After Sales",
+            "badge": "AFTER SALES",
+            "badge_theme": "red",
+            "target_vehicles": "Seluruh Kendaraan Penumpang & Komersial Mitsubishi",
+            "validity": "Senin s/d Jumat (Booking H-1)",
+            "highlight": "Perawatan berkala di bengkel resmi terpercaya dengan teknisi profesional bersertifikat.",
+            "bullets": [
+                "Diskon jasa servis berkala 10% dan genuine parts 15%",
+                "Gratis general check up menyeluruh pada 15 titik vital kendaraan",
+                "Gratis 1 liter oli mesin resmi Mitsubishi Motors Genuine Oil (MMGO)"
+            ],
+            "terms": [
+                "Wajib melakukan booking servis minimal 1 hari sebelumnya (H-1)",
+                "Berlaku di bengkel resmi Sun Star Prima Motor Margahayu",
+                "Dapat digabungkan dengan fasilitas antar jemput shuttle service"
+            ],
+            "action_link": "https://forms.gle/mitsubishi-margahayu-gathering",
+            "action_link_active": true,
+            "action_button_label": "Klaim",
+            "is_active": true,
+            "sort_order": 6,
+            "updated_by": "Admin Portal Margahayu",
+            "created_at": "2026-10-27T09:33:55.000000Z",
+            "updated_at": "2026-10-27T09:54:00.000000Z"
+        }
+    ]
+}
