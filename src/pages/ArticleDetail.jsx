@@ -301,15 +301,26 @@ export default function ArticleDetail() {
   const [authorChoice, setAuthorChoice] = useState('anon') // 'anon' | 'name'
   const [customName, setCustomName] = useState('')
 
-  // Reactive article list loaded from articleStorage
-  const [articleList, setArticleList] = useState(() => getStoredArticles())
+  // Reactive article list loaded from backend
+  const [articleList, setArticleList] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    let isMounted = true
+    fetchArticlesFromBackend().then((data) => {
+      if (isMounted) {
+        setArticleList(data || [])
+        setIsLoading(false)
+      }
+    })
     const handleUpdate = () => {
       setArticleList(getStoredArticles())
     }
     window.addEventListener('sunny_articles_updated', handleUpdate)
-    return () => window.removeEventListener('sunny_articles_updated', handleUpdate)
+    return () => {
+      isMounted = false
+      window.removeEventListener('sunny_articles_updated', handleUpdate)
+    }
   }, [])
 
   // Find article by slug (primary) or id (fallback)
@@ -366,10 +377,7 @@ export default function ArticleDetail() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [id])
 
-  // Initial backend sync
-  useEffect(() => {
-    fetchArticlesFromBackend()
-  }, [])
+
 
   // Views counter tracking with backend telemetry & session de-duplication
   useEffect(() => {
@@ -706,15 +714,24 @@ export default function ArticleDetail() {
       .slice(0, 3)
   }, [articleList, article])
 
-  // If article not found
+  // If article not found or still loading
   if (!article) {
+    if (isLoading) {
+      return (
+        <main className="article-not-found-page">
+          <div className="article-not-found-card">
+            <p style={{ color: '#64748b', fontSize: '1rem', margin: 0 }}>Memuat artikel...</p>
+          </div>
+        </main>
+      )
+    }
     return (
       <main className="article-not-found-page">
         <div className="article-not-found-card">
           <HiOutlineDocumentText size={48} className="not-found-icon" />
           <h1>Artikel Tidak Ditemukan</h1>
           <p>
-            Maaf, artikel yang Anda cari tidak tersedia atau tautan telah diperbarui. Silakan kembali ke pusat berita untuk melihat update resmi lainnya.
+            Maaf, artikel yang Anda cari tidak tersedia atau database sedang tidak terhubung. Silakan kembali ke pusat berita untuk melihat update resmi lainnya.
           </p>
           <Link to="/news" className="btn-article-back-hub">
             <HiOutlineArrowLeft size={16} />

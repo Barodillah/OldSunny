@@ -9,7 +9,6 @@ import {
   HiOutlineArrowUpRight
 } from 'react-icons/hi2'
 import { getStoredArticles, fetchArticlesFromBackend } from '../utils/articleStorage'
-import { LATEST_HOMEPAGE_ARTICLES } from '../data/newsData'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -17,27 +16,29 @@ export default function NewsSection() {
   const sectionRef = useRef(null)
   const cardsGridRef = useRef(null)
 
-  const [articles, setArticles] = useState(() => {
-    try {
-      const stored = getStoredArticles()
-      const pub = stored.filter((a) => (a.status || 'published') === 'published')
-      return pub.length > 0 ? pub.slice(0, 3) : LATEST_HOMEPAGE_ARTICLES
-    } catch {
-      return LATEST_HOMEPAGE_ARTICLES
-    }
-  })
+  const [articles, setArticles] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    fetchArticlesFromBackend()
+    let isMounted = true
+    fetchArticlesFromBackend().then((data) => {
+      if (isMounted) {
+        const pub = (data || []).filter((a) => (a.status || 'published') === 'published')
+        setArticles(pub.slice(0, 3))
+        setIsLoading(false)
+      }
+    })
+
     const handleUpdate = () => {
       const stored = getStoredArticles()
       const pub = stored.filter((a) => (a.status || 'published') === 'published')
-      if (pub.length > 0) {
-        setArticles(pub.slice(0, 3))
-      }
+      setArticles(pub.slice(0, 3))
     }
     window.addEventListener('sunny_articles_updated', handleUpdate)
-    return () => window.removeEventListener('sunny_articles_updated', handleUpdate)
+    return () => {
+      isMounted = false
+      window.removeEventListener('sunny_articles_updated', handleUpdate)
+    }
   }, [])
 
   // GSAP ScrollTrigger Entrance Animation
@@ -98,86 +99,96 @@ export default function NewsSection() {
         </div>
 
         {/* 3 ARTIKEL TERBARU GRID */}
-        <div ref={cardsGridRef} className="news-articles-grid">
-          {articles.map((article) => {
-            const isYellow = article.categoryTheme === 'yellow'
-            return (
-              <Link
-                key={article.id}
-                to={`/news/${article.slug || article.id}`}
-                className="news-article-card"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-                aria-label={`Baca artikel: ${article.title}`}
-              >
-                {/* Visual Thumbnail */}
-                <div className="news-card-thumbnail-wrap">
-                  <img
-                    src={article.imageUrl}
-                    alt={article.title}
-                    className="news-card-thumbnail"
-                    loading="lazy"
-                  />
-                  <div className="news-card-overlay" aria-hidden="true" />
+        {articles.length > 0 ? (
+          <div ref={cardsGridRef} className="news-articles-grid">
+            {articles.map((article) => {
+              const isYellow = article.categoryTheme === 'yellow'
+              return (
+                <Link
+                  key={article.id}
+                  to={`/news/${article.slug || article.id}`}
+                  className="news-article-card"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  aria-label={`Baca artikel: ${article.title}`}
+                >
+                  {/* Visual Thumbnail */}
+                  <div className="news-card-thumbnail-wrap">
+                    <img
+                      src={article.imageUrl}
+                      alt={article.title}
+                      className="news-card-thumbnail"
+                      loading="lazy"
+                    />
+                    <div className="news-card-overlay" aria-hidden="true" />
 
-                  {/* Category Pill Floating Over Image */}
-                  <div className={`news-category-tag ${isYellow ? 'tag-yellow' : 'tag-red'}`}>
-                    <span>{article.category}</span>
+                    {/* Category Pill Floating Over Image */}
+                    <div className={`news-category-tag ${isYellow ? 'tag-yellow' : 'tag-red'}`}>
+                      <span>{article.category}</span>
+                    </div>
+
+                    {/* Read Action Corner Icon */}
+                    <div className="news-card-hover-icon" aria-hidden="true">
+                      <HiOutlineArrowUpRight size={17} />
+                    </div>
                   </div>
 
-                  {/* Read Action Corner Icon */}
-                  <div className="news-card-hover-icon" aria-hidden="true">
-                    <HiOutlineArrowUpRight size={17} />
+                  {/* Card Body Content */}
+                  <div className="news-card-body">
+                    <div className="news-meta-row">
+                      <span className="news-meta-item">
+                        <HiOutlineCalendar size={14} className="news-meta-icon" />
+                        <span>{article.date}</span>
+                      </span>
+                      <span className="news-meta-divider">•</span>
+                      <span className="news-meta-item news-desktop-read-time">
+                        <HiOutlineClock size={14} className="news-meta-icon" />
+                        <span>{article.readTime}</span>
+                      </span>
+                      <span className={`news-mobile-category-tag ${isYellow ? 'tag-yellow' : 'tag-red'}`}>
+                        {article.category}
+                      </span>
+                    </div>
+
+                    <h3 className="news-card-title">
+                      {article.title}
+                    </h3>
+
+                    <p className="news-card-summary">
+                      {article.summary}
+                    </p>
+
+                    <div className="news-card-footer">
+                      <span className="news-read-more-text">
+                        <span>Lihat Selengkapnya</span>
+                        <HiOutlineArrowRight size={15} className="footer-arrow" />
+                      </span>
+                      <span className="news-mobile-read-time">
+                        <HiOutlineClock size={12} className="read-time-icon" />
+                        <span>{article.readTime}</span>
+                      </span>
+                    </div>
                   </div>
-                </div>
-
-                {/* Card Body Content */}
-                <div className="news-card-body">
-                  <div className="news-meta-row">
-                    <span className="news-meta-item">
-                      <HiOutlineCalendar size={14} className="news-meta-icon" />
-                      <span>{article.date}</span>
-                    </span>
-                    <span className="news-meta-divider">•</span>
-                    <span className="news-meta-item news-desktop-read-time">
-                      <HiOutlineClock size={14} className="news-meta-icon" />
-                      <span>{article.readTime}</span>
-                    </span>
-                    <span className={`news-mobile-category-tag ${isYellow ? 'tag-yellow' : 'tag-red'}`}>
-                      {article.category}
-                    </span>
-                  </div>
-
-                  <h3 className="news-card-title">
-                    {article.title}
-                  </h3>
-
-                  <p className="news-card-summary">
-                    {article.summary}
-                  </p>
-
-                  <div className="news-card-footer">
-                    <span className="news-read-more-text">
-                      <span>Lihat Selengkapnya</span>
-                      <HiOutlineArrowRight size={15} className="footer-arrow" />
-                    </span>
-                    <span className="news-mobile-read-time">
-                      <HiOutlineClock size={12} className="read-time-icon" />
-                      <span>{article.readTime}</span>
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
+                </Link>
+              )
+            })}
+          </div>
+        ) : (
+          <div className="news-empty-container" style={{ textAlign: 'center', padding: '3rem 1rem', color: '#64748b' }}>
+            <p style={{ margin: 0, fontSize: '0.95rem' }}>
+              {isLoading ? 'Memuat artikel...' : 'Belum ada artikel yang dipublikasikan.'}
+            </p>
+          </div>
+        )}
 
         {/* BOTTOM CTA: LIHAT LEBIH BANYAK */}
-        <div className="news-bottom-cta-wrap">
-          <Link to="/news" className="btn-news-bottom-primary">
-            <span>Lihat Lebih Banyak Artikel</span>
-            <HiOutlineArrowRight size={18} className="btn-arrow" />
-          </Link>
-        </div>
+        {articles.length > 0 && (
+          <div className="news-bottom-cta-wrap">
+            <Link to="/news" className="btn-news-bottom-primary">
+              <span>Lihat Lebih Banyak Artikel</span>
+              <HiOutlineArrowRight size={18} className="btn-arrow" />
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   )

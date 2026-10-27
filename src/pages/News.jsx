@@ -24,16 +24,26 @@ export default function News() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('Semua')
 
-  // Reactive article list loaded from articleStorage
-  const [allArticles, setAllArticles] = useState(() => getStoredArticles())
+  // Reactive article list loaded from backend
+  const [allArticles, setAllArticles] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    fetchArticlesFromBackend()
+    let isMounted = true
+    fetchArticlesFromBackend().then((data) => {
+      if (isMounted) {
+        setAllArticles(data || [])
+        setIsLoading(false)
+      }
+    })
     const handleUpdate = () => {
       setAllArticles(getStoredArticles())
     }
     window.addEventListener('sunny_articles_updated', handleUpdate)
-    return () => window.removeEventListener('sunny_articles_updated', handleUpdate)
+    return () => {
+      isMounted = false
+      window.removeEventListener('sunny_articles_updated', handleUpdate)
+    }
   }, [])
 
   // Only published articles are shown to visitors
@@ -145,139 +155,165 @@ export default function News() {
       {/* ==================================================================
           HERO PAGE CAROUSEL (FULL-WIDTH HERO & INTEGRATED PAGE HEADER)
           ================================================================== */}
-      <section
-        className="news-hero-carousel"
-        aria-label="Highlight Berita Utama dan Header News"
-        onMouseEnter={() => setIsCarouselPaused(true)}
-        onMouseLeave={() => setIsCarouselPaused(false)}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className="news-hero-viewport">
-          {highlightArticles.map((slide, index) => {
-            const isActive = index === activeSlide
-            return (
-              <div
-                key={slide.id}
-                className={`news-hero-slide ${isActive ? 'active' : ''}`}
-                aria-hidden={!isActive}
-              >
-                <img
-                  src={slide.imageUrl}
-                  alt={slide.title}
-                  className="news-hero-backdrop"
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                />
-                <div className="news-hero-overlay"></div>
+      {highlightArticles.length > 0 ? (
+        <section
+          className="news-hero-carousel"
+          aria-label="Highlight Berita Utama dan Header News"
+          onMouseEnter={() => setIsCarouselPaused(true)}
+          onMouseLeave={() => setIsCarouselPaused(false)}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div className="news-hero-viewport">
+            {highlightArticles.map((slide, index) => {
+              const isActive = index === activeSlide
+              return (
+                <div
+                  key={slide.id}
+                  className={`news-hero-slide ${isActive ? 'active' : ''}`}
+                  aria-hidden={!isActive}
+                >
+                  <img
+                    src={slide.imageUrl}
+                    alt={slide.title}
+                    className="news-hero-backdrop"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                  />
+                  <div className="news-hero-overlay"></div>
 
-                <div className="news-hero-container">
-                  <div className="news-hero-content-wrapper">
-                    {/* Top Overline Header Bar within Hero */}
-                    <div className="news-hero-top-bar">
-                      <div className="news-hero-branding">
-                        <span className="news-hero-pulse-dot"></span>
-                        <span className="news-hero-badge-title">News & Update</span>
-                        <span className="news-hero-badge-divider">•</span>
-                        <span className="news-hero-badge-sub">PT Sun Star Prima Motor Margahayu</span>
+                  <div className="news-hero-container">
+                    <div className="news-hero-content-wrapper">
+                      {/* Top Overline Header Bar within Hero */}
+                      <div className="news-hero-top-bar">
+                        <div className="news-hero-branding">
+                          <span className="news-hero-pulse-dot"></span>
+                          <span className="news-hero-badge-title">News & Update</span>
+                          <span className="news-hero-badge-divider">•</span>
+                          <span className="news-hero-badge-sub">PT Sun Star Prima Motor Margahayu</span>
+                        </div>
+
+                        <div className="news-hero-counter-pill">
+                          <span className="counter-current">0{activeSlide + 1}</span>
+                          <span className="counter-sep">/</span>
+                          <span className="counter-total">0{highlightArticles.length}</span>
+                        </div>
                       </div>
 
-                      <div className="news-hero-counter-pill">
-                        <span className="counter-current">0{activeSlide + 1}</span>
-                        <span className="counter-sep">/</span>
-                        <span className="counter-total">0{highlightArticles.length}</span>
-                      </div>
-                    </div>
-
-                    {/* Middle & Bottom: Main Title, Badges, Summary & Actions */}
-                    <div className="news-hero-body">
-                      <div className="news-hero-tag-row">
-                        <span className="news-hero-highlight-pill">
-                          <HiOutlineSparkles size={14} />
-                          <span>{slide.highlightBadge || 'HIGHLIGHT UTAMA'}</span>
-                        </span>
-                        <span className="news-hero-category-pill">
-                          {slide.category}
-                        </span>
-                      </div>
-
-                      <h1 className="news-hero-headline">{slide.title}</h1>
-                      <p className="news-hero-description">{slide.summary}</p>
-
-                      <div className="news-hero-footer-row">
-                        <Link
-                          to={`/news/${slide.slug || slide.id}`}
-                          className="btn-news-hero-read"
-                        >
-                          <span>Baca Berita Lengkap</span>
-                          <HiOutlineArrowRight size={17} className="hero-arrow-icon" />
-                        </Link>
-
-                        <div className="news-hero-meta-items">
-                          <span className="news-hero-meta">
-                            <HiOutlineCalendar size={15} />
-                            <span>{slide.date}</span>
+                      {/* Middle & Bottom: Main Title, Badges, Summary & Actions */}
+                      <div className="news-hero-body">
+                        <div className="news-hero-tag-row">
+                          <span className="news-hero-highlight-pill">
+                            <HiOutlineSparkles size={14} />
+                            <span>{slide.highlightBadge || 'HIGHLIGHT UTAMA'}</span>
                           </span>
-                          <span className="news-hero-meta-dot">•</span>
-                          <span className="news-hero-meta">
-                            <HiOutlineClock size={15} />
-                            <span>{slide.readTime}</span>
+                          <span className="news-hero-category-pill">
+                            {slide.category}
                           </span>
-                          {slide.author && (
-                            <>
-                              <span className="news-hero-meta-dot">•</span>
-                              <span className="news-hero-meta news-hero-author">
-                                Oleh: {slide.author}
-                              </span>
-                            </>
-                          )}
+                        </div>
+
+                        <h1 className="news-hero-headline">{slide.title}</h1>
+                        <p className="news-hero-description">{slide.summary}</p>
+
+                        <div className="news-hero-footer-row">
+                          <Link
+                            to={`/news/${slide.slug || slide.id}`}
+                            className="btn-news-hero-read"
+                          >
+                            <span>Baca Berita Lengkap</span>
+                            <HiOutlineArrowRight size={17} className="hero-arrow-icon" />
+                          </Link>
+
+                          <div className="news-hero-meta-items">
+                            <span className="news-hero-meta">
+                              <HiOutlineCalendar size={15} />
+                              <span>{slide.date}</span>
+                            </span>
+                            <span className="news-hero-meta-dot">•</span>
+                            <span className="news-hero-meta">
+                              <HiOutlineClock size={15} />
+                              <span>{slide.readTime}</span>
+                            </span>
+                            {slide.author && (
+                              <>
+                                <span className="news-hero-meta-dot">•</span>
+                                <span className="news-hero-meta news-hero-author">
+                                  Oleh: {slide.author}
+                                </span>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              )
+            })}
+          </div>
+
+          {/* Carousel Controls: Indicator Dots & Navigation Arrows */}
+          <div className="news-hero-controls-container">
+            <div className="news-hero-controls">
+              <div className="news-hero-dots" role="tablist" aria-label="Pilih slide highlight">
+                {highlightArticles.map((item, dotIndex) => (
+                  <button
+                    key={dotIndex}
+                    type="button"
+                    className={`news-hero-dot ${dotIndex === activeSlide ? 'active' : ''}`}
+                    aria-label={`Slide ${dotIndex + 1}: ${item.title}`}
+                    aria-selected={dotIndex === activeSlide}
+                    onClick={() => setActiveSlide(dotIndex)}
+                  />
+                ))}
               </div>
-            )
-          })}
-        </div>
 
-        {/* Carousel Controls: Indicator Dots & Navigation Arrows */}
-        <div className="news-hero-controls-container">
-          <div className="news-hero-controls">
-            <div className="news-hero-dots" role="tablist" aria-label="Pilih slide highlight">
-              {highlightArticles.map((item, dotIndex) => (
+              <div className="news-hero-arrows">
                 <button
-                  key={dotIndex}
                   type="button"
-                  className={`news-hero-dot ${dotIndex === activeSlide ? 'active' : ''}`}
-                  aria-label={`Slide ${dotIndex + 1}: ${item.title}`}
-                  aria-selected={dotIndex === activeSlide}
-                  onClick={() => setActiveSlide(dotIndex)}
-                />
-              ))}
-            </div>
-
-            <div className="news-hero-arrows">
-              <button
-                type="button"
-                className="btn-news-hero-arrow"
-                aria-label="Slide highlight sebelumnya"
-                onClick={handlePrevSlide}
-              >
-                <HiOutlineChevronLeft size={20} />
-              </button>
-              <button
-                type="button"
-                className="btn-news-hero-arrow"
-                aria-label="Slide highlight selanjutnya"
-                onClick={handleNextSlide}
-              >
-                <HiOutlineChevronRight size={20} />
-              </button>
+                  className="btn-news-hero-arrow"
+                  aria-label="Slide highlight sebelumnya"
+                  onClick={handlePrevSlide}
+                >
+                  <HiOutlineChevronLeft size={20} />
+                </button>
+                <button
+                  type="button"
+                  className="btn-news-hero-arrow"
+                  aria-label="Slide highlight selanjutnya"
+                  onClick={handleNextSlide}
+                >
+                  <HiOutlineChevronRight size={20} />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section
+          style={{
+            background: 'linear-gradient(135deg, #090d16 0%, #161e2e 100%)',
+            color: '#fff',
+            padding: '5rem 1.5rem 3.5rem',
+            borderBottom: '1px solid rgba(255,255,255,0.08)'
+          }}
+        >
+          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+            <div className="news-hero-branding" style={{ marginBottom: '1.25rem' }}>
+              <span className="news-hero-pulse-dot"></span>
+              <span className="news-hero-badge-title">News & Update</span>
+              <span className="news-hero-badge-divider">•</span>
+              <span className="news-hero-badge-sub">PT Sun Star Prima Motor Margahayu</span>
+            </div>
+            <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.4rem)', fontWeight: 800, margin: '0 0 0.75rem', color: '#fff', letterSpacing: '-0.02em' }}>
+              Berita & Informasi Resmi
+            </h1>
+            <p style={{ color: '#94a3b8', fontSize: '1rem', maxWidth: '640px', lineHeight: 1.6, margin: 0 }}>
+              Pusat rilis varian terbaru, transparansi transaksi, serta edukasi resmi dari Mitsubishi Sun Margahayu.
+            </p>
+          </div>
+        </section>
+      )}
 
       <div className="news-page-container">
         {/* ==================================================================
@@ -448,17 +484,25 @@ export default function News() {
             <div className="news-empty-icon-wrap">
               <HiOutlineDocumentMagnifyingGlass size={32} />
             </div>
-            <h3 className="news-empty-title">Tidak Ada Artikel Ditemukan</h3>
+            <h3 className="news-empty-title">
+              {searchQuery || selectedCategory !== 'Semua'
+                ? 'Tidak Ada Artikel Ditemukan'
+                : 'Belum Ada Artikel'}
+            </h3>
             <p className="news-empty-desc">
-              Kami tidak menemukan artikel yang cocok dengan kata kunci atau kategori yang Anda pilih. Coba gunakan istilah umum atau reset filter Anda.
+              {searchQuery || selectedCategory !== 'Semua'
+                ? 'Kami tidak menemukan artikel yang cocok dengan kata kunci atau kategori yang Anda pilih. Coba gunakan istilah umum atau reset filter Anda.'
+                : (isLoading ? 'Sedang memuat data artikel...' : 'Saat ini belum ada artikel yang dipublikasikan atau database sedang tidak terhubung.')}
             </p>
-            <button
-              type="button"
-              className="btn-news-reset-filter"
-              onClick={handleResetFilters}
-            >
-              Reset Filter & Tampilkan Semua
-            </button>
+            {(searchQuery || selectedCategory !== 'Semua') && (
+              <button
+                type="button"
+                className="btn-news-reset-filter"
+                onClick={handleResetFilters}
+              >
+                Reset Filter & Tampilkan Semua
+              </button>
+            )}
           </div>
         )}
 

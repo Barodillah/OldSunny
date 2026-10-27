@@ -80,15 +80,14 @@ export default function PortalArticles() {
     setTimeout(() => setFeedback(null), 3600)
   }
 
-  // Load articles from local cache first, then sync with backend
+  // Load articles from backend
   const loadArticles = useCallback(async () => {
-    const list = getStoredArticles()
-    setArticles(list)
-
     setArticlesLoading(true)
-    const remote = await fetchArticlesFromBackend()
-    if (remote && Array.isArray(remote) && remote.length > 0) {
+    const remote = await fetchArticlesFromBackend('portal')
+    if (Array.isArray(remote)) {
       setArticles(remote)
+    } else {
+      setArticles([])
     }
     setArticlesLoading(false)
   }, [])

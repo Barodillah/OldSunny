@@ -1,5 +1,3 @@
-import { NEWS_ARTICLES } from '../data/newsData'
-
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
 const STORAGE_KEY = 'sunny_news_articles'
 
@@ -105,10 +103,10 @@ export const normalizeArticle = (item) => {
   }
 }
 
-// Synchronous local storage read (with auto initial fallback)
+// Synchronous local storage read
 export const getStoredArticles = () => {
   if (typeof window === 'undefined') {
-    return NEWS_ARTICLES.map(a => ({ ...a, status: a.status || 'published' }))
+    return []
   }
 
   try {
@@ -123,13 +121,7 @@ export const getStoredArticles = () => {
     console.error('Error reading articles from localStorage:', err)
   }
 
-  const initial = NEWS_ARTICLES.map(a => ({
-    ...a,
-    status: a.status || 'published',
-    tags: a.tags || [a.category, 'Mitsubishi Motors', 'Dealer Resmi']
-  }))
-  saveStoredArticles(initial)
-  return initial
+  return []
 }
 
 // Helper to save array to localStorage and optionally notify listeners
@@ -170,10 +162,13 @@ export const fetchArticlesFromBackend = async (caller = 'public', filters = {}) 
       saveStoredArticles(normalized, false)
       return normalized
     }
+    return []
   } catch (err) {
-    console.warn('Backend fetchArticles failed, using localStorage fallback:', err)
+    console.warn('Backend fetchArticles failed (database tidak tersambung):', err)
+    // Jika database tidak tersambung, kosongkan storage dan jangan gunakan backup mock
+    saveStoredArticles([], false)
+    return []
   }
-  return getStoredArticles()
 }
 
 // Find single article by ID or slug
@@ -181,7 +176,7 @@ export const getStoredArticleByIdOrSlug = (idOrSlug) => {
   const articles = getStoredArticles()
   return articles.find(
     (item) => String(item.id) === String(idOrSlug) || item.slug === idOrSlug
-  )
+  ) || null
 }
 
 // Fetch single article from backend with approved comments
@@ -197,9 +192,9 @@ export const fetchArticleByIdOrSlugFromBackend = async (idOrSlug) => {
       }
     }
   } catch (err) {
-    console.warn('Backend fetchArticleByIdOrSlug failed, using cache:', err)
+    console.warn('Backend fetchArticleByIdOrSlug failed (database tidak tersambung):', err)
   }
-  return getStoredArticleByIdOrSlug(idOrSlug)
+  return null
 }
 
 // Save article (Create or Update) to backend & sync local
@@ -561,13 +556,8 @@ export const toggleArticleHighlight = async (id) => {
   return null
 }
 
-// Reset to initial articles from newsData.js
+// Reset articles cache to empty
 export const resetArticlesToDefault = () => {
-  const initial = NEWS_ARTICLES.map(a => ({
-    ...a,
-    status: 'published',
-    tags: a.tags || [a.category, 'Mitsubishi Motors', 'Dealer Resmi']
-  }))
-  saveStoredArticles(initial)
-  return initial
+  saveStoredArticles([])
+  return []
 }
