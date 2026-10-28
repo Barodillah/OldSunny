@@ -12,6 +12,7 @@ import {
   HiOutlineExclamationTriangle,
   HiOutlineSparkles
 } from 'react-icons/hi2'
+import { calculateTenure, parseDateForInput } from '../../utils/tenureHelper'
 import './PortalOrganization.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
@@ -73,7 +74,7 @@ export default function PortalOrganization() {
     setFormDepartment(emp.department || '')
     setFormPhotoUrl('https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg')
     setFormDescription('')
-    setFormTenure('Baru Menjabat')
+    setFormTenure(new Date().toISOString().split('T')[0])
     setFormNik('')
     setFormBadge(emp.badge || '')
     setFormNotes('')
@@ -89,7 +90,7 @@ export default function PortalOrganization() {
     setFormDepartment('')
     setFormPhotoUrl('https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg')
     setFormDescription('')
-    setFormTenure('Baru Bergabung')
+    setFormTenure(new Date().toISOString().split('T')[0])
     setFormNik('')
     setFormBadge(level === 'supervisor' ? 'Tim III' : '')
     setFormNotes('')
@@ -105,7 +106,7 @@ export default function PortalOrganization() {
     setFormDepartment(emp.department || '')
     setFormPhotoUrl(emp.photo_url || '')
     setFormDescription(emp.description || '')
-    setFormTenure(emp.tenure || '')
+    setFormTenure(parseDateForInput(emp.tenure))
     setFormNik(emp.nik || '')
     setFormBadge(emp.badge || '')
     setFormNotes('')
@@ -312,7 +313,7 @@ export default function PortalOrganization() {
                   <span className="org-card-role text-direksi">{emp.role}</span>
                   <span className="org-card-dept">{emp.department}</span>
                   <p className="org-card-desc">{emp.description}</p>
-                  <span className="org-card-tenure">{emp.tenure}</span>
+                  <span className="org-card-tenure">{calculateTenure(emp.tenure, { suffix: 'Pengalaman' })}</span>
 
                   <div className="org-card-actions">
                     <button
@@ -377,7 +378,7 @@ export default function PortalOrganization() {
                   <span className="org-card-role text-csm">{emp.role}</span>
                   <span className="org-card-dept">{emp.department}</span>
                   <p className="org-card-desc">{emp.description}</p>
-                  <span className="org-card-tenure">{emp.tenure}</span>
+                  <span className="org-card-tenure">{calculateTenure(emp.tenure, { suffix: 'Pengalaman' })}</span>
 
                   <div className="org-card-actions">
                     <button
@@ -450,7 +451,7 @@ export default function PortalOrganization() {
                   <span className="org-card-role text-mgr">{emp.role}</span>
                   <span className="org-card-dept">{emp.department}</span>
                   <p className="org-card-desc">{emp.description}</p>
-                  <span className="org-card-tenure">{emp.tenure}</span>
+                  <span className="org-card-tenure">{calculateTenure(emp.tenure, { suffix: 'Pengalaman' })}</span>
 
                   <div className="org-card-actions">
                     <button
@@ -538,7 +539,7 @@ export default function PortalOrganization() {
                     <span>{emp.sales_team ? emp.sales_team.length : 0} Sales Menginduk</span>
                   </div>
 
-                  <span className="org-card-tenure">{emp.tenure}</span>
+                  <span className="org-card-tenure">{calculateTenure(emp.tenure, { suffix: 'Pengalaman' })}</span>
 
                   <div className="org-card-actions">
                     <button
@@ -717,14 +718,16 @@ export default function PortalOrganization() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Masa Pengalaman / Tenure</label>
+                    <label className="form-label">Tanggal Bergabung</label>
                     <input
-                      type="text"
+                      type="date"
                       className="form-input"
-                      placeholder="Contoh: 12 Tahun Pengalaman"
                       value={formTenure}
                       onChange={(e) => setFormTenure(e.target.value)}
                     />
+                    <span className="form-help">
+                      Masa pengalaman akan dihitung secara dinamis dari tahun ke tahun berdasarkan tanggal ini.
+                    </span>
                   </div>
                 </div>
 

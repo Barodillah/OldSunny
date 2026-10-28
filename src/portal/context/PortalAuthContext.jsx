@@ -160,22 +160,8 @@ export function PortalAuthProvider({ children }) {
       const data = await response.json()
 
       if (response.ok && data.success) {
-        const newOtp = {
-          id: 'OTP-' + Date.now(),
-          userId: data.user.id,
-          userName: data.user.name,
-          identifier: data.user.email,
-          phone: data.user.phone,
-          otpCode: data.otpCode,
-          type: 'reset_password',
-          createdAt: new Date().toISOString(),
-          expiresAt: data.expiresAt,
-          isUsed: false
-        }
-        setOtps((prev) => [newOtp, ...prev])
         return {
           success: true,
-          otpCode: data.otpCode,
           user: data.user,
           expiresAt: data.expiresAt,
           message: data.message
@@ -230,7 +216,8 @@ export function PortalAuthProvider({ children }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'X-User-Role': user?.role || ''
         },
         body: JSON.stringify(userData)
       })
@@ -239,10 +226,21 @@ export function PortalAuthProvider({ children }) {
 
       if (response.ok && data.success) {
         refreshUsersFromDb()
-        return { success: true, user: data.data }
+        return { success: true, user: data.data, message: data.message }
       } else {
-        alert(data.message || 'Gagal menambahkan pengguna.')
-        return { success: false, message: data.message }
+        let msg = data.message || 'Gagal menambahkan pengguna baru.'
+        if (msg.includes('Duplicate entry') || msg.includes('SQLSTATE')) {
+          if (msg.includes('users_phone_unique') || msg.includes('phone')) {
+            msg = 'Nomor WhatsApp / telepon sudah terdaftar pada pengguna lain.'
+          } else if (msg.includes('users_email_unique') || msg.includes('email')) {
+            msg = 'Alamat email sudah terdaftar pada pengguna lain.'
+          } else if (msg.includes('users_nik_unique') || msg.includes('nik')) {
+            msg = 'NIK Karyawan sudah terdaftar pada pengguna lain.'
+          } else {
+            msg = 'Data yang Anda masukkan duplikat atau sudah digunakan pengguna lain.'
+          }
+        }
+        return { success: false, message: msg, errors: data.errors }
       }
     } catch (err) {
       console.error('Add user error:', err)
@@ -257,7 +255,8 @@ export function PortalAuthProvider({ children }) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'X-User-Role': user?.role || ''
         },
         body: JSON.stringify(updatedFields)
       })
@@ -271,14 +270,25 @@ export function PortalAuthProvider({ children }) {
           setUser(merged)
           localStorage.setItem('sunny_portal_current_user', JSON.stringify(merged))
         }
-        return { success: true }
+        return { success: true, message: data.message }
       } else {
-        alert(data.message || 'Gagal memperbarui pengguna.')
-        return { success: false }
+        let msg = data.message || 'Gagal memperbarui data pengguna.'
+        if (msg.includes('Duplicate entry') || msg.includes('SQLSTATE')) {
+          if (msg.includes('users_phone_unique') || msg.includes('phone')) {
+            msg = 'Nomor WhatsApp / telepon sudah terdaftar pada pengguna lain.'
+          } else if (msg.includes('users_email_unique') || msg.includes('email')) {
+            msg = 'Alamat email sudah terdaftar pada pengguna lain.'
+          } else if (msg.includes('users_nik_unique') || msg.includes('nik')) {
+            msg = 'NIK Karyawan sudah terdaftar pada pengguna lain.'
+          } else {
+            msg = 'Data yang Anda masukkan duplikat atau sudah digunakan pengguna lain.'
+          }
+        }
+        return { success: false, message: msg, errors: data.errors }
       }
     } catch (err) {
       console.error('Update user error:', err)
-      return { success: false }
+      return { success: false, message: 'Gagal terhubung ke layanan server.' }
     }
   }
 
@@ -291,7 +301,10 @@ export function PortalAuthProvider({ children }) {
     try {
       const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
         method: 'DELETE',
-        headers: { 'Accept': 'application/json' }
+        headers: {
+          'Accept': 'application/json',
+          'X-User-Role': user?.role || ''
+        }
       })
 
       const data = await response.json()

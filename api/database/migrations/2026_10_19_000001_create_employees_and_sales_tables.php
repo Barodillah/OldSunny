@@ -49,7 +49,6 @@ return new class extends Migration
             $table->string('specialization')->nullable(); // e.g. 'SUV & Varian Hybrid', 'Canter & Niaga'
             $table->string('tenure')->nullable(); // e.g. '4 Tahun'
             $table->string('joined_year')->nullable(); // e.g. '2022'
-            $table->string('csi_score')->nullable(); // e.g. '98.8 / 100'
             $table->string('status')->default('active'); // 'active', 'inactive'
             $table->timestamp('deactivated_at')->nullable();
             $table->string('deactivated_reason')->nullable();
@@ -181,7 +180,6 @@ return new class extends Migration
                 'specialization' => 'SUV & Varian Hybrid',
                 'tenure' => '6 Tahun',
                 'joined_year' => '2020',
-                'csi_score' => '99.4 / 100',
                 'status' => 'active',
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -197,7 +195,6 @@ return new class extends Migration
                 'specialization' => 'Family MPV & Crossover',
                 'tenure' => '4 Tahun',
                 'joined_year' => '2022',
-                'csi_score' => '98.8 / 100',
                 'status' => 'active',
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -213,7 +210,6 @@ return new class extends Migration
                 'specialization' => 'Uji Jalan & Pembiayaan Syariah',
                 'tenure' => '2.5 Tahun',
                 'joined_year' => '2023',
-                'csi_score' => '98.1 / 100',
                 'status' => 'active',
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -229,7 +225,6 @@ return new class extends Migration
                 'specialization' => 'Canter, Fighter X & Niaga',
                 'tenure' => '3 Tahun',
                 'joined_year' => '2023',
-                'csi_score' => '97.9 / 100',
                 'status' => 'active',
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -245,7 +240,6 @@ return new class extends Migration
                 'specialization' => 'Armada Perusahaan & Koperasi',
                 'tenure' => '5 Tahun',
                 'joined_year' => '2021',
-                'csi_score' => '97.5 / 100',
                 'status' => 'active',
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -261,7 +255,6 @@ return new class extends Migration
                 'specialization' => 'Konsultasi Cicilan Ringan & Promo',
                 'tenure' => '2 Tahun',
                 'joined_year' => '2024',
-                'csi_score' => '97.2 / 100',
                 'status' => 'active',
                 'created_at' => $now,
                 'updated_at' => $now,

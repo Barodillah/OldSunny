@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Otp extends Model
 {
+    protected $connection = 'mysql';
+
     protected $fillable = [
         'user_id',
         'identifier',

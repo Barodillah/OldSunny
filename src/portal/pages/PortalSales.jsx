@@ -13,6 +13,7 @@ import {
   HiOutlineClock
 } from 'react-icons/hi2'
 import { RiWhatsappLine, RiShieldCheckLine } from 'react-icons/ri'
+import { calculateTenure, parseDateForInput, formatIndonesianDate } from '../../utils/tenureHelper'
 import './PortalSales.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
@@ -41,7 +42,6 @@ export default function PortalSales() {
   const [formSpecialization, setFormSpecialization] = useState('')
   const [formTenure, setFormTenure] = useState('')
   const [formJoinedYear, setFormJoinedYear] = useState('')
-  const [formCsiScore, setFormCsiScore] = useState('')
   const [formNotes, setFormNotes] = useState('')
 
   // Fetch sales from API
@@ -82,9 +82,9 @@ export default function PortalSales() {
     setFormNik('')
     setFormPhotoUrl('https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg')
     setFormSpecialization('')
-    setFormTenure('Baru Bergabung')
-    setFormJoinedYear(String(new Date().getFullYear()))
-    setFormCsiScore('100 / 100')
+    const todayStr = new Date().toISOString().split('T')[0]
+    setFormTenure(todayStr)
+    setFormJoinedYear(todayStr.split('-')[0])
     setFormNotes('')
     setActiveModal('add')
   }
@@ -100,9 +100,8 @@ export default function PortalSales() {
     setFormNik(sales.nik || '')
     setFormPhotoUrl(sales.photo_url || '')
     setFormSpecialization(sales.specialization || '')
-    setFormTenure(sales.tenure || '')
+    setFormTenure(parseDateForInput(sales.tenure, sales.joined_year))
     setFormJoinedYear(sales.joined_year || '')
-    setFormCsiScore(sales.csi_score || '')
     setFormNotes(sales.notes || '')
     setActiveModal('edit')
   }
@@ -148,8 +147,7 @@ export default function PortalSales() {
             photo_url: formPhotoUrl,
             specialization: formSpecialization,
             tenure: formTenure,
-            joined_year: formJoinedYear,
-            csi_score: formCsiScore,
+            joined_year: formJoinedYear || (formTenure ? formTenure.substring(0, 4) : String(new Date().getFullYear())),
             notes: formNotes
           })
         })
@@ -175,8 +173,7 @@ export default function PortalSales() {
             photo_url: formPhotoUrl,
             specialization: formSpecialization,
             tenure: formTenure,
-            joined_year: formJoinedYear,
-            csi_score: formCsiScore,
+            joined_year: formJoinedYear || (formTenure ? formTenure.substring(0, 4) : undefined),
             notes: formNotes
           })
         })
@@ -322,7 +319,7 @@ export default function PortalSales() {
                 <th>JABATAN / POSISI</th>
                 <th>KONTAK WHATSAPP</th>
                 <th>SPESIALISASI</th>
-                <th>MASA KERJA / CSI</th>
+                <th>MASA KERJA</th>
                 <th style={{ textAlign: 'right' }}>AKSI</th>
               </tr>
             </thead>
@@ -396,12 +393,12 @@ export default function PortalSales() {
                       <span className="sales-spec-text">{sales.specialization || '-'}</span>
                     </td>
 
-                    {/* Tenure & CSI */}
+                    {/* Masa Kerja Dinamis */}
                     <td>
                       <div className="cell-tenure-csi">
-                        <span className="tenure-text">{sales.tenure || '-'}</span>
-                        {sales.csi_score && (
-                          <span className="csi-badge">CSI: {sales.csi_score}</span>
+                        <span className="tenure-text">{calculateTenure(sales.tenure)}</span>
+                        {formatIndonesianDate(sales.tenure) && (
+                          <span className="tenure-subdate">Mulai {formatIndonesianDate(sales.tenure)}</span>
                         )}
                       </div>
                     </td>
@@ -601,23 +598,21 @@ export default function PortalSales() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Masa Kerja & Skor CSI</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-                      <input
-                        type="text"
-                        className="form-input"
-                        placeholder="Masa Kerja (4 Tahun)"
-                        value={formTenure}
-                        onChange={(e) => setFormTenure(e.target.value)}
-                      />
-                      <input
-                        type="text"
-                        className="form-input"
-                        placeholder="CSI (99.4 / 100)"
-                        value={formCsiScore}
-                        onChange={(e) => setFormCsiScore(e.target.value)}
-                      />
-                    </div>
+                    <label className="form-label">Tanggal Bergabung</label>
+                    <input
+                      type="date"
+                      className="form-input"
+                      value={formTenure}
+                      onChange={(e) => {
+                        setFormTenure(e.target.value)
+                        if (e.target.value) {
+                          setFormJoinedYear(e.target.value.substring(0, 4))
+                        }
+                      }}
+                    />
+                    <span className="form-help">
+                      Masa kerja sales dihitung secara dinamis dari tahun ke tahun berdasarkan tanggal ini.
+                    </span>
                   </div>
                 </div>
 

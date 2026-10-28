@@ -8,6 +8,7 @@ import {
 } from 'react-icons/hi2'
 import { RiShieldCheckLine } from 'react-icons/ri'
 import WarningNoticeSection from '../components/WarningNoticeSection.jsx'
+import { calculateTenure } from '../utils/tenureHelper'
 import './Organization.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
@@ -673,7 +674,7 @@ export default function Organization() {
                   <div className="org-modal-submeta">
                     <span>NIK: <strong>{selectedLeader.nik}</strong></span>
                     <span>•</span>
-                    <span>{selectedLeader.tenure}</span>
+                    <span>{calculateTenure(selectedLeader.tenure, { suffix: 'Pengalaman' })}</span>
                   </div>
                 </div>
               </div>

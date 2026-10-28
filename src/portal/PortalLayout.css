@@ -646,6 +646,27 @@
   border: 1px solid #f1f5f9;
 }
 
+.portal-topbar-clock {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  background-color: #f8fafc;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.portal-topbar-clock svg {
+  color: #d97706;
+  flex-shrink: 0;
+}
+
 /* Page Content Body */
 .portal-page-content {
   flex: 1;

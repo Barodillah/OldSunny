@@ -412,7 +412,6 @@ class EmployeeController extends Controller
             'specialization' => $data['specialization'] ?? null,
             'tenure' => $data['tenure'] ?? 'Baru Bergabung',
             'joined_year' => $data['joined_year'] ?? date('Y'),
-            'csi_score' => $data['csi_score'] ?? '100 / 100',
             'status' => 'active',
             'notes' => $data['notes'] ?? null,
         ]);
@@ -471,7 +470,6 @@ class EmployeeController extends Controller
         if (isset($data['specialization'])) $sales->specialization = $data['specialization'];
         if (isset($data['tenure'])) $sales->tenure = $data['tenure'];
         if (isset($data['joined_year'])) $sales->joined_year = $data['joined_year'];
-        if (isset($data['csi_score'])) $sales->csi_score = $data['csi_score'];
         if (isset($data['notes'])) $sales->notes = $data['notes'];
 
         $sales->save();

@@ -444,56 +444,48 @@
   color: #0f172a;
 }
 
-/* Simulated OTP Notification Banner */
-.portal-simulated-otp-box {
-  background: #fefce8;
-  border: 1px dashed #eab308;
+/* Real Email OTP Notification Info Card */
+.portal-otp-info-card {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
   border-radius: 12px;
-  padding: 0.85rem 1rem;
+  padding: 0.9rem 1rem;
   margin-bottom: 1.25rem;
   display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.portal-otp-info-icon {
+  flex-shrink: 0;
+  color: #16a34a;
+  margin-top: 2px;
+}
+
+.portal-otp-info-text {
+  display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.2rem;
 }
 
-.simulated-otp-header {
-  font-size: 0.75rem;
+.portal-otp-info-title {
+  font-size: 0.84rem;
   font-weight: 700;
-  color: #854d0e;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
+  color: #15803d;
+  margin: 0;
 }
 
-.simulated-otp-code-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.portal-otp-info-desc {
+  font-size: 0.78rem;
+  color: #166534;
+  line-height: 1.45;
+  margin: 0;
 }
 
-.simulated-otp-big-code {
-  font-family: var(--font-heading, monospace);
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: #ca8a04;
-  letter-spacing: 0.2em;
-}
-
-.btn-copy-otp {
-  font-size: 0.75rem;
+.portal-otp-info-desc strong {
+  color: #0f172a;
   font-weight: 700;
-  padding: 0.3rem 0.65rem;
-  border-radius: 6px;
-  background: #ca8a04;
-  color: #ffffff;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-copy-otp:hover {
-  background: #a16207;
 }
 
 @keyframes fadeIn {

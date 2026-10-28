@@ -22,7 +22,6 @@ class Sales extends Model
         'specialization',
         'tenure',
         'joined_year',
-        'csi_score',
         'status',
         'deactivated_at',
         'deactivated_reason',

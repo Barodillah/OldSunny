@@ -34,7 +34,7 @@ export default function PortalLogin() {
   const [resetOtpCode, setResetOtpCode] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [activeOtpPreview, setActiveOtpPreview] = useState(null)
+  const [sentEmailTarget, setSentEmailTarget] = useState('')
   const [forgotError, setForgotError] = useState('')
   const [isOtpLoading, setIsOtpLoading] = useState(false)
 
@@ -78,7 +78,7 @@ export default function PortalLogin() {
     try {
       const res = await requestResetOtp(resetIdentifier)
       if (res.success) {
-        setActiveOtpPreview(res)
+        setSentEmailTarget(res.user?.email || resetIdentifier)
         setForgotStep(2)
       } else {
         setForgotError(res.message || 'Gagal mengirim kode OTP.')
@@ -119,7 +119,7 @@ export default function PortalLogin() {
         setIdentifier(resetIdentifier)
         setIsForgotModalOpen(false)
         setForgotStep(1)
-        setActiveOtpPreview(null)
+        setSentEmailTarget('')
       } else {
         setForgotError(res.message || 'Verifikasi OTP gagal.')
       }
@@ -213,7 +213,7 @@ export default function PortalLogin() {
                 onClick={() => {
                   setForgotError('')
                   setForgotStep(1)
-                  setActiveOtpPreview(null)
+                  setSentEmailTarget('')
                   setResetIdentifier(identifier)
                   setIsForgotModalOpen(true)
                 }}
@@ -339,27 +339,19 @@ export default function PortalLogin() {
             {/* STEP 2: VERIFY OTP & ENTER NEW PASSWORD */}
             {forgotStep === 2 && (
               <form onSubmit={handleVerifyOtpAndChange} className="portal-login-form">
-                {/* Simulated Real-Time OTP Banner (For Testing & Demo) */}
-                {activeOtpPreview && (
-                  <div className="portal-simulated-otp-box">
-                    <div className="simulated-otp-header">
-                      <HiOutlineSparkles size={14} />
-                      <span>Simulasi SMS / WhatsApp OTP Masuk:</span>
-                    </div>
-                    <div className="simulated-otp-code-row">
-                      <span className="simulated-otp-big-code">
-                        {activeOtpPreview.otpCode}
-                      </span>
-                      <button
-                        type="button"
-                        className="btn-copy-otp"
-                        onClick={() => setResetOtpCode(activeOtpPreview.otpCode)}
-                      >
-                        Isi Otomatis
-                      </button>
-                    </div>
+                {/* Real Email OTP Notification Info Card */}
+                <div className="portal-otp-info-card">
+                  <div className="portal-otp-info-icon">
+                    <HiOutlineEnvelope size={20} />
                   </div>
-                )}
+                  <div className="portal-otp-info-text">
+                    <p className="portal-otp-info-title">Kode OTP Telah Dikirim</p>
+                    <p className="portal-otp-info-desc">
+                      Silakan periksa kotak masuk (Inbox) atau folder Spam pada email{' '}
+                      <strong>{sentEmailTarget || resetIdentifier}</strong>.
+                    </p>
+                  </div>
+                </div>
 
                 <div className="portal-input-group">
                   <label className="portal-label">Masukkan 6-Digit Kode OTP</label>

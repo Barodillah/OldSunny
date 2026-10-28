@@ -89,6 +89,29 @@
   background-color: #10b981;
 }
 
+.btn-refresh-stats {
+  transition: all 0.2s ease;
+}
+
+.btn-refresh-stats:hover {
+  background-color: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a;
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* --------------------------------------------------------------------------
    4 KPI METRICS GRID
    -------------------------------------------------------------------------- */
@@ -180,6 +203,13 @@
 .text-green {
   color: #059669;
   font-weight: 600;
+}
+
+.metric-sub-italic {
+  font-size: 0.68rem;
+  font-style: italic;
+  font-weight: 500;
+  opacity: 0.92;
 }
 
 /* --------------------------------------------------------------------------

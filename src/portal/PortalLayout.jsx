@@ -15,7 +15,8 @@ import {
   HiOutlineUserGroup,
   HiOutlineChartBarSquare,
   HiOutlineBookOpen,
-  HiOutlineNewspaper
+  HiOutlineNewspaper,
+  HiOutlineClock
 } from 'react-icons/hi2'
 import './PortalLayout.css'
 
@@ -27,6 +28,37 @@ export default function PortalLayout() {
   const location = useLocation()
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
   const [dbStatus, setDbStatus] = useState('checking') // 'connected' | 'disconnected' | 'checking'
+
+  // Real-time clock in topbar (Format: "HH:mm:ss Hari, DD Bulan YYYY")
+  const [currentTime, setCurrentTime] = useState(() => {
+    const pad = (n) => String(n).padStart(2, '0')
+    const now = new Date()
+    const daysId = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+    const monthsId = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ]
+    return `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${daysId[now.getDay()]}, ${now.getDate()} ${monthsId[now.getMonth()]} ${now.getFullYear()}`
+  })
+
+  useEffect(() => {
+    const pad = (n) => String(n).padStart(2, '0')
+    const daysId = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+    const monthsId = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ]
+
+    const updateClock = () => {
+      const now = new Date()
+      setCurrentTime(
+        `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${daysId[now.getDay()]}, ${now.getDate()} ${monthsId[now.getMonth()]} ${now.getFullYear()}`
+      )
+    }
+
+    const clockInterval = setInterval(updateClock, 1000)
+    return () => clearInterval(clockInterval)
+  }, [])
 
   // Real-time count of new leads (by total and per-type)
   const [newLeadCounts, setNewLeadCounts] = useState({
@@ -433,16 +465,19 @@ export default function PortalLayout() {
                 </NavLink>
               </li>
 
-              <li>
-                <NavLink
-                  to="/portal/users"
-                  className={({ isActive }) => `portal-nav-item ${isActive ? 'is-active' : ''}`}
-                  onClick={() => setIsMobileSidebarOpen(false)}
-                >
-                  <HiOutlineUsers size={19} className="nav-item-icon" />
-                  <span>Users</span>
-                </NavLink>
-              </li>
+              {/* Users Menu - Hanya untuk Admin dan Superadmin */}
+              {user?.role && user.role !== 'user' && (
+                <li>
+                  <NavLink
+                    to="/portal/users"
+                    className={({ isActive }) => `portal-nav-item ${isActive ? 'is-active' : ''}`}
+                    onClick={() => setIsMobileSidebarOpen(false)}
+                  >
+                    <HiOutlineUsers size={19} className="nav-item-icon" />
+                    <span>Users</span>
+                  </NavLink>
+                </li>
+              )}
             </ul>
 
             <span className="portal-nav-heading portal-nav-heading-sec">NAVIGASI EKSTERNAL</span>
@@ -532,11 +567,9 @@ export default function PortalLayout() {
               </span>
             </div>
 
-            <div className="portal-topbar-user">
-              <HiOutlineShieldCheck size={16} className={`text-role-${user.role || 'user'}`} />
-              <span className={`portal-topbar-role-pill ${user.role}`}>
-                {user.role === 'superadmin' ? 'SUPERADMIN' : user.role === 'admin' ? 'ADMIN' : 'USER'}
-              </span>
+            <div className="portal-topbar-clock" title="Waktu Sistem Saat Ini">
+              <HiOutlineClock size={16} />
+              <span>{currentTime}</span>
             </div>
           </div>
         </header>

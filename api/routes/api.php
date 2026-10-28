@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Otp;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +28,75 @@ Route::get('/health', function () {
         'status' => $dbOk ? 'ok' : 'error',
         'database' => $dbOk ? 'connected' : 'disconnected'
     ], $dbOk ? 200 : 503);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Portal Dashboard Operational Statistics
+|--------------------------------------------------------------------------
+*/
+Route::get('/dashboard/stats', function () {
+    // 1. Total Chat Sunny (ambil semua data chat session)
+    $totalChatSessions = \Illuminate\Support\Facades\DB::table('chat_sessions')->count();
+    $activeChatSessions = \Illuminate\Support\Facades\DB::table('chat_sessions')->where('status', 'active')->count();
+
+    // 2. Semua Leads (semua data leads yang diterima semua status)
+    $totalLeads = \Illuminate\Support\Facades\DB::table('leads')->count();
+    $statusCounts = \Illuminate\Support\Facades\DB::table('leads')
+        ->select('status', \Illuminate\Support\Facades\DB::raw('count(*) as count'))
+        ->groupBy('status')
+        ->pluck('count', 'status')
+        ->toArray();
+
+    // 3. Total View Artikel (ambil total baris log kunjungan riil dari tabel article_views)
+    $totalArticles = \Illuminate\Support\Facades\DB::table('articles')->count();
+    $publishedArticles = \Illuminate\Support\Facades\DB::table('articles')->where('status', 'published')->count();
+    $totalArticleViews = (int) \Illuminate\Support\Facades\DB::table('article_views')->count();
+
+    // 4. Waktu Respon Sunny (ambil data 50 chat message terakhir, lalu rata2 dari semua selisih waktu antar chat)
+    $messages = \Illuminate\Support\Facades\DB::table('chat_messages')
+        ->orderBy('id', 'desc')
+        ->limit(50)
+        ->get(['id', 'session_id', 'sender_type', 'created_at'])
+        ->reverse()
+        ->values();
+
+    $diffs = [];
+    for ($i = 0; $i < count($messages) - 1; $i++) {
+        $curr = $messages[$i];
+        $next = $messages[$i + 1];
+
+        // Selisih waktu pesan customer ke balasan Sunny AI dalam sesi yang sama
+        if ($curr->session_id === $next->session_id && $curr->sender_type === 'user' && in_array($next->sender_type, ['ai', 'bot', 'assistant'])) {
+            $t1 = strtotime($curr->created_at);
+            $t2 = strtotime($next->created_at);
+            $diff = $t2 - $t1;
+            if ($diff >= 0 && $diff <= 180) {
+                // Jika balasan pada detik yang sama (< 1 detik), hitung ~0.8 detik
+                $diffs[] = $diff === 0 ? 0.8 : (float) $diff;
+            }
+        }
+    }
+
+    $avgResponseTime = count($diffs) > 0 
+        ? round(array_sum($diffs) / count($diffs), 1) 
+        : 1.5;
+
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'total_chat_sessions' => $totalChatSessions,
+            'active_chat_sessions' => $activeChatSessions,
+            'total_leads' => $totalLeads,
+            'status_leads' => $statusCounts,
+            'total_article_views' => $totalArticleViews,
+            'total_articles' => $totalArticles,
+            'published_articles' => $publishedArticles,
+            'avg_response_time' => $avgResponseTime,
+            'evaluated_messages' => count($messages),
+            'paired_replies' => count($diffs)
+        ]
+    ]);
 });
 
 // 1. Auth: Login
@@ -157,9 +228,54 @@ Route::post('/auth/request-otp', function (Request $request) {
         'ip_address' => $request->ip()
     ]);
 
+    // Kirim email kode OTP ke email asli pengguna via SMTP Hostinger
+    $emailSent = false;
+    try {
+        Mail::html("
+            <div style='font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; border: 1px solid #e2e8f0; border-radius: 14px; background-color: #ffffff;'>
+                <div style='text-align: center; margin-bottom: 24px;'>
+                    <h2 style='color: #0f172a; margin: 0 0 6px 0; font-size: 20px; font-weight: 800;'>MITSUBISHI MOTORS</h2>
+                    <span style='color: #b91c1c; font-size: 13px; font-weight: 700; letter-spacing: 0.5px;'>PT SUN STAR MOTOR MARGAHAYU</span>
+                </div>
+                
+                <div style='background-color: #f8fafc; border-radius: 10px; padding: 18px 20px; margin-bottom: 20px; border: 1px solid #f1f5f9;'>
+                    <h3 style='color: #1e293b; font-size: 15px; margin: 0 0 6px 0;'>Verifikasi Reset Kata Sandi Akun</h3>
+                    <p style='color: #475569; font-size: 13px; line-height: 1.5; margin: 0;'>
+                        Halo <strong>{$user->name}</strong>,<br>
+                        Berikut adalah kode OTP resmi untuk memverifikasi akun Portal Sunny Anda:
+                    </p>
+                </div>
+
+                <div style='text-align: center; margin: 24px 0; padding: 20px; background: #fffbeb; border: 2px dashed #fde68a; border-radius: 12px;'>
+                    <div style='font-size: 11px; font-weight: 700; color: #92400e; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;'>KODE VERIFIKASI OTP (6-DIGIT)</div>
+                    <div style='font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #d97706;'>{$otpCode}</div>
+                </div>
+
+                <p style='color: #64748b; font-size: 12px; line-height: 1.6; margin: 0 0 14px 0;'>
+                    Kode verifikasi ini berlaku selama <strong>5 menit</strong>. Jangan bagikan kode ini kepada siapa pun demi keamanan akun internal dealer Anda.
+                </p>
+
+                <p style='color: #94a3b8; font-size: 11px; line-height: 1.5; margin: 0;'>
+                    Jika Anda tidak merasa mengajukan reset sandi, abaikan email ini atau segera hubungi Superadmin.
+                </p>
+
+                <hr style='border: none; border-top: 1px solid #f1f5f9; margin: 24px 0 16px 0;' />
+                <p style='color: #94a3b8; font-size: 11px; text-align: center; margin: 0;'>
+                    © " . date('Y') . " PT Sun Star Motor Margahayu • Sistem Portal Resmi
+                </p>
+            </div>
+        ", function ($message) use ($user) {
+            $message->to($user->email, $user->name)
+                    ->subject("Kode OTP Reset Kata Sandi - Portal Sunny Margahayu");
+        });
+        $emailSent = true;
+    } catch (\Throwable $mailErr) {
+        Log::error("Gagal mengirim email OTP ke {$user->email}: " . $mailErr->getMessage());
+    }
+
     return response()->json([
         'success' => true,
-        'otpCode' => $otpCode,
+        'emailSent' => $emailSent,
         'user' => [
             'id' => (string) $user->id,
             'name' => $user->name,
@@ -168,7 +284,9 @@ Route::post('/auth/request-otp', function (Request $request) {
             'nik' => $user->nik
         ],
         'expiresAt' => $expiresAt->timestamp * 1000,
-        'message' => "Kode OTP berhasil dibuat untuk {$user->name}."
+        'message' => $emailSent
+            ? "Kode OTP telah berhasil dikirim ke email {$user->email}."
+            : "Kode OTP berhasil diproses. Silakan periksa email {$user->email}."
     ]);
 });
 
@@ -236,9 +354,20 @@ Route::get('/users', function (Request $request) {
     $callerRole = $request->header('X-User-Role') ?: $request->input('caller_role');
     $query = User::orderBy('id', 'asc');
 
-    // Jika peran yang meminta bukan superadmin (misal admin atau staf), jangan tampilkan akun superadmin
-    if ($callerRole && $callerRole !== 'superadmin') {
-        $query->where('role', '!=', 'superadmin');
+    // Pembatasan akses:
+    // - Superadmin: melihat semua pengguna (superadmin, admin, user)
+    // - Admin: HANYA BISA melihat list akun user saja
+    // - User: tidak memiliki akses
+    if ($callerRole === 'admin') {
+        $query->where('role', 'user');
+    } elseif ($callerRole === 'user') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Akun User tidak memiliki akses ke data manajemen pengguna.',
+            'data' => []
+        ], 403);
+    } elseif ($callerRole && $callerRole !== 'superadmin') {
+        $query->where('role', 'user');
     }
 
     $users = $query->get()->map(function ($u) {
@@ -264,50 +393,239 @@ Route::get('/users', function (Request $request) {
 });
 
 Route::post('/users', function (Request $request) {
-    $validated = $request->validate([
+    $callerRole = $request->header('X-User-Role') ?: $request->input('caller_role');
+
+    // Role User tidak diizinkan membuat akun
+    if ($callerRole === 'user') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Akun User tidak memiliki hak akses untuk menambahkan pengguna.'
+        ], 403);
+    }
+
+    // Role Admin HANYA BISA membuat role user saja
+    if ($callerRole === 'admin' && ($request->input('role') !== 'user')) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Admin hanya memiliki izin untuk membuat akun dengan peran User.'
+        ], 403);
+    }
+
+    $input = array_map(function ($val) {
+        return is_string($val) ? trim($val) : $val;
+    }, $request->all());
+
+    if ($callerRole === 'admin') {
+        $input['role'] = 'user';
+    }
+
+    if (empty($input['phone'])) {
+        $input['phone'] = null;
+    }
+    if (empty($input['nik'])) {
+        $input['nik'] = null;
+    }
+
+    $validator = \Illuminate\Support\Facades\Validator::make($input, [
         'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'phone' => 'nullable|string|max:30',
+        'email' => 'required|email|max:255|unique:users,email',
+        'phone' => 'nullable|string|max:30|unique:users,phone',
         'nik' => 'nullable|string|max:50|unique:users,nik',
         'position' => 'required|string|max:100',
         'role' => 'required|in:superadmin,admin,user',
         'department' => 'nullable|string|max:100',
         'password' => 'required|string|min:6',
-        'status' => 'nullable|in:active,inactive'
+        'status' => 'nullable|in:active,inactive,suspended'
+    ], [
+        'name.required' => 'Nama lengkap wajib diisi.',
+        'email.required' => 'Alamat email wajib diisi.',
+        'email.email' => 'Format alamat email tidak valid.',
+        'email.unique' => 'Alamat email sudah terdaftar pada pengguna lain.',
+        'phone.unique' => 'Nomor WhatsApp / telepon sudah terdaftar pada pengguna lain.',
+        'nik.unique' => 'NIK Karyawan sudah terdaftar pada pengguna lain.',
+        'position.required' => 'Jabatan pengguna wajib diisi.',
+        'password.required' => 'Password sementara wajib diisi.',
+        'password.min' => 'Password minimal harus 6 karakter.'
     ]);
 
-    $validated['password'] = Hash::make($validated['password']);
-    $user = User::create($validated);
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'message' => $validator->errors()->first(),
+            'errors' => $validator->errors()
+        ], 422);
+    }
 
-    return response()->json([
-        'success' => true,
-        'data' => $user,
-        'message' => 'Pengguna berhasil ditambahkan ke database MySQL.'
-    ], 201);
+    try {
+        $validated = $validator->validated();
+        $validated['password'] = Hash::make($validated['password']);
+        $user = User::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'data' => $user,
+            'message' => 'Pengguna berhasil ditambahkan ke database MySQL.'
+        ], 201);
+    } catch (\Illuminate\Database\QueryException $e) {
+        $errorCode = $e->errorInfo[1] ?? null;
+        $errorMsg = $e->getMessage();
+        $msg = 'Data yang Anda masukkan sudah terdaftar pada pengguna lain.';
+        $errors = [];
+
+        if ($errorCode === 1062 || str_contains($errorMsg, 'Duplicate entry')) {
+            if (str_contains($errorMsg, 'users_phone_unique')) {
+                $msg = 'Nomor WhatsApp / telepon sudah terdaftar pada pengguna lain.';
+                $errors['phone'] = [$msg];
+            } elseif (str_contains($errorMsg, 'users_email_unique')) {
+                $msg = 'Alamat email sudah terdaftar pada pengguna lain.';
+                $errors['email'] = [$msg];
+            } elseif (str_contains($errorMsg, 'users_nik_unique')) {
+                $msg = 'NIK Karyawan sudah terdaftar pada pengguna lain.';
+                $errors['nik'] = [$msg];
+            }
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => $msg,
+            'errors' => $errors
+        ], 422);
+    }
 });
 
 Route::put('/users/{id}', function (Request $request, $id) {
-    $user = User::findOrFail($id);
-
-    $fields = $request->only([
-        'name', 'email', 'phone', 'nik', 'position', 'role', 'department', 'status', 'avatar'
-    ]);
-
-    if ($request->filled('password')) {
-        $fields['password'] = Hash::make($request->input('password'));
+    $user = User::find($id);
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Pengguna tidak ditemukan di database.'
+        ], 404);
     }
 
-    $user->update($fields);
+    $callerRole = $request->header('X-User-Role') ?: $request->input('caller_role');
 
-    return response()->json([
-        'success' => true,
-        'data' => $user,
-        'message' => 'Data pengguna berhasil diperbarui di database.'
+    // Role User tidak diizinkan mengubah akun
+    if ($callerRole === 'user') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Akun User tidak memiliki hak akses untuk mengedit data pengguna.'
+        ], 403);
+    }
+
+    // Role Admin HANYA BISA mengedit akun ber-role user, dan tidak bisa mengubah role menjadi selain user
+    if ($callerRole === 'admin') {
+        if ($user->role !== 'user') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Admin hanya memiliki izin untuk mengelola akun dengan peran User.'
+            ], 403);
+        }
+    }
+
+    $input = array_map(function ($val) {
+        return is_string($val) ? trim($val) : $val;
+    }, $request->all());
+
+    if ($callerRole === 'admin') {
+        $input['role'] = 'user';
+    }
+
+    if (array_key_exists('phone', $input) && empty($input['phone'])) {
+        $input['phone'] = null;
+    }
+    if (array_key_exists('nik', $input) && empty($input['nik'])) {
+        $input['nik'] = null;
+    }
+
+    $validator = \Illuminate\Support\Facades\Validator::make($input, [
+        'name' => 'sometimes|required|string|max:255',
+        'email' => ['sometimes', 'required', 'email', 'max:255', \Illuminate\Validation\Rule::unique('users', 'email')->ignore($id)],
+        'phone' => ['nullable', 'string', 'max:30', \Illuminate\Validation\Rule::unique('users', 'phone')->ignore($id)],
+        'nik' => ['nullable', 'string', 'max:50', \Illuminate\Validation\Rule::unique('users', 'nik')->ignore($id)],
+        'position' => 'sometimes|required|string|max:100',
+        'role' => 'sometimes|required|in:superadmin,admin,user',
+        'department' => 'nullable|string|max:100',
+        'status' => 'nullable|in:active,inactive,suspended',
+        'password' => 'nullable|string|min:6',
+        'avatar' => 'nullable|string'
+    ], [
+        'name.required' => 'Nama lengkap wajib diisi.',
+        'email.required' => 'Alamat email wajib diisi.',
+        'email.email' => 'Format alamat email tidak valid.',
+        'email.unique' => 'Alamat email sudah terdaftar pada pengguna lain.',
+        'phone.unique' => 'Nomor WhatsApp / telepon sudah terdaftar pada pengguna lain.',
+        'nik.unique' => 'NIK Karyawan sudah terdaftar pada pengguna lain.',
+        'position.required' => 'Jabatan pengguna wajib diisi.',
+        'password.min' => 'Password minimal harus 6 karakter.'
     ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'message' => $validator->errors()->first(),
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    try {
+        $fields = $validator->validated();
+        if (!empty($fields['password'])) {
+            $fields['password'] = Hash::make($fields['password']);
+        } else {
+            unset($fields['password']);
+        }
+
+        $user->update($fields);
+
+        return response()->json([
+            'success' => true,
+            'data' => $user,
+            'message' => 'Data pengguna berhasil diperbarui di database.'
+        ]);
+    } catch (\Illuminate\Database\QueryException $e) {
+        $errorCode = $e->errorInfo[1] ?? null;
+        $errorMsg = $e->getMessage();
+        $msg = 'Gagal memperbarui data pengguna: terjadi konflik data.';
+        $errors = [];
+
+        if ($errorCode === 1062 || str_contains($errorMsg, 'Duplicate entry')) {
+            if (str_contains($errorMsg, 'users_phone_unique')) {
+                $msg = 'Nomor WhatsApp / telepon sudah terdaftar pada pengguna lain.';
+                $errors['phone'] = [$msg];
+            } elseif (str_contains($errorMsg, 'users_email_unique')) {
+                $msg = 'Alamat email sudah terdaftar pada pengguna lain.';
+                $errors['email'] = [$msg];
+            } elseif (str_contains($errorMsg, 'users_nik_unique')) {
+                $msg = 'NIK Karyawan sudah terdaftar pada pengguna lain.';
+                $errors['nik'] = [$msg];
+            }
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => $msg,
+            'errors' => $errors
+        ], 422);
+    }
 });
 
-Route::delete('/users/{id}', function ($id) {
+Route::delete('/users/{id}', function (Request $request, $id) {
     $user = User::findOrFail($id);
+    $callerRole = $request->header('X-User-Role') ?: $request->input('caller_role');
+
+    if ($callerRole === 'user') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Akun User tidak memiliki hak akses untuk menghapus pengguna.'
+        ], 403);
+    }
+
+    if ($callerRole === 'admin' && $user->role !== 'user') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Admin hanya memiliki izin untuk menghapus akun dengan peran User.'
+        ], 403);
+    }
 
     if ($user->role === 'superadmin') {
         return response()->json([
