@@ -16,6 +16,7 @@ import Accessories from './pages/Accessories.jsx'
 import Promo from './pages/Promo.jsx'
 import ServiceOnRoad from './pages/ServiceOnRoad.jsx'
 import BookingService from './pages/BookingService.jsx'
+import SearchResults from './pages/SearchResults.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Forbidden from './pages/Forbidden.jsx'
 import BadRequest from './pages/BadRequest.jsx'
@@ -113,6 +114,7 @@ function App() {
               <Route path="/news/:slug" element={<ArticleDetail />} />
               <Route path="/article/:slug" element={<ArticleDetail />} />
               <Route path="/contact" element={<Contact onOpenAiChat={(topic) => setSelectedAiService(topic)} />} />
+              <Route path="/search" element={<SearchResults />} />
 
               {/* Explicit & Catch-All Error Pages */}
               <Route path="/404" element={<NotFound />} />

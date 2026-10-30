@@ -13,7 +13,8 @@ import {
   HiOutlineUser,
   HiOutlineShieldCheck,
   HiOutlineSparkles,
-  HiOutlinePhone
+  HiOutlinePhone,
+  HiOutlineLockClosed
 } from 'react-icons/hi2'
 import './PortalChatHistory.css'
 
@@ -32,7 +33,8 @@ export default function PortalChatHistory() {
     active: 0,
     mobile: 0,
     desktop: 0,
-    totalMessages: 0
+    totalMessages: 0,
+    totalBlocks: 0
   })
 
   // Selected session for Right-Side Drawer
@@ -73,7 +75,8 @@ export default function PortalChatHistory() {
           active: activeCount,
           mobile: mobileCount,
           desktop: desktopCount,
-          totalMessages: msgSum
+          totalMessages: msgSum,
+          totalBlocks: json.meta?.total_blocks || 0
         })
       }
     } catch (err) {
@@ -338,12 +341,12 @@ export default function PortalChatHistory() {
         </div>
 
         <div className="chat-stat-card">
-          <div className="chat-stat-icon stat-icon-msg">
-            <HiOutlineSparkles size={20} />
+          <div className="chat-stat-icon stat-icon-blocked">
+            <HiOutlineLockClosed size={20} />
           </div>
           <div className="chat-stat-info">
-            <span className="chat-stat-value">{stats.totalMessages}</span>
-            <span className="chat-stat-label">Pesan Masuk & Dijawab</span>
+            <span className="chat-stat-value">{stats.totalBlocks}</span>
+            <span className="chat-stat-label">Jumlah Block Tercatat</span>
           </div>
         </div>
       </div>
@@ -371,6 +374,14 @@ export default function PortalChatHistory() {
             onClick={() => setStatusFilter('closed')}
           >
             Sesi Selesai
+          </button>
+          <button
+            type="button"
+            className={`filter-chip ${statusFilter === 'blocked' ? 'is-active' : ''}`}
+            onClick={() => setStatusFilter('blocked')}
+            style={{ color: statusFilter === 'blocked' ? '#ffffff' : '#dc2626' }}
+          >
+            Sesi Block
           </button>
         </div>
 
@@ -458,10 +469,18 @@ export default function PortalChatHistory() {
                     </td>
 
                     <td>
-                      <span className={`status-badge-chip ${sess.status || 'active'}`}>
-                        {sess.status === 'active' && <span className="status-dot-pulse" />}
-                        <span>{sess.status === 'active' ? 'Aktif' : 'Selesai'}</span>
-                      </span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                        <span className={`status-badge-chip ${sess.status || 'active'}`}>
+                          {sess.status === 'active' && <span className="status-dot-pulse" />}
+                          <span>{sess.status === 'active' ? 'Aktif' : 'Selesai'}</span>
+                        </span>
+                        {sess.block_status && (
+                          <span className="status-badge-chip blocked" title={`Diblokir ${sess.block_status.block_count}x (${sess.block_status.out_of_context_count} pesan luar konteks)`}>
+                            <HiOutlineLockClosed size={11} style={{ display: 'inline', marginRight: 2 }} />
+                            <span>{sess.block_status.is_blocked ? 'Sedang Diblokir' : 'Pernah Diblokir'}</span>
+                          </span>
+                        )}
+                      </div>
                     </td>
 
                     <td>
@@ -525,6 +544,12 @@ export default function PortalChatHistory() {
                   <span className={`status-badge-chip ${selectedSession.status || 'active'}`}>
                     <span>{selectedSession.status === 'active' ? 'Sesi Aktif' : 'Sesi Selesai'}</span>
                   </span>
+                  {selectedSession.block_status && (
+                    <span className="status-badge-chip blocked" style={{ marginLeft: 6 }}>
+                      <HiOutlineLockClosed size={12} style={{ display: 'inline', marginRight: 3 }} />
+                      <span>{selectedSession.block_status.is_blocked ? 'Status: Sedang Diblokir' : 'Status: Pernah Diblokir'}</span>
+                    </span>
+                  )}
                 </div>
                 <span className="drawer-session-sub">{selectedSession.session_id}</span>
               </div>

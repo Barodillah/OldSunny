@@ -107,6 +107,11 @@
   color: #db2777;
 }
 
+.stat-icon-blocked {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
 .chat-stat-info {
   display: flex;
   flex-direction: column;
@@ -313,6 +318,12 @@
   background-color: #f1f5f9;
   color: #64748b;
   border: 1px solid #cbd5e1;
+}
+
+.status-badge-chip.blocked {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
 }
 
 .status-dot-pulse {

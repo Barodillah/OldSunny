@@ -3,10 +3,10 @@ import { Link, useLocation } from 'react-router-dom'
 import {
   HiOutlineBars3,
   HiOutlineXMark,
-  HiOutlineUser,
-  HiOutlinePhone,
-  HiOutlineChevronDown
+  HiOutlineChevronDown,
+  HiOutlineMagnifyingGlass
 } from 'react-icons/hi2'
+import GlobalSearchModal from './GlobalSearchModal.jsx'
 import { openChatHistoryModal, openSunnyChat, openSecurityWarningDrawer } from '../utils/sunnySessionStorage.js'
 
 const NAV_MEGA_MENUS = {
@@ -138,6 +138,25 @@ export default function Navbar({ onOpenEmergency }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeMegaMenu, setActiveMegaMenu] = useState(null)
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
+
+  // Global Ctrl + K / Cmd + K keyboard shortcut & custom event to open search modal
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setIsSearchModalOpen((prev) => !prev)
+      }
+    }
+    const handleCustomOpen = () => setIsSearchModalOpen(true)
+
+    window.addEventListener('keydown', handleGlobalKeyDown)
+    window.addEventListener('open_global_search', handleCustomOpen)
+    return () => {
+      window.removeEventListener('keydown', handleGlobalKeyDown)
+      window.removeEventListener('open_global_search', handleCustomOpen)
+    }
+  }, [])
   const [hoveredImage, setHoveredImage] = useState(null)
   const [mobileExpandedSection, setMobileExpandedSection] = useState(null)
   const location = useLocation()
@@ -424,20 +443,17 @@ export default function Navbar({ onOpenEmergency }) {
         <div className="minimal-header-actions">
           <button
             type="button"
-            className="minimal-action-btn emergency-circle-btn"
-            title="Hotline Bantuan Darurat 24 Jam"
+            className="minimal-action-btn search-trigger-btn"
+            title="Pencarian Cepat Showroom & Layanan (Ctrl + K)"
+            aria-label="Buka Pencarian"
             onClick={() => {
               setIsOpen(false)
               setActiveMegaMenu(null)
-              if (onOpenEmergency) onOpenEmergency()
+              setIsSearchModalOpen(true)
             }}
           >
-            <HiOutlinePhone size={17} />
+            <HiOutlineMagnifyingGlass size={18} />
           </button>
-
-          <Link to="/about" className="minimal-action-btn user-avatar-btn" title="Profil Mitsubishi Sun Margahayu">
-            <HiOutlineUser size={18} />
-          </Link>
 
           <button
             type="button"
@@ -450,9 +466,27 @@ export default function Navbar({ onOpenEmergency }) {
         </div>
       </div>
 
+      {/* Global Search Modal (Spotlight / Command-K) */}
+      <GlobalSearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+      />
+
       {/* Mobile Navigation Drawer Dropdown (Dropdown biasa tanpa gambar) */}
       <div className={`mobile-nav-drawer ${isOpen ? 'is-open' : ''}`} aria-label="Navigasi Mobile">
         <div className="mobile-nav-drawer-inner">
+          <button
+            type="button"
+            className="mobile-search-bar-trigger"
+            onClick={() => {
+              setIsOpen(false)
+              setIsSearchModalOpen(true)
+            }}
+          >
+            <HiOutlineMagnifyingGlass size={17} />
+            <span>Pencarian Cepat Showroom...</span>
+          </button>
+
           <Link
             to="/"
             className={`mobile-home-item ${location.pathname === '/' ? 'is-active' : ''}`}

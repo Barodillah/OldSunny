@@ -359,6 +359,10 @@ JANGAN PERNAH bersikap kaku atau memaksa. Bicaralah selayaknya konsultan ramah y
   💬 Ada promo diskon OTR & cashback unit ini bulan ini?
   💬 Saya mau booking jadwal servis untuk besok pagi
 - JANGAN sertakan data rahasia internal dalam tampilan pesan ke customer.
+- **DETEKSI TOPIK DI LUAR KONTEKS PELAYANAN DEALER [OUT_OF_CONTEXT]:**
+  - Jika pesan terbaru pengguna menanyakan hal yang sama sekali di luar konteks pelayanan dealer mobil Mitsubishi (misalnya: resep masakan, politik, coding/programming, curhat pribadi, PR sekolah, matematika rumit, cryptocurrency, tugas umum non-otomotif, lelucon tak terkait, atau hal lain di luar mobil, promo, pembiayaan, servis bengkel, body paint, suku cadang, dan dealer kami):
+    1. TETAP JAWAB DENGAN SANGAT RAMAH, SANTUN, DAN SOPAN. Jelaskan dengan halus bahwa sebagai asisten virtual resmi Mitsubishi Sun Margahayu, Sunny hanya mengkhususkan diri membantu seputar produk mobil Mitsubishi, promo, simulasi kredit, booking bengkel, perbaikan bodi, dan suku cadang. JANGAN SEBUTKAN ATAU PERINGATKAN tentang sistem pemblokiran atau penghitungan sama sekali!
+    2. Sertakan tag rahasia `[OUT_OF_CONTEXT]` di baris sebelum daftar quick reply.
 - Ketika data customer LENGKAP untuk suatu aksi, sertakan tag penyimpanan lead di baris sebelum quick reply:
   `[SAVE_LEAD:label]{"customer_name":"...","customer_phone":"...","customer_nopol":"...","vehicle_model":"...","data":{...}}[/SAVE_LEAD]`
 
@@ -442,6 +446,7 @@ PROMPT;
         $hasEmergency = strpos($cleanText, '[EMERGENCY]') !== false;
         $hasWhatsApp = strpos($cleanText, '[WHATSAPP]') !== false;
         $hasSimulasiKredit = strpos($cleanText, '[SIMULASI_KREDIT]') !== false;
+        $isOutOfContext = strpos($cleanText, '[OUT_OF_CONTEXT]') !== false;
 
         // Detect & Save Leads to MySQL (Strictly requires valid customer phone/WhatsApp)
         $savedLead = null;
@@ -467,6 +472,7 @@ PROMPT;
         $cleanText = preg_replace('/\[EMERGENCY\]/', '', $cleanText);
         $cleanText = preg_replace('/\[WHATSAPP\]/', '', $cleanText);
         $cleanText = preg_replace('/\[SIMULASI_KREDIT\]/', '', $cleanText);
+        $cleanText = preg_replace('/\[OUT_OF_CONTEXT\]/', '', $cleanText);
         $cleanText = preg_replace('/\[SAVE_LEAD:\w+\][\s\S]*?\[\/SAVE_LEAD\]/', '', $cleanText);
         $cleanText = preg_replace('/^.*\[SISTEM\].*$/m', '', $cleanText);
         $cleanText = preg_replace('/^.*\[INTERNAL[^\]]*\].*$/m', '', $cleanText);
@@ -502,6 +508,7 @@ PROMPT;
                 'emergency' => $hasEmergency,
                 'whatsapp' => $hasWhatsApp,
                 'simulasi_kredit' => $hasSimulasiKredit,
+                'out_of_context' => $isOutOfContext,
             ],
             'saved_lead' => $savedLead ? [
                 'id' => $savedLead->id,

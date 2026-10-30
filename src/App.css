@@ -395,6 +395,32 @@
   margin-top: 0.5rem;
 }
 
+.mobile-search-bar-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  color: #64748b;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.mobile-search-bar-trigger:hover,
+.mobile-search-bar-trigger:active {
+  background-color: #ffffff;
+  border-color: var(--accent-red, #e3000c);
+  color: var(--accent-red, #e3000c);
+  box-shadow: 0 2px 8px rgba(227, 0, 12, 0.15);
+}
+
 .mobile-home-item {
   display: flex;
   align-items: center;
@@ -614,6 +640,13 @@
 .minimal-action-btn:hover {
   border-color: var(--text-muted);
   color: var(--text-main);
+  transform: translateY(-1px);
+}
+
+.search-trigger-btn:hover {
+  background-color: var(--accent-red-subtle, #fef2f2);
+  border-color: var(--accent-red, #dc2626) !important;
+  color: var(--accent-red, #dc2626) !important;
   transform: translateY(-1px);
 }
 
@@ -3198,6 +3231,113 @@
   color: #ffffff;
 }
 
+/* Sunny Temporary Chat Blocked Notice Banner */
+.chat-blocked-banner {
+  padding: 1rem 1.15rem;
+  background: linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%);
+  border-top: 1px solid #fecaca;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.chat-flyout.is-fullscreen .chat-blocked-banner {
+  padding: 1.25rem 2rem;
+  align-items: center;
+}
+
+.chat-blocked-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 840px;
+  width: 100%;
+}
+
+.chat-blocked-icon {
+  color: #dc2626;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.chat-blocked-text-col {
+  flex: 1;
+}
+
+.chat-blocked-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #991b1b;
+}
+
+.chat-blocked-desc {
+  margin: 0 0 0.45rem 0;
+  font-size: 0.8rem;
+  color: #7f1d1d;
+  line-height: 1.45;
+}
+
+.chat-blocked-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: #ffffff;
+  border: 1px solid #fca5a5;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #b91c1c;
+}
+
+.chat-blocked-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 840px;
+}
+
+.btn-blocked-contact {
+  flex: 1;
+  min-width: 140px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-pill, 999px);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.btn-blocked-wa {
+  background-color: #25d366;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25);
+}
+
+.btn-blocked-wa:hover {
+  background-color: #1eb857;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+.btn-blocked-phone {
+  background-color: #0f172a;
+  color: #ffffff !important;
+}
+
+.btn-blocked-phone:hover {
+  background-color: #1e293b;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
 /* Chat Input Row */
 .chat-input-row {
   padding: 0.85rem 1rem;
@@ -3276,6 +3416,28 @@
 .chat-msg-block:last-child {
   margin-bottom: 0;
 }
+.chat-msg-heading {
+  margin: 0.6rem 0 0.35rem 0;
+  font-weight: 700;
+  color: inherit;
+  line-height: 1.4;
+}
+.chat-msg-h1 {
+  font-size: 1.05rem;
+}
+.chat-msg-h2 {
+  font-size: 0.98rem;
+}
+.chat-msg-h3 {
+  font-size: 0.92rem;
+}
+.chat-msg-heading:first-child {
+  margin-top: 0;
+}
+.chat-msg-heading:last-child {
+  margin-bottom: 0;
+}
+
 .chat-msg-p {
   margin: 0 0 0.45rem 0;
   color: inherit;
@@ -3339,6 +3501,16 @@
   margin-top: 0.75rem;
   padding-top: 0.65rem;
   border-top: 1px dashed #e2e8f0;
+}
+.chat-actions-container:empty,
+.item-user .chat-actions-container,
+.item-user hr,
+.item-user .chat-lead-badge {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  height: 0 !important;
 }
 .chat-action-btn {
   display: inline-flex;

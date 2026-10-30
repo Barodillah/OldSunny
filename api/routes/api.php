@@ -650,6 +650,9 @@ Route::delete('/users/{id}', function (Request $request, $id) {
 use App\Http\Controllers\AiAssistantController;
 
 Route::post('/ai/chat', [AiAssistantController::class, 'chat']);
+Route::get('/ai/block-status', [AiAssistantController::class, 'checkBlockStatus']);
+Route::post('/ai/quick-replies', [AiAssistantController::class, 'generateQuickReplies']);
+Route::get('/search', [\App\Http\Controllers\SearchController::class, 'search']);
 Route::get('/ai/history', [AiAssistantController::class, 'getHistory']);
 Route::post('/ai/session/close', [AiAssistantController::class, 'closeSession']);
 Route::get('/ai/sessions', [AiAssistantController::class, 'getSessions']);

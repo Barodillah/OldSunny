@@ -12,11 +12,58 @@ import {
   HiOutlineChevronRight,
   HiOutlineCheck,
   HiOutlineXMark,
-  HiOutlineChevronDown
+  HiOutlineChevronDown,
+  HiOutlineShieldCheck,
+  HiOutlineQuestionMarkCircle
 } from 'react-icons/hi2'
 import { RiCarLine, RiWhatsappLine } from 'react-icons/ri'
 import CustomDatePicker from '../components/CustomDatePicker.jsx'
 import './BookingService.css'
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+
+const EXTENDED_SMART_PACKAGES = {
+  XPANDER: {
+    vehicleName: 'Xpander',
+    title: 'Extended SMART Package Xpander',
+    image: 'https://csdwindo.com/wp-content/uploads/xpanderxtended.webp',
+    effectiveDate: '1 Juli 2026',
+    note: 'per 1XPM adalah 6 bulan. Kedua paket lebih hemat s/d 25%',
+    tiers: [
+      { id: '1XPM', label: '1XPM', duration: '6 Bulan', price: 1387500, formattedPrice: 'Rp 1.387.500' },
+      { id: '2XPM', label: '2XPM', duration: '12 Bulan (1 Thn)', price: 2386500, formattedPrice: 'Rp 2.386.500', isRecommended: true },
+      { id: '4XPM', label: '4XPM', duration: '24 Bulan (2 Thn)', price: 4551000, formattedPrice: 'Rp 4.551.000' },
+      { id: '6XPM', label: '6XPM', duration: '36 Bulan (3 Thn)', price: 6660000, formattedPrice: 'Rp 6.660.000' }
+    ]
+  },
+  PAJERO: {
+    vehicleName: 'Pajero',
+    title: 'Extended SMART Package Pajero',
+    image: 'https://csdwindo.com/wp-content/uploads/1625123782-mmksi-press-release-mmksi-luncurkan-program-perpanjangan-paket-smart-untuk-pajero-sportjpg-optimized.webp',
+    effectiveDate: '1 Juli 2026',
+    note: 'per 1XPM adalah 6 bulan. Kedua paket lebih hemat s/d 25%',
+    tiers: [
+      { id: '1XPM', label: '1XPM', duration: '6 Bulan', price: 2497500, formattedPrice: 'Rp 2.497.500' },
+      { id: '2XPM', label: '2XPM', duration: '12 Bulan (1 Thn)', price: 4662000, formattedPrice: 'Rp 4.662.000', isRecommended: true },
+      { id: '4XPM', label: '4XPM', duration: '24 Bulan (2 Thn)', price: 9102000, formattedPrice: 'Rp 9.102.000' },
+      { id: '6XPM', label: '6XPM', duration: '36 Bulan (3 Thn)', price: 13320000, formattedPrice: 'Rp 13.320.000' }
+    ]
+  }
+}
+
+const getEligibleExtendedSmartPackage = (kendaraan = '', km = '') => {
+  const k = String(kendaraan).toUpperCase()
+  const kmNum = parseInt(km, 10) || 0
+  if (kmNum < 50000) return null
+
+  if (k.includes('XPANDER')) {
+    return EXTENDED_SMART_PACKAGES.XPANDER
+  }
+  if (k.includes('PAJERO')) {
+    return EXTENDED_SMART_PACKAGES.PAJERO
+  }
+  return null
+}
 
 const STEPS = [
   { id: 1, title: 'Kendaraan', icon: RiCarLine },
@@ -73,19 +120,24 @@ export default function BookingService() {
     kendaraan: 'MITSUBISHI NEW XPANDER',
     maskedPhone: '',
     fullPhone: '',
+    newPhone: '',
     km: '10000',
     keluhan: '',
-    acCare: false,
+    extendedSmartPackage: null,
     tanggal: '',
     jam: '',
     verifyPhone: ''
   })
 
+  const [phoneChoice, setPhoneChoice] = useState(null) // 'benar' | 'salah' | null
+  const [previewSmartPackageImage, setPreviewSmartPackageImage] = useState(null)
   const [availableDates, setAvailableDates] = useState([])
   const [availableSlots, setAvailableSlots] = useState([])
   const [isSlotLoading, setIsSlotLoading] = useState(false)
   const [showCustomDateModal, setShowCustomDateModal] = useState(false)
   const [bookingCode, setBookingCode] = useState('')
+
+  const eligibleSmartPkg = getEligibleExtendedSmartPackage(formData.kendaraan, formData.km)
 
   // Scroll to top on step change
   useEffect(() => {
@@ -115,7 +167,19 @@ export default function BookingService() {
   }, [])
 
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData((prev) => {
+      const updated = { ...prev, [field]: value }
+      if (field === 'kendaraan' || field === 'km') {
+        const eligible = getEligibleExtendedSmartPackage(
+          field === 'kendaraan' ? value : updated.kendaraan,
+          field === 'km' ? value : updated.km
+        )
+        if (!eligible || (updated.extendedSmartPackage && updated.extendedSmartPackage.vehicle !== eligible.vehicleName)) {
+          updated.extendedSmartPackage = null
+        }
+      }
+      return updated
+    })
     if (errorMsg) setErrorMsg('')
   }
 
@@ -158,6 +222,7 @@ export default function BookingService() {
         if (data.status && data.data) {
           const d = data.data
           const expectedPhone = normalizePhone(d.telp)
+          setPhoneChoice(null)
           setFormData((prev) => ({
             ...prev,
             nopolFound: true,
@@ -166,6 +231,7 @@ export default function BookingService() {
             kendaraan: d.kendaraan || 'MITSUBISHI NEW XPANDER',
             maskedPhone: d.telp ? `xxxx-xxxx-${d.telp.slice(-4)}` : 'xxxx-xxxx-7777',
             fullPhone: expectedPhone,
+            newPhone: '',
             verifyPhone: ''
           }))
           setCurrentStep(2)
@@ -176,6 +242,7 @@ export default function BookingService() {
       }
 
       // Not found or manual flow
+      setPhoneChoice(null)
       setFormData((prev) => ({
         ...prev,
         nopolFound: false,
@@ -184,6 +251,7 @@ export default function BookingService() {
         kendaraan: prev.kendaraan || 'MITSUBISHI NEW XPANDER',
         maskedPhone: '',
         fullPhone: '',
+        newPhone: '',
         verifyPhone: prev.verifyPhone || ''
       }))
       setCurrentStep(2)
@@ -257,18 +325,18 @@ export default function BookingService() {
       const isSunday = new Date(isoDate).getDay() === 0
       const defaultSlots = isSunday
         ? [
-            { jam: '08:00', remaining: 3 },
-            { jam: '09:00', remaining: 2 },
-            { jam: '10:00', remaining: 2 },
-            { jam: '11:00', remaining: 1 },
-          ]
+          { jam: '08:00', remaining: 3 },
+          { jam: '09:00', remaining: 2 },
+          { jam: '10:00', remaining: 2 },
+          { jam: '11:00', remaining: 1 },
+        ]
         : [
-            { jam: '08:00', remaining: 5 },
-            { jam: '09:00', remaining: 4 },
-            { jam: '10:00', remaining: 3 },
-            { jam: '11:00', remaining: 4 },
-            { jam: '13:00', remaining: 3 },
-          ]
+          { jam: '08:00', remaining: 5 },
+          { jam: '09:00', remaining: 4 },
+          { jam: '10:00', remaining: 3 },
+          { jam: '11:00', remaining: 4 },
+          { jam: '13:00', remaining: 3 },
+        ]
       setAvailableSlots(defaultSlots)
     } finally {
       setIsSlotLoading(false)
@@ -286,14 +354,48 @@ export default function BookingService() {
 
   // Submit Final Booking
   const submitBooking = async () => {
+    let finalTelp = ''
+
     if (formData.nopolFound) {
-      if (!formData.verifyPhone) {
-        setErrorMsg('Silakan masukkan nomor telepon / WhatsApp untuk konfirmasi.')
+      if (!phoneChoice) {
+        setErrorMsg('Silakan pilih konfirmasi nomor telepon (Sesuai atau Ganti Nomor Baru).')
         return
       }
-    } else if (!formData.verifyPhone) {
-      setErrorMsg('Silakan masukkan nomor telepon aktif.')
-      return
+
+      if (phoneChoice === 'salah') {
+        const cleanPhone = (formData.newPhone || '').replace(/\D/g, '')
+        if (!cleanPhone) {
+          setErrorMsg('Silakan masukkan nomor telepon / WhatsApp baru.')
+          return
+        }
+        if (cleanPhone.length < 8) {
+          setErrorMsg('Nomor telepon minimal 8 angka.')
+          return
+        }
+        if (cleanPhone.length > 14) {
+          setErrorMsg('Nomor telepon maksimal 14 angka.')
+          return
+        }
+        finalTelp = normalizePhone(cleanPhone)
+      } else {
+        // phoneChoice === 'benar'
+        finalTelp = normalizePhone(formData.fullPhone)
+        if (!finalTelp) {
+          setErrorMsg('Data nomor telepon terdaftar tidak valid.')
+          return
+        }
+      }
+    } else {
+      const cleanPhone = (formData.verifyPhone || '').replace(/\D/g, '')
+      if (!cleanPhone) {
+        setErrorMsg('Silakan masukkan nomor telepon aktif.')
+        return
+      }
+      if (cleanPhone.length < 8 || cleanPhone.length > 14) {
+        setErrorMsg('Nomor telepon minimal 8 dan maksimal 14 angka.')
+        return
+      }
+      finalTelp = normalizePhone(cleanPhone)
     }
 
     setIsLoading(true)
@@ -304,28 +406,64 @@ export default function BookingService() {
     setBookingCode(refCode)
 
     try {
-      const payload = {
-        tanggal: formData.tanggal,
-        jam: formData.jam,
-        kendaraan: formData.kendaraan,
-        nopol: formData.nopol.toUpperCase().replace(/\s+/g, ''),
-        nomor_rangka: formData.nomorRangka ? formData.nomorRangka.toUpperCase() : '',
-        nama: formData.nama,
-        telp: normalizePhone(formData.verifyPhone),
-        jenis: `Servis Berkala ${formData.km} KM`,
-        keluhan: formData.keluhan + (formData.acCare ? ' (+AC Care)' : ''),
-        dealer: 'Mitsubishi Sun Margahayu'
+      let smartPackageNote = ''
+      if (formData.extendedSmartPackage) {
+        smartPackageNote = ` [Extended SMART ${formData.extendedSmartPackage.vehicle} - ${formData.extendedSmartPackage.tier} (${formData.extendedSmartPackage.formattedPrice})]`
       }
 
-      // Attempt API transmission
+      // 1. Simpan ke database lokal / portal tabel leads kategori booking
       try {
+        const leadPayload = {
+          type: 'booking',
+          customer_name: formData.nama || 'Pelanggan Booking Servis',
+          customer_phone: finalTelp,
+          customer_nopol: formData.nopol.toUpperCase().replace(/\s+/g, ''),
+          vehicle_model: formData.kendaraan,
+          source: 'booking_service_page',
+          data: {
+            booking_code: refCode,
+            tanggal: formData.tanggal,
+            jam: formData.jam,
+            km: formData.km,
+            nomor_rangka: formData.nomorRangka ? formData.nomorRangka.toUpperCase() : null,
+            keluhan: formData.keluhan || null,
+            extended_smart_package: formData.extendedSmartPackage || null,
+            phone_choice: phoneChoice
+          },
+          notes: `Booking Servis ${formData.kendaraan} (${formData.km} KM) tgl ${formData.tanggal} jam ${formData.jam} WIB. Kode: ${refCode}.${formData.keluhan ? ` Keluhan: ${formData.keluhan}.` : ''}${smartPackageNote}`
+        }
+
+        await fetch(`${API_BASE_URL}/ai/leads`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(leadPayload)
+        })
+      } catch (leadErr) {
+        console.warn('Gagal menyimpan lead booking ke database:', leadErr)
+      }
+
+      // 2. Transmisi ke legacy booking API jika tersedia
+      try {
+        const legacyPayload = {
+          tanggal: formData.tanggal,
+          jam: formData.jam,
+          kendaraan: formData.kendaraan,
+          nopol: formData.nopol.toUpperCase().replace(/\s+/g, ''),
+          nomor_rangka: formData.nomorRangka ? formData.nomorRangka.toUpperCase() : '',
+          nama: formData.nama,
+          telp: finalTelp,
+          jenis: `Servis Berkala ${formData.km} KM`,
+          keluhan: (formData.keluhan || '') + smartPackageNote,
+          dealer: 'Mitsubishi Sun Margahayu'
+        }
+
         await fetch('https://csdwindo.com/api/chat/booking_legacy.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(legacyPayload)
         })
       } catch {
-        // Continue smoothly even if 3rd party api fails
+        // Tetap lanjut meski API pihak ketiga offline
       }
 
       setTimeout(() => {
@@ -340,7 +478,13 @@ export default function BookingService() {
 
   // Generate WhatsApp confirmation
   const createWhatsAppConfirmation = () => {
-    const text = `Halo Service Advisor Mitsubishi Sun Margahayu,\n\nSaya telah melakukan booking service melalui website resmi:\n• Kode Booking: ${bookingCode}\n• Nomor Polisi: ${formData.nopol.toUpperCase()}\n${formData.nomorRangka ? `• No. Rangka: ${formData.nomorRangka.toUpperCase()}\n` : ''}• Pemilik: ${formData.nama}\n• Kendaraan: ${formData.kendaraan}\n• Rencana Servis: ${parseInt(formData.km).toLocaleString('id-ID')} KM${formData.acCare ? ' (+AC Care)' : ''}\n• Jadwal: ${formData.tanggal} jam ${formData.jam} WIB\n• No. Telepon: ${formData.verifyPhone}\n\nMohon konfirmasi ketersediaan slot stall. Terima kasih!`
+    const finalPhoneUsed = formData.nopolFound && phoneChoice === 'benar'
+      ? (formData.fullPhone || formData.maskedPhone)
+      : (formData.newPhone || formData.verifyPhone)
+    const smartText = formData.extendedSmartPackage
+      ? `\n• Paket SMART: Extended SMART ${formData.extendedSmartPackage.vehicle} (${formData.extendedSmartPackage.tier} - ${formData.extendedSmartPackage.formattedPrice})`
+      : ''
+    const text = `Halo Service Advisor Mitsubishi Sun Margahayu,\n\nSaya telah melakukan booking service melalui website resmi:\n• Kode Booking: ${bookingCode}\n• Nomor Polisi: ${formData.nopol.toUpperCase()}\n${formData.nomorRangka ? `• No. Rangka: ${formData.nomorRangka.toUpperCase()}\n` : ''}• Pemilik: ${formData.nama}\n• Kendaraan: ${formData.kendaraan}\n• Rencana Servis: ${parseInt(formData.km).toLocaleString('id-ID')} KM${smartText}\n• Jadwal: ${formData.tanggal} jam ${formData.jam} WIB\n• No. Telepon: ${finalPhoneUsed}\n\nMohon konfirmasi ketersediaan slot stall. Terima kasih!`
     return `https://wa.me/6282210928822?text=${encodeURIComponent(text)}`
   }
 
@@ -631,33 +775,109 @@ export default function BookingService() {
               </div>
             </div>
 
-            {/* Addon AC Care Card */}
-            <div
-              className={`booking-card addon-card ${formData.acCare ? 'is-selected' : ''}`}
-              onClick={() => handleInputChange('acCare', !formData.acCare)}
-              role="checkbox"
-              aria-checked={formData.acCare}
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  handleInputChange('acCare', !formData.acCare)
-                }
-              }}
-            >
-              <div className="addon-checkbox-circle">
-                {formData.acCare && <HiOutlineCheck size={14} />}
-              </div>
-              <div className="addon-content">
-                <div className="addon-title-row">
-                  <h4 className="addon-title">Tambah Paket AC Care (+Rp 338.000)</h4>
-                  <span className="addon-badge">DISARANKAN</span>
+            {/* Extended SMART Package Card (Xpander / Pajero, KM >= 50.000) */}
+            {eligibleSmartPkg && (
+              <div className="booking-card smart-pkg-card">
+                <div className="smart-pkg-header">
+                  <div className="smart-pkg-header-left">
+                    <div className="smart-pkg-icon-badge">
+                      <HiOutlineShieldCheck size={22} />
+                    </div>
+                    <div>
+                      <div className="smart-pkg-title-row">
+                        <h4 className="smart-pkg-title">Daftarkan {eligibleSmartPkg.title}</h4>
+                        <span className="smart-pkg-badge-save">Hemat s/d 25%</span>
+                      </div>
+                      <p className="smart-pkg-desc">
+                        Perpanjang paket service berkala resmi Mitsubishi setelah 50.000 KM agar bebas kenaikan harga suku cadang &amp; jasa.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setPreviewSmartPackageImage({
+                      title: eligibleSmartPkg.title,
+                      image: eligibleSmartPkg.image,
+                      vehicle: eligibleSmartPkg.vehicleName
+                    })}
+                    className="btn-smart-pkg-detail"
+                    title="Lihat brosur dan rincian lengkap"
+                  >
+                    <HiOutlineQuestionMarkCircle size={15} />
+                  </button>
                 </div>
-                <p className="addon-desc">
-                  Pembersihan evaporator &amp; blower tanpa bongkar dashboard untuk menjaga udara kabin bebas bakteri dan sejuk maksimal.
-                </p>
+
+                {/* Info Strip */}
+                <div className="smart-pkg-info-strip">
+                  <span>⏱ 1XPM berlaku untuk 6 bulan</span>
+                  <span>Tarif Resmi (Termasuk PPN)</span>
+                </div>
+
+                {/* Tiers Grid */}
+                <div className="smart-pkg-tiers-grid">
+                  {eligibleSmartPkg.tiers.map((tier) => {
+                    const isSelected = formData.extendedSmartPackage?.tier === tier.id &&
+                      formData.extendedSmartPackage?.vehicle === eligibleSmartPkg.vehicleName
+
+                    return (
+                      <button
+                        key={tier.id}
+                        type="button"
+                        onClick={() => {
+                          if (isSelected) {
+                            handleInputChange('extendedSmartPackage', null)
+                          } else {
+                            handleInputChange('extendedSmartPackage', {
+                              tier: tier.id,
+                              price: tier.price,
+                              formattedPrice: tier.formattedPrice,
+                              vehicle: eligibleSmartPkg.vehicleName,
+                              duration: tier.duration,
+                              title: `${eligibleSmartPkg.title} - ${tier.label}`
+                            })
+                          }
+                        }}
+                        className={`smart-tier-btn ${isSelected ? 'is-selected' : ''}`}
+                      >
+                        {tier.isRecommended && (
+                          <span className="smart-tier-recommended-tag">Rekomendasi</span>
+                        )}
+                        <div className="smart-tier-top-row">
+                          <span className="smart-tier-label">{tier.label}</span>
+                          <span className="smart-tier-duration">{tier.duration}</span>
+                        </div>
+                        <div className="smart-tier-price">{tier.formattedPrice}</div>
+                        <div className="smart-tier-status-row">
+                          <span className="smart-tier-status-text">
+                            {isSelected ? '✓ Terpilih' : 'Pilih paket'}
+                          </span>
+                          <div className={`smart-tier-check-circle ${isSelected ? 'is-checked' : ''}`}>
+                            {isSelected && <HiOutlineCheck size={11} />}
+                          </div>
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {/* Tombol Batalkan Pilihan */}
+                {formData.extendedSmartPackage && formData.extendedSmartPackage.vehicle === eligibleSmartPkg.vehicleName && (
+                  <div className="smart-pkg-footer">
+                    <span className="smart-pkg-selected-text">
+                      Paket terpilih: <strong>{formData.extendedSmartPackage.tier}</strong> ({formData.extendedSmartPackage.formattedPrice})
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleInputChange('extendedSmartPackage', null)}
+                      className="btn-cancel-smart-pkg"
+                    >
+                      Batalkan Pilihan
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
 
             {errorMsg && (
               <div className="booking-alert-box alert-error">
@@ -861,9 +1081,22 @@ export default function BookingService() {
                   <span className="summary-label">Paket Servis</span>
                   <div className="summary-val-col">
                     <strong>Servis Berkala {parseInt(formData.km).toLocaleString('id-ID')} KM</strong>
-                    {formData.acCare && <span className="addon-text">+ Paket AC Care Resmi</span>}
                   </div>
                 </div>
+
+                {formData.extendedSmartPackage && (
+                  <div className="summary-detail-row">
+                    <span className="summary-label">Paket SMART</span>
+                    <div className="summary-val-col">
+                      <strong className="text-amber-800">
+                        Extended SMART {formData.extendedSmartPackage.vehicle}
+                      </strong>
+                      <span className="summary-subval">
+                        {formData.extendedSmartPackage.tier} ({formData.extendedSmartPackage.duration}) • <strong className="text-amber-700">{formData.extendedSmartPackage.formattedPrice}</strong>
+                      </span>
+                    </div>
+                  </div>
+                )}
 
                 <div className="summary-detail-row">
                   <span className="summary-label">Jadwal Kedatangan</span>
@@ -887,21 +1120,110 @@ export default function BookingService() {
             <div className="booking-card phone-verify-card">
               <div className="verify-header-row">
                 <HiOutlinePhone size={20} className="text-red" />
-                <h4 className="verify-title">Nomor WhatsApp / Konfirmasi</h4>
+                <h4 className="verify-title">
+                  {formData.nopolFound ? 'Verifikasi Nomor Terdaftar' : 'Nomor WhatsApp / Konfirmasi'}
+                </h4>
               </div>
-              <p className="verify-desc">
-                {formData.nopolFound && formData.maskedPhone
-                  ? `Data nopol terhubung dengan nomor ${formData.maskedPhone}. Masukkan nomor lengkap Anda untuk validasi:`
-                  : 'Masukkan nomor WhatsApp aktif Anda untuk pengiriman bukti reservasi dan notifikasi kedatangan:'}
-              </p>
-              <input
-                type="tel"
-                placeholder="Contoh: 081234567890"
-                value={formData.verifyPhone}
-                onChange={(e) => handleInputChange('verifyPhone', e.target.value)}
-                className="booking-input phone-input"
-                required
-              />
+
+              {formData.nopolFound ? (
+                <>
+                  <p className="verify-desc">
+                    Data kendaraan Anda terdaftar dengan nomor telepon:{' '}
+                    <strong className="verify-masked-phone">{formData.maskedPhone}</strong>. Apakah nomor ini sudah sesuai?
+                  </p>
+
+                  {/* Tombol Pilihan: Sesuai / Ganti Nomor */}
+                  <div className="phone-choice-grid">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPhoneChoice('benar')
+                        if (errorMsg) setErrorMsg('')
+                      }}
+                      className={`btn-phone-choice btn-choice-benar ${phoneChoice === 'benar' ? 'is-active' : ''}`}
+                    >
+                      <HiOutlineCheck size={18} />
+                      <span>Sesuai (Benar)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPhoneChoice('salah')
+                        if (errorMsg) setErrorMsg('')
+                      }}
+                      className={`btn-phone-choice btn-choice-salah ${phoneChoice === 'salah' ? 'is-active' : ''}`}
+                    >
+                      <HiOutlineXMark size={18} />
+                      <span>Ganti Nomor Baru</span>
+                    </button>
+                  </div>
+
+                  {/* Input Nomor Baru jika Ganti Nomor */}
+                  {phoneChoice === 'salah' && (
+                    <div className="phone-new-input-box">
+                      <label className="phone-new-label">
+                        Nomor WhatsApp / Telepon Baru <span className="text-red">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={14}
+                        placeholder="Contoh: 08123456789"
+                        value={formData.newPhone || ''}
+                        onChange={(e) => {
+                          const numericOnly = e.target.value.replace(/\D/g, '')
+                          if (numericOnly.length <= 14) {
+                            handleInputChange('newPhone', numericOnly)
+                          }
+                        }}
+                        className="booking-input phone-input"
+                        autoFocus
+                      />
+                      <div className="phone-helper-row">
+                        <span className="phone-helper-text">Gunakan nomor aktif untuk konfirmasi, diawali 08</span>
+                        <span className={`phone-counter ${(formData.newPhone?.length || 0) >= 8 && (formData.newPhone?.length || 0) <= 14 ? 'is-valid' : ''}`}>
+                          {formData.newPhone?.length || 0}/14
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Notifikasi jika Nomor Sesuai */}
+                  {phoneChoice === 'benar' && (
+                    <div className="phone-confirmed-notice">
+                      <HiOutlineCheck size={16} className="text-emerald" />
+                      <span>Nomor terdaftar <strong>{formData.maskedPhone}</strong> akan digunakan untuk konfirmasi booking Anda.</span>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="verify-desc">
+                    Masukkan nomor WhatsApp aktif Anda untuk pengiriman bukti reservasi dan notifikasi kedatangan:
+                  </p>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={14}
+                    placeholder="Contoh: 081234567890"
+                    value={formData.verifyPhone || ''}
+                    onChange={(e) => {
+                      const numericOnly = e.target.value.replace(/\D/g, '')
+                      if (numericOnly.length <= 14) {
+                        handleInputChange('verifyPhone', numericOnly)
+                      }
+                    }}
+                    className="booking-input phone-input"
+                    required
+                  />
+                  <div className="phone-helper-row">
+                    <span className="phone-helper-text">Gunakan nomor aktif yang terhubung dengan WhatsApp</span>
+                    <span className={`phone-counter ${(formData.verifyPhone?.length || 0) >= 8 && (formData.verifyPhone?.length || 0) <= 14 ? 'is-valid' : ''}`}>
+                      {formData.verifyPhone?.length || 0}/14
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
 
             {errorMsg && (
@@ -963,6 +1285,14 @@ export default function BookingService() {
                     <strong className="font-mono">{formData.nomorRangka}</strong>
                   </div>
                 )}
+                {formData.extendedSmartPackage && (
+                  <div className="success-row">
+                    <span>Paket SMART</span>
+                    <strong className="text-amber-800">
+                      Extended SMART {formData.extendedSmartPackage.vehicle} ({formData.extendedSmartPackage.tier})
+                    </strong>
+                  </div>
+                )}
                 <div className="success-row">
                   <span>Lokasi</span>
                   <strong>Bengkel Resmi Sun Margahayu</strong>
@@ -989,6 +1319,56 @@ export default function BookingService() {
           </div>
         )}
       </main>
+
+      {/* Modal Full Preview Brosur Extended SMART Package */}
+      {previewSmartPackageImage && (
+        <div className="booking-modal-overlay" onClick={() => setPreviewSmartPackageImage(null)}>
+          <div className="booking-modal-card smart-preview-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="booking-modal-header">
+              <div className="booking-modal-title-group">
+                <div className="smart-pkg-icon-badge small">
+                  <HiOutlineShieldCheck size={18} />
+                </div>
+                <div>
+                  <h3 className="booking-modal-title">{previewSmartPackageImage.title}</h3>
+                  <p className="booking-modal-subtitle">Brosur Program Perpanjangan Paket SMART Mitsubishi</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewSmartPackageImage(null)}
+                className="booking-modal-close"
+                aria-label="Tutup"
+              >
+                <HiOutlineXMark size={18} />
+              </button>
+            </div>
+
+            <div className="smart-preview-modal-body">
+              <img
+                src={previewSmartPackageImage.image}
+                alt={previewSmartPackageImage.title}
+                className="smart-preview-img"
+                loading="lazy"
+              />
+              <div className="smart-preview-note">
+                💡 <em>Program Extended SMART Package memberikan jaminan hemat s/d 25% biaya service berkala dengan suku cadang original &amp; teknisi bersertifikasi MMKSI.</em>
+              </div>
+            </div>
+
+            <div className="booking-modal-footer">
+              <span className="smart-preview-footer-note">Harga Per 1 Juli 2026 (Termasuk PPN)</span>
+              <button
+                type="button"
+                onClick={() => setPreviewSmartPackageImage(null)}
+                className="booking-btn-close-modal"
+              >
+                Tutup Brosur
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

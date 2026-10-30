@@ -490,7 +490,29 @@ export default function PortalLayout() {
                   rel="noopener noreferrer"
                 >
                   <HiOutlineArrowTopRightOnSquare size={18} className="nav-item-icon" />
-                  <span>Website Showroom</span>
+                  <span>Website Public</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="http://mivision.mitsubishi-motors.co.id/"
+                  className="portal-nav-item portal-nav-item-external"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <HiOutlineArrowTopRightOnSquare size={18} className="nav-item-icon" />
+                  <span>Mi Vision</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="https://csm-sunmargahayu.com/"
+                  className="portal-nav-item portal-nav-item-external"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <HiOutlineArrowTopRightOnSquare size={18} className="nav-item-icon" />
+                  <span>Digital Checksheet</span>
                 </Link>
               </li>
             </ul>

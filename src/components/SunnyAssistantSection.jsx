@@ -7,6 +7,7 @@ import {
   HiOutlineShieldCheck,
   HiOutlineArrowRight,
   HiOutlineClock,
+  HiOutlineBolt,
   HiChevronLeft,
   HiChevronRight
 } from 'react-icons/hi2'
@@ -80,11 +81,37 @@ const SUNNY_EXPRESSIONS = [
   },
 ]
 
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+const API_BASE_URL = rawApiUrl.replace(/\/+$/, '')
+
 export default function SunnyAssistantSection({ onOpenAiChat, isHeader = false, customBadge = null }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [slideCycleKey, setSlideCycleKey] = useState(0)
+  const [avgResponseTime, setAvgResponseTime] = useState(null)
+
+  // Fetch real average response time dari endpoint statistik operasional (/dashboard/stats)
+  useEffect(() => {
+    let isMounted = true
+    const fetchResponseTime = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/dashboard/stats`, {
+          headers: { Accept: 'application/json' }
+        })
+        const json = await res.json()
+        if (isMounted && json.success && json.data && json.data.avg_response_time !== undefined) {
+          setAvgResponseTime(json.data.avg_response_time)
+        }
+      } catch (err) {
+        // Fallback senyap jika API sedang tidak terjangkau
+      }
+    }
+    fetchResponseTime()
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const sectionRef = useRef(null)
   const cardContainerRef = useRef(null)
@@ -444,11 +471,12 @@ export default function SunnyAssistantSection({ onOpenAiChat, isHeader = false, 
               </div>
               <span className="guarantee-dot">•</span>
               <div className="guarantee-item">
-                <span>Respon Cepat 24 Jam</span>
+                <span>Online 24 Jam</span>
               </div>
               <span className="guarantee-dot">•</span>
-              <div className="guarantee-item">
-                <span>Privasi Data Aman</span>
+              <div className="guarantee-item" title="Rata-rata waktu respon Sunny AI dari pesan chat terakhir">
+                <HiOutlineBolt size={15} className="text-yellow-brand" />
+                <span>Respon Cepat {avgResponseTime !== null ? `~${avgResponseTime} Detik` : '~1.5 Detik'}</span>
               </div>
             </div>
           </div>

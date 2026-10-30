@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import {
@@ -15,7 +16,8 @@ import {
   HiOutlineCheckCircle,
   HiOutlineWrenchScrewdriver,
   HiOutlineMapPin,
-  HiOutlineClock
+  HiOutlineClock,
+  HiOutlineLockClosed
 } from 'react-icons/hi2'
 import { RiWhatsappLine, RiCarLine, RiPaintBrushLine } from 'react-icons/ri'
 import { recordCustomerSession } from '../utils/sunnySessionStorage.js'
@@ -55,11 +57,11 @@ const MASCOT_EXPRESSIONS = [
 ]
 
 const DEFAULT_QUICK_REPLIES = [
-  'Berapa diskon OTR & promo mobil baru bulan ini?',
-  'Saya ingin booking jadwal servis berkala di bengkel',
-  'Hitungkan simulasi DP ringan & cicilan per bulan',
-  'Bisa bantu proses klaim asuransi & perbaikan bodi?',
-  'Saya butuh bantuan darurat Service on Road 24 Jam'
+  'Informasi Promo',
+  'Booking Service',
+  'Info Harga Mobil',
+  'Lokasi Dealer',
+  'Butuh Bantuan Darurat!'
 ]
 
 const LOADING_STATUSES = [
@@ -68,6 +70,17 @@ const LOADING_STATUSES = [
   'Memproses rincian harga & simulasi...',
   'Menyiapkan rekomendasi terbaik...'
 ]
+
+// Get or generate persistent unique device ID for client block tracking
+const getOrCreateDeviceId = () => {
+  if (typeof localStorage === 'undefined') return 'unknown_device'
+  let did = localStorage.getItem('sunny_device_id')
+  if (!did) {
+    did = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 9)
+    localStorage.setItem('sunny_device_id', did)
+  }
+  return did
+}
 
 // Extract comprehensive client hardware, browser, screen, and location telemetry
 const getClientTelemetry = () => {
@@ -107,6 +120,7 @@ const getClientTelemetry = () => {
   const savedName = typeof localStorage !== 'undefined' ? (localStorage.getItem('sunny_customer_name') || '') : ''
 
   return {
+    device_id: getOrCreateDeviceId(),
     user_agent: ua,
     device_type: deviceType,
     browser,
@@ -120,6 +134,8 @@ const getClientTelemetry = () => {
 }
 
 export default function AIAssistantFloating({ prefilledAction, onClosePrefill }) {
+  const location = useLocation()
+  const [pageQuickReplies, setPageQuickReplies] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isFullScreen, setIsFullScreen] = useState(false)
   const [expressionIndex, setExpressionIndex] = useState(0)
@@ -127,6 +143,19 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
   const [isLoading, setIsLoading] = useState(false)
   const [loadingStatusIndex, setLoadingStatusIndex] = useState(0)
   const [isSimulasiModalOpen, setIsSimulasiModalOpen] = useState(false)
+  const [isBlocked, setIsBlocked] = useState(() => {
+    try {
+      const storedUntil = localStorage.getItem('sunny_chat_blocked_until')
+      if (storedUntil) {
+        return new Date(storedUntil).getTime() > Date.now()
+      }
+    } catch { }
+    return false
+  })
+  const [blockedUntilTime, setBlockedUntilTime] = useState(() => {
+    return localStorage.getItem('sunny_chat_blocked_until') || null
+  })
+  const [blockRemainingFormatted, setBlockRemainingFormatted] = useState('')
 
   // Default showroom coordinates: Margahayu Bekasi Timur
   const DEFAULT_CENTER = { lat: -6.2508468, lng: 107.0245155 }
@@ -138,6 +167,74 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
   const [tempAddress, setTempAddress] = useState('')
   const [isGeocoding, setIsGeocoding] = useState(false)
   const initialCoordsRef = useRef(DEFAULT_CENTER)
+
+  // Format timer countdown sisa blokir
+  useEffect(() => {
+    if (!isBlocked || !blockedUntilTime) return
+
+    const updateTimer = () => {
+      const diffSec = Math.max(0, Math.floor((new Date(blockedUntilTime).getTime() - Date.now()) / 1000))
+      if (diffSec <= 0) {
+        setIsBlocked(false)
+        setBlockedUntilTime(null)
+        setBlockRemainingFormatted('')
+        localStorage.removeItem('sunny_chat_blocked_until')
+        return
+      }
+
+      const hours = Math.floor(diffSec / 3600)
+      const minutes = Math.floor((diffSec % 3600) / 60)
+      const seconds = diffSec % 60
+
+      if (hours > 0) {
+        setBlockRemainingFormatted(`${hours} jam ${minutes} mnt ${seconds} dtk`)
+      } else {
+        setBlockRemainingFormatted(`${minutes} mnt ${seconds} dtk`)
+      }
+    }
+
+    updateTimer()
+    const interval = setInterval(updateTimer, 1000)
+    return () => clearInterval(interval)
+  }, [isBlocked, blockedUntilTime])
+
+  // Generate 3 contextual quick replies (3-4 kata) sesuai halaman web yang sedang dibuka
+  useEffect(() => {
+    let isMounted = true
+    const fetchContextualQuickReplies = async () => {
+      try {
+        const pageTitle = document.title || 'PT Sun Star Prima Motor Margahayu'
+        const mainContentEl = document.querySelector('.app-content, main, article, .page-header, h1')
+        const pageTextContext = mainContentEl
+          ? (mainContentEl.innerText || '').slice(0, 350).replace(/\s+/g, ' ')
+          : ''
+
+        const res = await fetch(`${API_BASE_URL}/ai/quick-replies`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            path: location.pathname,
+            title: pageTitle,
+            context: pageTextContext
+          })
+        })
+        const data = await res.json()
+        if (isMounted && data.success && Array.isArray(data.quick_replies) && data.quick_replies.length > 0) {
+          setPageQuickReplies(data.quick_replies)
+        }
+      } catch (err) {
+        // Fallback senyap jika API sedang offline
+      }
+    }
+
+    fetchContextualQuickReplies()
+    return () => {
+      isMounted = false
+    }
+  }, [location.pathname])
   const mapContainerRef = useRef(null)
   const mapInstanceRef = useRef(null)
   const markerRef = useRef(null)
@@ -146,12 +243,32 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
     return localStorage.getItem('sunny_ai_session_id') || `sunny_sess_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`
   })
 
+  // Cek status blokir dari backend saat floating chat dibuka / pertama kali dimuat
+  useEffect(() => {
+    const checkServerBlock = async () => {
+      try {
+        const did = getOrCreateDeviceId()
+        const res = await fetch(`${API_BASE_URL}/ai/block-status?device_id=${did}&session_id=${sessionId}`)
+        const data = await res.json()
+        if (data.success && data.is_blocked && data.blocked_until) {
+          setIsBlocked(true)
+          setBlockedUntilTime(data.blocked_until)
+          localStorage.setItem('sunny_chat_blocked_until', data.blocked_until)
+        }
+      } catch (err) {
+        // Fallback ke status localStorage yang sudah ada
+      }
+    }
+
+    checkServerBlock()
+  }, [sessionId])
+
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem('sunny_chat_history')
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed.map(m => ({ ...m, actionTags: m.sender === 'ai' ? m.actionTags : null, savedLead: m.sender === 'ai' ? m.savedLead : null }))
       } catch {
         // Fallback to initial
       }
@@ -173,6 +290,15 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
     }
     return DEFAULT_QUICK_REPLIES
   })
+
+  // Update quick replies saat pageQuickReplies berubah jika chat masih di pesan awal
+  useEffect(() => {
+    if (pageQuickReplies && pageQuickReplies.length > 0) {
+      if (messages.length <= 1) {
+        setCurrentQuickReplies(pageQuickReplies)
+      }
+    }
+  }, [pageQuickReplies, messages.length])
 
   const [inputText, setInputText] = useState('')
   const streamEndRef = useRef(null)
@@ -210,8 +336,8 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
               sender: m.sender_type === 'user' ? 'user' : 'ai',
               text: m.message,
               quickReplies: m.quick_replies || [],
-              actionTags: m.action_tags || {},
-              savedLead: m.metadata?.saved_lead_id ? { id: m.metadata.saved_lead_id } : null
+              actionTags: m.sender_type === 'ai' ? (m.action_tags || null) : null,
+              savedLead: m.sender_type === 'ai' && m.metadata?.saved_lead_id ? { id: m.metadata.saved_lead_id } : null
             }))
             setMessages(mapped)
             localStorage.setItem('sunny_chat_history', JSON.stringify(mapped))
@@ -242,8 +368,8 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
             sender: m.sender_type === 'user' ? 'user' : 'ai',
             text: m.message,
             quickReplies: m.quick_replies || [],
-            actionTags: m.action_tags || {},
-            savedLead: m.metadata?.saved_lead_id ? { id: m.metadata.saved_lead_id } : null
+            actionTags: m.sender_type === 'ai' ? (m.action_tags || null) : null,
+            savedLead: m.sender_type === 'ai' && m.metadata?.saved_lead_id ? { id: m.metadata.saved_lead_id } : null
           }))
 
           setMessages(mappedMessages)
@@ -368,7 +494,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
       }
     ]
     setMessages(initial)
-    setCurrentQuickReplies(DEFAULT_QUICK_REPLIES)
+    setCurrentQuickReplies(pageQuickReplies || DEFAULT_QUICK_REPLIES)
     localStorage.setItem('sunny_ai_session_id', newSess)
     localStorage.setItem('sunny_chat_history', JSON.stringify(initial))
   }
@@ -510,7 +636,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
 
   // Send query to Laravel Backend OpenRouter integration with full client telemetry & optional location
   const sendQueryToBackend = useCallback(async (userText, locationData = null) => {
-    if (!userText || !userText.trim() || isLoading) return
+    if (!userText || !userText.trim() || isLoading || isBlocked) return
     const textToSend = userText.trim()
     setInputText('')
 
@@ -573,6 +699,19 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
 
       const data = await response.json()
 
+      // Tangani jika backend menandai akun/device diblokir karena pesan di luar konteks
+      if (data.block_info && data.block_info.is_blocked && data.block_info.blocked_until) {
+        setIsBlocked(true)
+        setBlockedUntilTime(data.block_info.blocked_until)
+        localStorage.setItem('sunny_chat_blocked_until', data.block_info.blocked_until)
+      } else if (response.status === 429 && data.is_blocked) {
+        setIsBlocked(true)
+        if (data.blocked_until) {
+          setBlockedUntilTime(data.blocked_until)
+          localStorage.setItem('sunny_chat_blocked_until', data.blocked_until)
+        }
+      }
+
       if (data.success && data.reply) {
         if (data.saved_lead) {
           try {
@@ -616,7 +755,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
     } finally {
       setIsLoading(false)
     }
-  }, [messages, sessionId, isLoading])
+  }, [messages, sessionId, isLoading, isBlocked])
 
   // Keep sendQueryRef in sync with sendQueryToBackend
   useEffect(() => {
@@ -752,10 +891,19 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
       let listKind = null // 'ul' or 'ol'
 
       rawLines.forEach((line) => {
+        const isHeading = /^(#{1,6})\s+(.+)$/.exec(line)
         const isBullet = /^[•\-\*]\s+/.test(line)
         const isNumbered = /^\d+[\.\)]\s+/.test(line)
 
-        if (isBullet) {
+        if (isHeading) {
+          if (currentList) {
+            segments.push({ kind: listKind, items: currentList })
+            currentList = null
+            listKind = null
+          }
+          const level = Math.min(isHeading[1].length, 3)
+          segments.push({ kind: 'heading', level, text: isHeading[2] })
+        } else if (isBullet) {
           if (currentList && listKind !== 'ul') {
             segments.push({ kind: listKind, items: currentList })
             currentList = null
@@ -802,6 +950,16 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
                     />
                   ))}
                 </ul>
+              )
+            }
+            if (seg.kind === 'heading') {
+              const HeadingTag = seg.level === 1 ? 'h4' : seg.level === 2 ? 'h5' : 'h6'
+              return (
+                <HeadingTag
+                  key={sIdx}
+                  className={`chat-msg-heading chat-msg-h${seg.level}`}
+                  dangerouslySetInnerHTML={{ __html: formatInline(seg.text) }}
+                />
               )
             }
             if (seg.kind === 'ol') {
@@ -1010,7 +1168,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
                   )}
 
                   {/* Lead Saved Badge if recorded */}
-                  {m.savedLead && (
+                  {m.sender === 'ai' && m.savedLead && (
                     <div className="chat-lead-badge">
                       <HiOutlineCheckCircle size={15} />
                       <span>
@@ -1022,57 +1180,73 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
                   )}
 
                   {/* Interactive Action Banners */}
-                  {m.actionTags && (
-                    <div className="chat-actions-container">
-                      {(m.actionTags.emergency || (m.sender === 'ai' && (m.text.toLowerCase().includes('service on road') || m.text.toLowerCase().includes('darurat') || m.text.toLowerCase().includes('mogok')))) && (
-                        <>
-                          {!hasSharedLocation && (
-                            <button
-                              type="button"
-                              className="chat-action-btn action-btn-shareloc"
-                              onClick={handleRequestShareLocation}
-                              disabled={isLocating}
-                              title="Buka peta GPS & kirim titik lokasi darurat"
+                  {(() => {
+                    if (m.sender !== 'ai') return null
+                    const isEmergency = Boolean(
+                      m.actionTags?.emergency ||
+                      (m.text && (
+                        m.text.toLowerCase().includes('service on road') ||
+                        m.text.toLowerCase().includes('darurat') ||
+                        m.text.toLowerCase().includes('mogok')
+                      ))
+                    )
+                    const isWhatsapp = Boolean(m.actionTags?.whatsapp)
+                    const isSimulasi = Boolean(m.actionTags?.simulasi_kredit)
+
+                    if (!isEmergency && !isWhatsapp && !isSimulasi) return null
+
+                    return (
+                      <div className="chat-actions-container">
+                        {isEmergency && (
+                          <>
+                            {!hasSharedLocation && (
+                              <button
+                                type="button"
+                                className="chat-action-btn action-btn-shareloc"
+                                onClick={handleRequestShareLocation}
+                                disabled={isLocating}
+                                title="Buka peta GPS & kirim titik lokasi darurat"
+                              >
+                                <HiOutlineMapPin size={16} />
+                                <span>{isLocating ? 'Mencari Titik GPS...' : 'Share Loc Titik Darurat'}</span>
+                              </button>
+                            )}
+
+                            <a
+                              href="tel:082210928822"
+                              className="chat-action-btn action-btn-emergency"
                             >
-                              <HiOutlineMapPin size={16} />
-                              <span>{isLocating ? 'Mencari Titik GPS...' : 'Share Loc Titik Darurat'}</span>
-                            </button>
-                          )}
+                              <HiOutlinePhone size={15} />
+                              <span>Hotline Servis</span>
+                            </a>
+                          </>
+                        )}
 
+                        {isWhatsapp && (
                           <a
-                            href="tel:082210928822"
-                            className="chat-action-btn action-btn-emergency"
+                            href="https://wa.me/6281318747300?text=Halo%20Sunny%20Dealer%20Mitsubishi%20Sun%20Margahayu,%20saya%20ingin%20konsultasi%20langsung."
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="chat-action-btn action-btn-whatsapp"
                           >
-                            <HiOutlinePhone size={15} />
-                            <span>Hotline Servis</span>
+                            <RiWhatsappLine size={16} />
+                            <span>Chat WA CS</span>
                           </a>
-                        </>
-                      )}
+                        )}
 
-                      {m.actionTags.whatsapp && (
-                        <a
-                          href="https://wa.me/6281318747300?text=Halo%20Sunny%20Dealer%20Mitsubishi%20Sun%20Margahayu,%20saya%20ingin%20konsultasi%20langsung."
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="chat-action-btn action-btn-whatsapp"
-                        >
-                          <RiWhatsappLine size={16} />
-                          <span>Chat WA CS</span>
-                        </a>
-                      )}
-
-                      {m.actionTags.simulasi_kredit && (
-                        <button
-                          type="button"
-                          className="chat-action-btn action-btn-booking"
-                          onClick={() => setIsSimulasiModalOpen(true)}
-                        >
-                          <HiOutlineCalculator size={15} />
-                          <span>Minta Rincian Simulasi Kredit</span>
-                        </button>
-                      )}
-                    </div>
-                  )}
+                        {isSimulasi && (
+                          <button
+                            type="button"
+                            className="chat-action-btn action-btn-booking"
+                            onClick={() => setIsSimulasiModalOpen(true)}
+                          >
+                            <HiOutlineCalculator size={15} />
+                            <span>Minta Rincian Simulasi Kredit</span>
+                          </button>
+                        )}
+                      </div>
+                    )
+                  })()}
                 </div>
               ))}
 
@@ -1105,7 +1279,7 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
                     type="button"
                     className={`shortcut-chip ${q.toLowerCase().includes('darurat') || q.toLowerCase().includes('mogok') || q.toLowerCase().includes('share loc') ? 'shortcut-chip-emergency' : ''}`}
                     onClick={() => sendQueryToBackend(q)}
-                    disabled={isLoading}
+                    disabled={isLoading || isBlocked}
                   >
                     {q.toLowerCase().includes('share loc') || q.toLowerCase().includes('titik lokasi') ? (
                       <HiOutlineMapPin size={13} />
@@ -1126,41 +1300,61 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
             </div>
           </div>
 
-          {/* Chat Input Field */}
-          <form className="chat-input-row" onSubmit={handleSendMessage}>
-            <div className="chat-input-inner">
-              {!hasSharedLocation && (
-                <button
-                  type="button"
-                  className="chat-location-quick-btn"
-                  title="Bagikan Titik Lokasi GPS Darurat (Service on Road)"
-                  aria-label="Bagikan Lokasi GPS"
-                  onClick={handleRequestShareLocation}
-                  disabled={isLocating}
-                >
-                  <HiOutlineMapPin size={18} />
-                </button>
-              )}
-              <input
-                ref={inputRef}
-                type="text"
-                className="chat-input-field"
-                placeholder="Tulis pesan atau pertanyaan Anda (misal: Mau tanya promo Xforce)..."
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                disabled={isLoading}
-              />
-              <button
-                type="submit"
-                className="chat-send-btn"
-                aria-label="Kirim pesan"
-                title="Kirim pesan"
-                disabled={!inputText.trim() || isLoading}
-              >
-                <HiOutlinePaperAirplane size={16} />
-              </button>
+          {/* Chat Input Field / Blocked State Notice */}
+          {isBlocked ? (
+            <div className="chat-blocked-banner">
+              <div className="chat-blocked-content">
+                <HiOutlineLockClosed size={24} className="chat-blocked-icon" />
+                <div className="chat-blocked-text-col">
+                  <h4 className="chat-blocked-title">Layanan Chat Dibatasi Sementara</h4>
+                  <p className="chat-blocked-desc">
+                    Sunny hanya melayani konsultasi seputar mobil Mitsubishi, promo, simulasi kredit, servis, dan suku cadang resmi. Akses chat dibuka kembali otomatis dalam:
+                  </p>
+                  {blockRemainingFormatted && (
+                    <div className="chat-blocked-timer">
+                      <HiOutlineClock size={14} />
+                      <span>{blockRemainingFormatted}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          </form>
+          ) : (
+            <form className="chat-input-row" onSubmit={handleSendMessage}>
+              <div className="chat-input-inner">
+                {!hasSharedLocation && (
+                  <button
+                    type="button"
+                    className="chat-location-quick-btn"
+                    title="Bagikan Titik Lokasi GPS Darurat (Service on Road)"
+                    aria-label="Bagikan Lokasi GPS"
+                    onClick={handleRequestShareLocation}
+                    disabled={isLocating}
+                  >
+                    <HiOutlineMapPin size={18} />
+                  </button>
+                )}
+                <input
+                  ref={inputRef}
+                  type="text"
+                  className="chat-input-field"
+                  placeholder="Tulis pesan atau pertanyaan Anda (misal: Mau tanya promo Xforce)..."
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  disabled={isLoading}
+                />
+                <button
+                  type="submit"
+                  className="chat-send-btn"
+                  aria-label="Kirim pesan"
+                  title="Kirim pesan"
+                  disabled={!inputText.trim() || isLoading}
+                >
+                  <HiOutlinePaperAirplane size={16} />
+                </button>
+              </div>
+            </form>
+          )}
         </div>
       )}
 

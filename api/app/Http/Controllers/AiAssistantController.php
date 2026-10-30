@@ -8,6 +8,7 @@ use App\Services\ChatSessionTracker;
 use App\Models\ChatSession;
 use App\Models\ChatMessage;
 use App\Models\Lead;
+use App\Models\ChatBlock;
 
 class AiAssistantController extends Controller
 {
@@ -29,12 +30,29 @@ class AiAssistantController extends Controller
         $messages = $data['messages'] ?? [];
         $sessionId = $data['session_id'] ?? ('sunny_sess_' . time() . '_' . substr(md5(uniqid()), 0, 6));
         $clientInfo = $data['client_info'] ?? [];
+        $deviceId = $clientInfo['device_id'] ?? $request->input('device_id');
 
         if (empty($messages) || !is_array($messages)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Parameter messages wajib diisi berupa array riwayat percakapan.'
             ], 422);
+        }
+
+        // 0. Cek apakah IP / Device saat ini sedang dalam status pemblokiran aktif
+        $ip = $this->getClientIpAddress($request);
+        $blockRecord = $this->getActiveBlockRecord($ip, $deviceId, $sessionId);
+
+        if ($blockRecord && $blockRecord->blocked_until && $blockRecord->blocked_until->isFuture()) {
+            return response()->json([
+                'success' => false,
+                'is_blocked' => true,
+                'blocked_until' => $blockRecord->blocked_until->toIso8601String(),
+                'remaining_seconds' => max(0, $blockRecord->blocked_until->diffInSeconds(now())),
+                'block_count' => $blockRecord->block_count,
+                'duration_minutes' => $blockRecord->block_duration_minutes,
+                'message' => 'Layanan chat interaktif sedang dibatasi sementara. Silakan hubungi konsultan kami langsung melalui WhatsApp atau Telepon.'
+            ], 429);
         }
 
         // 1. Record / update chat session with comprehensive IP, device, browser, city, country data
@@ -159,6 +177,66 @@ class AiAssistantController extends Controller
             'os' => $session->os,
         ];
 
+        // 5. Cek & Proses Deteksi Pertanyaan di Luar Konteks Pelayanan Dealer
+        $isOutOfContext = !empty($result['action_tags']['out_of_context']);
+        $blockInfo = null;
+
+        if ($isOutOfContext) {
+            $record = $blockRecord ?: new ChatBlock([
+                'ip_address' => $ip,
+                'device_id' => $deviceId,
+                'session_id' => $sessionId,
+                'out_of_context_count' => 0,
+                'block_count' => 0,
+            ]);
+
+            $record->ip_address = $ip;
+            if (!empty($deviceId)) $record->device_id = $deviceId;
+            $record->session_id = $sessionId;
+            $record->last_out_of_context_message = $lastUserMsg;
+
+            $record->out_of_context_count = ($record->out_of_context_count ?? 0) + 1;
+
+            $shouldBlock = false;
+            $newDurationMinutes = 0;
+
+            if ($record->block_count == 0) {
+                // Pemblokiran pertama: harus 3x out of context
+                if ($record->out_of_context_count >= 3) {
+                    $shouldBlock = true;
+                    $record->block_count = 1;
+                    $newDurationMinutes = 30; // 30 menit
+                }
+            } else {
+                // Pernah diblokir sebelumnya: cukup 1x pesan di luar konteks lagi
+                $shouldBlock = true;
+                $record->block_count += 1;
+                // Kelipatan 2x: 30 -> 60 -> 120 -> 240 ...
+                $base = $record->block_duration_minutes > 0 ? $record->block_duration_minutes : 30;
+                $newDurationMinutes = $base * 2;
+            }
+
+            if ($shouldBlock) {
+                $record->block_duration_minutes = $newDurationMinutes;
+                $record->blocked_until = now()->addMinutes($newDurationMinutes);
+                $record->reason = "Pesan di luar konteks dealer sebanyak {$record->out_of_context_count}x. Pemblokiran ke-{$record->block_count} selama {$newDurationMinutes} menit.";
+            }
+
+            $record->save();
+
+            $blockInfo = [
+                'out_of_context_detected' => true,
+                'out_of_context_count' => $record->out_of_context_count,
+                'is_blocked' => $shouldBlock || ($record->blocked_until && $record->blocked_until->isFuture()),
+                'blocked_until' => $record->blocked_until ? $record->blocked_until->toIso8601String() : null,
+                'remaining_seconds' => $record->blocked_until && $record->blocked_until->isFuture() ? max(0, $record->blocked_until->diffInSeconds(now())) : 0,
+                'block_count' => $record->block_count,
+                'duration_minutes' => $record->block_duration_minutes
+            ];
+        }
+
+        $result['block_info'] = $blockInfo;
+
         return response()->json($result);
     }
 
@@ -227,9 +305,20 @@ class AiAssistantController extends Controller
 
         $query = ChatSession::withCount('messages')->orderBy('last_activity_at', 'desc');
 
-        if ($status) {
+        if ($status === 'blocked') {
+            // Sesi yang IP, device_id, atau session_id nya terdaftar di tabel chat_blocks yang pernah diblokir (block_count > 0)
+            $blockedIps = ChatBlock::where('block_count', '>', 0)->pluck('ip_address')->filter()->unique();
+            $blockedSessions = ChatBlock::where('block_count', '>', 0)->pluck('session_id')->filter()->unique();
+            $blockedDevices = ChatBlock::where('block_count', '>', 0)->pluck('device_id')->filter()->unique();
+
+            $query->where(function ($q) use ($blockedIps, $blockedSessions, $blockedDevices) {
+                $q->whereIn('ip_address', $blockedIps)
+                  ->orWhereIn('session_id', $blockedSessions);
+            });
+        } elseif ($status) {
             $query->where('status', $status);
         }
+
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('session_id', 'like', "%{$search}%")
@@ -240,9 +329,51 @@ class AiAssistantController extends Controller
             });
         }
 
+        $paginated = $query->paginate(25);
+
+        // Ambil data pemblokiran aktif atau riwayat blokir untuk setiap sesi
+        $sessionIps = collect($paginated->items())->pluck('ip_address')->unique();
+        $sessionIds = collect($paginated->items())->pluck('session_id')->unique();
+
+        $blocks = ChatBlock::where(function ($q) use ($sessionIps, $sessionIds) {
+            $q->whereIn('ip_address', $sessionIps)
+              ->orWhereIn('session_id', $sessionIds);
+        })->get();
+
+        $items = collect($paginated->items())->map(function ($sess) use ($blocks) {
+            $matchedBlock = $blocks->first(function ($b) use ($sess) {
+                return ($b->session_id && $b->session_id === $sess->session_id) || ($b->ip_address && $b->ip_address === $sess->ip_address);
+            });
+
+            $sessArray = $sess->toArray();
+            if ($matchedBlock && $matchedBlock->block_count > 0) {
+                $isCurrentlyBlocked = $matchedBlock->blocked_until && $matchedBlock->blocked_until->isFuture();
+                $sessArray['block_status'] = [
+                    'is_blocked' => $isCurrentlyBlocked,
+                    'block_count' => $matchedBlock->block_count,
+                    'out_of_context_count' => $matchedBlock->out_of_context_count,
+                    'blocked_until' => $matchedBlock->blocked_until ? $matchedBlock->blocked_until->toIso8601String() : null,
+                    'duration_minutes' => $matchedBlock->block_duration_minutes,
+                ];
+            } else {
+                $sessArray['block_status'] = null;
+            }
+
+            return $sessArray;
+        });
+
+        // Hitung total blokir tercatat secara keseluruhan di sistem
+        $totalBlockedCount = ChatBlock::where('block_count', '>', 0)->count();
+
+        $customPaginated = $paginated->toArray();
+        $customPaginated['data'] = $items;
+
         return response()->json([
             'success' => true,
-            'data' => $query->paginate(25)
+            'data' => $customPaginated,
+            'meta' => [
+                'total_blocks' => $totalBlockedCount
+            ]
         ]);
     }
 
@@ -333,6 +464,9 @@ class AiAssistantController extends Controller
         $validated['type'] = str_replace(' ', '_', strtolower($validated['type']));
         if ($validated['type'] === 'aksesoris') {
             $validated['type'] = 'sparepart';
+        }
+        if ($validated['type'] === 'booking_service') {
+            $validated['type'] = 'booking';
         }
 
         // Deduplication: check if lead already exists for this session or phone
@@ -526,5 +660,196 @@ class AiAssistantController extends Controller
             'data' => $lead,
             'message' => 'Data lead berhasil diperbarui.'
         ]);
+    }
+
+    /**
+     * Generate 3 contextual quick replies based on current page content
+     * Using google/gemini-3.1-flash-lite (fast & cost-efficient)
+     */
+    public function generateQuickReplies(Request $request)
+    {
+        $pagePath = $request->input('path', '/');
+        $pageTitle = $request->input('title', 'PT Sun Star Prima Motor Margahayu');
+        $pageContext = $request->input('context', '');
+
+        // Static fallback per rute jika AI timeout atau offline
+        $fallback = [
+            'Promo mobil baru',
+            'Simulasi kredit angsuran',
+            'Booking jadwal bengkel'
+        ];
+
+        $normalizedPath = strtolower(trim((string) $pagePath, '/'));
+        if (str_contains($normalizedPath, 'promo')) {
+            $fallback = ['Promo bunga ringan', 'Diskon mobil baru', 'Klaim kupon promo'];
+        } elseif (str_contains($normalizedPath, 'booking') || str_contains($normalizedPath, 'bengkel') || str_contains($normalizedPath, 'servis') || str_contains($normalizedPath, 'facilities') || str_contains($normalizedPath, 'fasilitas')) {
+            $fallback = ['Booking servis berkala', 'Biaya tune up', 'Layanan bengkel resmi'];
+        } elseif (str_contains($normalizedPath, 'service-on-road') || str_contains($normalizedPath, 'emergency')) {
+            $fallback = ['Bantuan darurat mogok', 'Panggil derek resmi', 'Kirim lokasi GPS'];
+        } elseif (str_contains($normalizedPath, 'accessori') || str_contains($normalizedPath, 'aksesoris') || str_contains($normalizedPath, 'sparepart')) {
+            $fallback = ['Katalog aksesoris resmi', 'Harga suku cadang', 'Pasang variasi mobil'];
+        } elseif (str_contains($normalizedPath, 'vehicle') || str_contains($normalizedPath, 'mobil')) {
+            $fallback = ['Harga OTR terbaru', 'Simulasi DP murah', 'Jadwal test drive'];
+        } elseif (str_contains($normalizedPath, 'sales')) {
+            $fallback = ['Kontak wiraniaga resmi', 'Rekomendasi sales terbaik', 'Konsultasi mobil baru'];
+        } elseif (str_contains($normalizedPath, 'news') || str_contains($normalizedPath, 'article')) {
+            $fallback = ['Rangkuman berita ini', 'Promo terkait artikel', 'Tanya seputar topik'];
+        }
+
+        // Cache 1 jam per rute unik untuk menghemat token dan respon secepat kilat
+        $cacheKey = 'qr_page_' . md5($pagePath . '_' . substr($pageTitle, 0, 50) . '_' . substr($pageContext, 0, 50));
+        $cached = \Illuminate\Support\Facades\Cache::get($cacheKey);
+        if (is_array($cached) && count($cached) === 3) {
+            return response()->json([
+                'success' => true,
+                'source' => 'cache',
+                'quick_replies' => $cached
+            ]);
+        }
+
+        $apiKey = env('OPENROUTER_API_KEY');
+        if (empty($apiKey) || trim($apiKey) === 'your_openrouter_api_key_here') {
+            return response()->json([
+                'success' => true,
+                'source' => 'fallback',
+                'quick_replies' => $fallback
+            ]);
+        }
+
+        $model = 'google/gemini-3.1-flash-lite';
+        $siteUrl = env('OPENROUTER_SITE_URL', 'http://localhost:5173');
+        $appName = env('OPENROUTER_APP_NAME', 'Sunny AI - PT Sun Star Prima Motor Margahayu');
+
+        $systemPrompt = "Kamu adalah generator opsi pertanyaan cepat untuk website dealer Mitsubishi Margahayu Bekasi Timur.\n" .
+            "Tugas: buat tepat 3 opsi pertanyaan cepat yang 100% membahas isi topik halaman yang sedang dilihat pengunjung.\n" .
+            "Panjang per opsi: WAJIB 3 sampai 4 KATA SAJA.\n" .
+            "Format balasan: HANYA JSON array string valid [\"opsi 1\", \"opsi 2\", \"opsi 3\"] tanpa pembungkus markdown.";
+
+        $userContent = "Topik Halaman Web:\n" .
+            "- URL: {$pagePath}\n" .
+            "- Judul Halaman: {$pageTitle}\n" .
+            "- Isi/Deskripsi Halaman: " . substr((string) $pageContext, 0, 400);
+
+        try {
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'HTTP-Referer' => $siteUrl,
+                'X-Title' => $appName,
+                'Content-Type' => 'application/json'
+            ])->timeout(8)->post('https://openrouter.ai/api/v1/chat/completions', [
+                'model' => $model,
+                'messages' => [
+                    ['role' => 'system', 'content' => $systemPrompt],
+                    ['role' => 'user', 'content' => $userContent]
+                ],
+                'temperature' => 0.3,
+                'max_tokens' => 120
+            ]);
+
+            if ($response->successful()) {
+                $raw = $response->json()['choices'][0]['message']['content'] ?? '';
+                $clean = preg_replace('/^```(?:json)?\s*|\s*```$/i', '', trim($raw));
+                $decoded = json_decode($clean, true);
+
+                if (is_array($decoded) && count($decoded) >= 3) {
+                    $finalReplies = [];
+                    foreach (array_slice($decoded, 0, 3) as $item) {
+                        $str = trim(strip_tags((string) $item));
+                        $words = preg_split('/\s+/', $str);
+                        if (count($words) > 4) {
+                            $str = implode(' ', array_slice($words, 0, 4));
+                        }
+                        $finalReplies[] = $str;
+                    }
+
+                    if (count($finalReplies) === 3) {
+                        \Illuminate\Support\Facades\Cache::put($cacheKey, $finalReplies, now()->addHours(1));
+                        return response()->json([
+                            'success' => true,
+                            'source' => 'gemini-3.1-flash-lite',
+                            'quick_replies' => $finalReplies
+                        ]);
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Quick replies generation failed: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'success' => true,
+            'source' => 'fallback',
+            'quick_replies' => $fallback
+        ]);
+    }
+
+    /**
+     * Check if client IP / Device ID is currently blocked
+     */
+    public function checkBlockStatus(Request $request)
+    {
+        $ip = $this->getClientIpAddress($request);
+        $deviceId = $request->input('device_id');
+        $sessionId = $request->input('session_id');
+
+        $blockRecord = $this->getActiveBlockRecord($ip, $deviceId, $sessionId);
+
+        if ($blockRecord && $blockRecord->blocked_until && $blockRecord->blocked_until->isFuture()) {
+            return response()->json([
+                'success' => true,
+                'is_blocked' => true,
+                'blocked_until' => $blockRecord->blocked_until->toIso8601String(),
+                'remaining_seconds' => max(0, $blockRecord->blocked_until->diffInSeconds(now())),
+                'block_count' => $blockRecord->block_count,
+                'duration_minutes' => $blockRecord->block_duration_minutes,
+                'message' => 'Layanan chat interaktif sedang dibatasi sementara karena terdeteksi beberapa pesan di luar konteks pelayanan dealer.'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'is_blocked' => false,
+            'out_of_context_count' => $blockRecord ? $blockRecord->out_of_context_count : 0,
+            'block_count' => $blockRecord ? $blockRecord->block_count : 0
+        ]);
+    }
+
+    /**
+     * Helper to find or resolve active block record by IP, deviceId, or sessionId
+     */
+    protected function getActiveBlockRecord(string $ip, ?string $deviceId = null, ?string $sessionId = null): ?ChatBlock
+    {
+        $query = ChatBlock::query();
+
+        $query->where(function ($q) use ($ip, $deviceId, $sessionId) {
+            $q->where('ip_address', $ip);
+            if (!empty($deviceId)) {
+                $q->orWhere('device_id', $deviceId);
+            }
+            if (!empty($sessionId)) {
+                $q->orWhere('session_id', $sessionId);
+            }
+        });
+
+        return $query->orderBy('id', 'desc')->first();
+    }
+
+    /**
+     * Helper get real client IP
+     */
+    protected function getClientIpAddress(Request $request): string
+    {
+        $headers = ['CF-Connecting-IP', 'X-Forwarded-For', 'X-Real-IP'];
+        foreach ($headers as $h) {
+            $val = $request->header($h);
+            if (!empty($val)) {
+                $parts = explode(',', $val);
+                $ip = trim($parts[0]);
+                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    return $ip;
+                }
+            }
+        }
+        return $request->ip() ?: '127.0.0.1';
     }
 }

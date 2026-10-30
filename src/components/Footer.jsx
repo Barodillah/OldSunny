@@ -76,8 +76,6 @@ export default function Footer() {
               <span className="footer-nav-sep" aria-hidden="true">•</span>
               <Link to="/services">Layanan</Link>
               <span className="footer-nav-sep" aria-hidden="true">•</span>
-              <Link to="/news">Berita</Link>
-              <span className="footer-nav-sep" aria-hidden="true">•</span>
               <Link to="/contact">Kontak</Link>
             </nav>
           </div>
