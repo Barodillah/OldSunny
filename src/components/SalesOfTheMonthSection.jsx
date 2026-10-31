@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -7,28 +7,75 @@ import {
   HiOutlineArrowRight,
   HiOutlineXMark,
   HiOutlineUser,
-  HiOutlineMapPin,
   HiOutlineCheckBadge,
   HiOutlineInformationCircle,
-  HiOutlineSparkles
+  HiOutlineSparkles,
 } from 'react-icons/hi2'
 import {
   RiAwardLine,
   RiWhatsappLine,
   RiShieldCheckLine,
-  RiStarFill
 } from 'react-icons/ri'
-import { TOP_SALES_TRADING_CARDS, ALL_SALES_DIRECTORY } from '../data/salesData.js'
+import {
+  TOP_SALES_TRADING_CARDS,
+  ALL_SALES_DIRECTORY,
+  DEFAULT_SALES_PHOTO,
+  transformSalesFromApi,
+} from '../data/salesData.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+
 export default function SalesOfTheMonthSection() {
+  const [salesList, setSalesList] = useState([])
   const [selectedConsultantModal, setSelectedConsultantModal] = useState(null)
-  const [hoveredConsultant, setHoveredConsultant] = useState(TOP_SALES_TRADING_CARDS[0])
+  const [hoveredConsultant, setHoveredConsultant] = useState(
+    TOP_SALES_TRADING_CARDS[0]
+  )
 
   const sectionRef = useRef(null)
   const cardsContainerRef = useRef(null)
   const cursorPopRef = useRef(null)
+
+  // Fetch data sales dari database MySQL
+  useEffect(() => {
+    let isMounted = true
+
+    const fetchSales = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/sales?status=active`)
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+        const json = await res.json()
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          const transformed = transformSalesFromApi(json.data)
+          if (isMounted) {
+            setSalesList(transformed)
+            setHoveredConsultant(transformed[0])
+          }
+        }
+      } catch (err) {
+        console.warn('Fallback ke data statis sales:', err)
+      }
+    }
+
+    fetchSales()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  // Top 3 Cards
+  const topSalesCards = useMemo(() => {
+    return salesList.length > 0
+      ? salesList.slice(0, 3)
+      : TOP_SALES_TRADING_CARDS
+  }, [salesList])
+
+  const totalSalesCount =
+    salesList.length > 0 ? salesList.length : ALL_SALES_DIRECTORY.length
 
   const updateCursorPopPosition = (clientX, clientY, immediate = false) => {
     if (!cursorPopRef.current) return
@@ -60,7 +107,7 @@ export default function SalesOfTheMonthSection() {
         y: posY,
         duration: 0.16,
         ease: 'power2.out',
-        overwrite: 'auto'
+        overwrite: 'auto',
       })
     }
   }
@@ -75,7 +122,13 @@ export default function SalesOfTheMonthSection() {
       gsap.fromTo(
         cursorPopRef.current,
         { scale: 0.88, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.22, ease: 'back.out(1.6)', overwrite: 'auto' }
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.22,
+          ease: 'back.out(1.6)',
+          overwrite: 'auto',
+        }
       )
     }
   }
@@ -96,12 +149,12 @@ export default function SalesOfTheMonthSection() {
           if (cursorPopRef.current) {
             gsap.set(cursorPopRef.current, { visibility: 'hidden' })
           }
-        }
+        },
       })
     }
   }
 
-  // GSAP ScrollTrigger Entrance Animation (Slide shutter opening photo from top or bottom)
+  // GSAP ScrollTrigger Entrance Animation (Dijalankan sekali saja saat mount)
   useEffect(() => {
     if (!sectionRef.current || !cardsContainerRef.current) return
 
@@ -204,7 +257,7 @@ export default function SalesOfTheMonthSection() {
     }, sectionRef)
 
     return () => ctx.revert()
-  }, [])
+  }, []) // Dependency array kosong: entrance shutter hanya jalan sekali di awal dan tidak terulang saat hover
 
   // Keyboard navigation: Escape key closes active modals
   useEffect(() => {
@@ -222,13 +275,22 @@ export default function SalesOfTheMonthSection() {
   const openWhatsApp = (consultant) => {
     const text = encodeURIComponent(
       consultant.whatsappMessage ||
-      `Halo Bpk/Ibu ${consultant.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Mitsubishi Sun Margahayu.`
+        `Halo Bpk/Ibu ${consultant.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Mitsubishi Sun Margahayu.`
     )
-    window.open(`https://wa.me/${consultant.whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer')
+    window.open(
+      `https://wa.me/${consultant.whatsappNumber}?text=${text}`,
+      '_blank',
+      'noopener,noreferrer'
+    )
   }
 
   return (
-    <section ref={sectionRef} className="hall-of-fame-section" id="hall-of-fame" aria-labelledby="hall-of-fame-title">
+    <section
+      ref={sectionRef}
+      className="hall-of-fame-section"
+      id="hall-of-fame"
+      aria-labelledby="hall-of-fame-title"
+    >
       <div className="hall-of-fame-container">
         {/* Section Header */}
         <div className="hall-header-row">
@@ -237,7 +299,8 @@ export default function SalesOfTheMonthSection() {
               Sales Satisfaction of the Month
             </h2>
             <p className="hall-subtitle">
-              Peringkat kehormatan berdasarkan indeks kepuasan Net Promoter Score (NPS), lama dedikasi melayani, dan ulasan konsumen terverifikasi.
+              Peringkat kehormatan berdasarkan indeks kepuasan Net Promoter Score
+              (NPS), lama dedikasi melayani, dan ulasan konsumen terverifikasi.
             </p>
           </div>
 
@@ -248,21 +311,23 @@ export default function SalesOfTheMonthSection() {
               title="Lihat Direktori Seluruh Sales Resmi"
             >
               <HiOutlineUserGroup size={18} />
-              <span>Lihat Semua ({ALL_SALES_DIRECTORY.length} Sales)</span>
+              <span>Lihat Semua ({totalSalesCount} Sales)</span>
               <HiOutlineArrowRight size={16} />
             </Link>
           </div>
         </div>
 
-        {/* 3 TRADING CARDS GRID (AS IN REFERENCE) */}
+        {/* 3 TRADING CARDS GRID */}
         <div ref={cardsContainerRef} className="trading-cards-grid">
-          {TOP_SALES_TRADING_CARDS.map((consultant) => {
+          {topSalesCards.map((consultant) => {
             const isInverted = consultant.isInverted
 
             return (
               <article
-                key={consultant.id}
-                className={`trading-card-item ${consultant.themeStyle} ${isInverted ? 'is-inverted' : ''}`}
+                key={consultant.rank || consultant.id}
+                className={`trading-card-item ${consultant.themeStyle} ${
+                  isInverted ? 'is-inverted' : ''
+                }`}
                 data-slide-direction={consultant.slideDirection}
                 onMouseEnter={(e) => handleCardMouseEnter(consultant, e)}
                 onMouseMove={handleCardMouseMove}
@@ -277,25 +342,40 @@ export default function SalesOfTheMonthSection() {
                     <div className="card-content-block">
                       <div className="card-top-nav-row">
                         {/* Circular Emblem with Rank Number */}
-                        <div className="circle-rank-emblem" aria-label={`Peringkat ${consultant.rank}`}>
-                          <span className="emblem-number">{consultant.rank}</span>
+                        <div
+                          className="circle-rank-emblem"
+                          aria-label={`Peringkat ${consultant.rank}`}
+                        >
+                          <span className="emblem-number">
+                            {consultant.rank}
+                          </span>
                         </div>
 
                         {/* Tenure & NPS Badge */}
                         <div className="card-meta-badge">
-                          <span className="badge-since">Since {consultant.joinedYear}</span>
-                          <span className="badge-nps">{consultant.npsScore} NPS</span>
+                          <span className="badge-since">
+                            Since {consultant.joinedYear}
+                          </span>
+                          <span className="badge-nps">
+                            {consultant.npsScore === '-'
+                              ? '-'
+                              : `${consultant.npsScore} NPS`}
+                          </span>
                         </div>
                       </div>
 
                       <div className="card-identity-group">
-                        <h3 className="card-consultant-name">{consultant.name}</h3>
+                        <h3 className="card-consultant-name">
+                          {consultant.name}
+                        </h3>
                       </div>
                     </div>
 
                     {/* Bottom Photo Block with Slide Shutter & Bottom-Right Floating CTA */}
                     <div className="card-photo-block">
-                      <div className={`card-photo-shutter shutter-${consultant.slideDirection}`} />
+                      <div
+                        className={`card-photo-shutter shutter-${consultant.slideDirection}`}
+                      />
 
                       {/* Icon-Only CTA Floating at Bottom-Right of Photo */}
                       <div className="card-photo-floating-actions pos-bottom-right">
@@ -330,6 +410,9 @@ export default function SalesOfTheMonthSection() {
                         alt={`Foto ${consultant.name}`}
                         className="card-portrait-img"
                         loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.src = DEFAULT_SALES_PHOTO
+                        }}
                       />
                     </div>
                   </div>
@@ -338,7 +421,9 @@ export default function SalesOfTheMonthSection() {
                   <div className="card-inner-wrapper">
                     {/* Top Photo Block with Slide Shutter & Top-Right Floating CTA */}
                     <div className="card-photo-block">
-                      <div className={`card-photo-shutter shutter-${consultant.slideDirection}`} />
+                      <div
+                        className={`card-photo-shutter shutter-${consultant.slideDirection}`}
+                      />
 
                       {/* Icon-Only CTA Floating at Top-Right of Photo */}
                       <div className="card-photo-floating-actions pos-top-right">
@@ -373,25 +458,41 @@ export default function SalesOfTheMonthSection() {
                         alt={`Foto ${consultant.name}`}
                         className="card-portrait-img"
                         loading="lazy"
+                        onError={(e) => {
+                          e.currentTarget.src = DEFAULT_SALES_PHOTO
+                        }}
                       />
                     </div>
 
                     {/* Bottom Content Block */}
                     <div className="card-content-block">
                       <div className="card-identity-group">
-                        <h3 className="card-consultant-name">{consultant.name}</h3>
+                        <h3 className="card-consultant-name">
+                          {consultant.name}
+                        </h3>
                       </div>
 
                       <div className="card-bottom-nav-row">
                         {/* Circular Emblem with Rank Number */}
-                        <div className="circle-rank-emblem" aria-label={`Peringkat ${consultant.rank}`}>
-                          <span className="emblem-number">{consultant.rank}</span>
+                        <div
+                          className="circle-rank-emblem"
+                          aria-label={`Peringkat ${consultant.rank}`}
+                        >
+                          <span className="emblem-number">
+                            {consultant.rank}
+                          </span>
                         </div>
 
                         {/* Tenure & NPS Badge */}
                         <div className="card-meta-badge">
-                          <span className="badge-since">Since {consultant.joinedYear}</span>
-                          <span className="badge-nps">{consultant.npsScore} NPS</span>
+                          <span className="badge-since">
+                            Since {consultant.joinedYear}
+                          </span>
+                          <span className="badge-nps">
+                            {consultant.npsScore === '-'
+                              ? '-'
+                              : `${consultant.npsScore} NPS`}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -403,16 +504,14 @@ export default function SalesOfTheMonthSection() {
         </div>
 
         {/* FLOATING CURSOR POP CARD (POPOVER DATA LAINNYA) */}
-        <div
-          ref={cursorPopRef}
-          className="sales-cursor-pop"
-          aria-hidden="true"
-        >
+        <div ref={cursorPopRef} className="sales-cursor-pop" aria-hidden="true">
           {hoveredConsultant && (
             <div className="cursor-pop-content">
               {/* Top Meta Bar: Rank & NIK */}
               <div className="pop-header-row">
-                <span className={`pop-rank-badge rank-${hoveredConsultant.rankNumber}`}>
+                <span
+                  className={`pop-rank-badge rank-${hoveredConsultant.rankNumber}`}
+                >
                   <RiAwardLine size={13} />
                   TOP #{hoveredConsultant.rank}
                 </span>
@@ -436,15 +535,22 @@ export default function SalesOfTheMonthSection() {
                   <HiOutlineSparkles size={14} className="pop-icon text-gold" />
                   <div className="pop-detail-text">
                     <span className="pop-detail-label">Spesialisasi</span>
-                    <span className="pop-detail-val">{hoveredConsultant.specialization}</span>
+                    <span className="pop-detail-val">
+                      {hoveredConsultant.specialization}
+                    </span>
                   </div>
                 </div>
 
                 <div className="pop-detail-item">
-                  <HiOutlineCheckBadge size={14} className="pop-icon text-emerald" />
+                  <HiOutlineCheckBadge
+                    size={14}
+                    className="pop-icon text-emerald"
+                  />
                   <div className="pop-detail-text">
                     <span className="pop-detail-label">Pengalaman Kerja</span>
-                    <span className="pop-detail-val">{hoveredConsultant.tenure} ({hoveredConsultant.joinedSince})</span>
+                    <span className="pop-detail-val">
+                      {hoveredConsultant.tenure} ({hoveredConsultant.joinedSince})
+                    </span>
                   </div>
                 </div>
               </div>
@@ -453,17 +559,17 @@ export default function SalesOfTheMonthSection() {
               <div className="pop-metrics-row">
                 <div className="pop-metric-box">
                   <span className="pop-metric-caption">Indeks CSI</span>
-                  <span className="pop-metric-value">{hoveredConsultant.csiScore.split('/')[0].trim()}</span>
+                  <span className="pop-metric-value">
+                    {hoveredConsultant.csiScore || '-'}
+                  </span>
                   <span className="pop-metric-sub">Kepuasan Pelanggan</span>
                 </div>
                 <div className="pop-metric-box">
                   <span className="pop-metric-caption">PKT Time Rate</span>
                   <span className="pop-metric-value text-emerald">
-                    {hoveredConsultant.pktTimeRate || '3 Hari'}
+                    {hoveredConsultant.pktTimeRate || '-'}
                   </span>
-                  <span className="pop-metric-sub">
-                    Rata-rata SPK ke PKT
-                  </span>
+                  <span className="pop-metric-sub">Rata-rata SPK ke PKT</span>
                 </div>
               </div>
 
@@ -481,7 +587,9 @@ export default function SalesOfTheMonthSection() {
           <p className="trading-footer-disclaimer">
             <RiShieldCheckLine size={18} className="text-accent-red" />
             <span>
-              Seluruh transaksi uang muka (DP) dan pelunasan wajib disalurkan langsung ke rekening bank resmi <strong>PT Sun Star Prima Motor (BCA: 3425419999)</strong>.
+              Seluruh transaksi uang muka (DP) dan pelunasan wajib disalurkan
+              langsung ke rekening bank resmi{' '}
+              <strong>PT Sun Star Prima Motor (BCA: 3425419999)</strong>.
             </span>
           </p>
         </div>
@@ -523,6 +631,9 @@ export default function SalesOfTheMonthSection() {
                       src={selectedConsultantModal.photoUrl}
                       alt={selectedConsultantModal.name}
                       className="modal-consultant-avatar"
+                      onError={(e) => {
+                        e.currentTarget.src = DEFAULT_SALES_PHOTO
+                      }}
                     />
                   ) : (
                     <div className="modal-consultant-initials">
@@ -532,14 +643,21 @@ export default function SalesOfTheMonthSection() {
 
                   <div className="modal-consultant-primary">
                     <div className="modal-badge-status">
-                      <HiOutlineCheckBadge size={16} className="text-emerald" />
+                      <HiOutlineCheckBadge
+                        size={16}
+                        className="text-emerald"
+                      />
                       <span>Aktif Terverifikasi Dealer Resmi</span>
                     </div>
-                    <h3 id="modal-consultant-name" className="modal-consultant-title">
+                    <h3
+                      id="modal-consultant-name"
+                      className="modal-consultant-title"
+                    >
                       {selectedConsultantModal.name}
                     </h3>
                     <p className="modal-consultant-nik">
-                      NIK: <strong>{selectedConsultantModal.nik}</strong> • {selectedConsultantModal.joinedSince}
+                      NIK: <strong>{selectedConsultantModal.nik}</strong> •{' '}
+                      {selectedConsultantModal.joinedSince}
                     </p>
                     <p className="modal-consultant-role">
                       {selectedConsultantModal.title}
@@ -551,32 +669,51 @@ export default function SalesOfTheMonthSection() {
                 <div className="modal-metrics-grid">
                   <div className="modal-metric-card">
                     <span className="modal-metric-label">Skor NPS</span>
-                    <span className="modal-metric-number">{selectedConsultantModal.npsScore}</span>
-                    <span className="modal-metric-sub">Net Promoter Score</span>
+                    <span className="modal-metric-number">
+                      {selectedConsultantModal.npsScore || '-'}
+                    </span>
+                    <span className="modal-metric-sub">
+                      Net Promoter Score
+                    </span>
                   </div>
                   <div className="modal-metric-card">
                     <span className="modal-metric-label">Indeks CSI</span>
-                    <span className="modal-metric-number">{selectedConsultantModal.csiScore || '98.0 / 100'}</span>
+                    <span className="modal-metric-number">
+                      {selectedConsultantModal.csiScore || '-'}
+                    </span>
                     <span className="modal-metric-sub">Customer Service</span>
                   </div>
                   <div className="modal-metric-card">
                     <span className="modal-metric-label">PKT Time Rate</span>
-                    <span className="modal-metric-number text-emerald">{selectedConsultantModal.pktTimeRate || '3 Hari'}</span>
-                    <span className="modal-metric-sub">Rata-rata SPK ke PKT</span>
+                    <span className="modal-metric-number text-emerald">
+                      {selectedConsultantModal.pktTimeRate || '-'}
+                    </span>
+                    <span className="modal-metric-sub">
+                      Rata-rata SPK ke PKT
+                    </span>
                   </div>
                 </div>
 
                 {/* Area of Focus */}
                 <div className="modal-detail-section">
-                  <h5 className="modal-section-title">Bidang Spesialisasi & Unit:</h5>
-                  <p className="modal-section-text">{selectedConsultantModal.specialization}</p>
+                  <h5 className="modal-section-title">
+                    Bidang Spesialisasi & Unit:
+                  </h5>
+                  <p className="modal-section-text">
+                    {selectedConsultantModal.specialization}
+                  </p>
                 </div>
 
                 {/* Safety Transfer Reminder */}
                 <div className="modal-safety-alert">
-                  <HiOutlineInformationCircle size={18} className="text-accent-red flex-shrink-0" />
+                  <HiOutlineInformationCircle
+                    size={18}
+                    className="text-accent-red flex-shrink-0"
+                  />
                   <span>
-                    Seluruh pembayaran uang muka (DP) dan pelunasan hanya ditransfer ke rekening bank resmi PT Sun Star Prima Motor (BCA: 3425419999), bukan rekening pribadi.
+                    Seluruh pembayaran uang muka (DP) dan pelunasan hanya
+                    ditransfer ke rekening bank resmi PT Sun Star Prima Motor
+                    (BCA: 3425419999), bukan rekening pribadi.
                   </span>
                 </div>
 

@@ -137,7 +137,83 @@ export default function BookingService() {
   const [showCustomDateModal, setShowCustomDateModal] = useState(false)
   const [bookingCode, setBookingCode] = useState('')
 
-  const eligibleSmartPkg = getEligibleExtendedSmartPackage(formData.kendaraan, formData.km)
+  const [smartPackagesData, setSmartPackagesData] = useState(EXTENDED_SMART_PACKAGES)
+
+  // Real-time dynamic fetch from Extended SMART Package knowledge API
+  useEffect(() => {
+    let isMounted = true
+    const fetchLiveExtendedSmart = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/knowledge/extended_smart`, {
+          headers: { Accept: 'application/json' }
+        })
+        if (res.ok) {
+          const json = await res.json()
+          if (json.success && json.data) {
+            const raw = json.data.extended_smart_package || json.data
+            const xp = raw.xpander_series || {}
+            const pj = raw.pajero_sport || {}
+
+            const durationMap = {
+              '1XPM': '6 Bulan',
+              '2XPM': '12 Bulan (1 Thn)',
+              '4XPM': '24 Bulan (2 Thn)',
+              '6XPM': '36 Bulan (3 Thn)'
+            }
+
+            const formatRp = (v) => 'Rp ' + (v || 0).toLocaleString('id-ID')
+
+            const xpTiers = (xp.prices_including_vat || []).map(t => ({
+              id: t.type,
+              label: t.type,
+              duration: durationMap[t.type] || 'Periode Servis',
+              price: t.after ?? (t.price ?? 0),
+              formattedPrice: formatRp(t.after ?? (t.price ?? 0)),
+              isRecommended: t.type === '2XPM'
+            }))
+
+            const pjTiers = (pj.prices_including_vat || []).map(t => ({
+              id: t.type,
+              label: t.type,
+              duration: durationMap[t.type] || 'Periode Servis',
+              price: t.price ?? (t.after ?? 0),
+              formattedPrice: formatRp(t.price ?? (t.after ?? 0)),
+              isRecommended: t.type === '2XPM'
+            }))
+
+            if (isMounted) {
+              setSmartPackagesData({
+                XPANDER: {
+                  vehicleName: 'Xpander',
+                  title: 'Extended SMART Package Xpander',
+                  image: 'https://csdwindo.com/wp-content/uploads/xpanderxtended.webp',
+                  effectiveDate: xp.effective_date || '1 Juli 2026',
+                  note: 'per 1XPM adalah 6 bulan. Kedua paket lebih hemat s/d 25%',
+                  variants: xp.include_car_variant || ['Xpander', 'Xpander Cross', 'Xforce'],
+                  tiers: xpTiers.length > 0 ? xpTiers : EXTENDED_SMART_PACKAGES.XPANDER.tiers
+                },
+                PAJERO: {
+                  vehicleName: 'Pajero',
+                  title: 'Extended SMART Package Pajero',
+                  image: 'https://csdwindo.com/wp-content/uploads/1625123782-mmksi-press-release-mmksi-luncurkan-program-perpanjangan-paket-smart-untuk-pajero-sportjpg-optimized.webp',
+                  effectiveDate: pj.effective_date || '1 Juli 2026',
+                  note: 'per 1XPM adalah 6 bulan. Kedua paket lebih hemat s/d 25%',
+                  tiers: pjTiers.length > 0 ? pjTiers : EXTENDED_SMART_PACKAGES.PAJERO.tiers
+                }
+              })
+            }
+          }
+        }
+      } catch (err) {
+        // Silently keep default fallback
+      }
+    }
+
+    fetchLiveExtendedSmart()
+    return () => { isMounted = false }
+  }, [])
+
+  const eligibleSmartPkg = getEligibleExtendedSmartPackage(formData.kendaraan, formData.km, smartPackagesData)
 
   // Scroll to top on step change
   useEffect(() => {

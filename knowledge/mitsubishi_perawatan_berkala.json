@@ -9,7 +9,7 @@
       "Pajero Sport CR45"
     ],
     "mata_uang": "IDR (Rupiah)",
-    "pajak": "PPN 10% sudah termasuk dalam Grand Total"
+    "pajak": "PPN 11% sudah termasuk dalam Grand Total"
   },
   "kebijakan_free_service": {
     "nama_program": "Program MMKSI Free Jasa dan Spare Part",
@@ -84,8 +84,8 @@
           ],
           "subtotal_spare_part": 879000,
           "total_sebelum_ppn": 1379000,
-          "ppn_10_persen": 137900,
-          "grand_total": 1516900
+          "grand_total": 1530690,
+          "ppn_11_persen": 151690
         },
         "20000": {
           "km": 20000,
@@ -131,8 +131,8 @@
           ],
           "subtotal_spare_part": 946500,
           "total_sebelum_ppn": 1946500,
-          "ppn_10_persen": 194650,
-          "grand_total": 2141150
+          "grand_total": 2160615,
+          "ppn_11_persen": 214115
         },
         "30000": {
           "km": 30000,
@@ -171,8 +171,8 @@
           ],
           "subtotal_spare_part": 879000,
           "total_sebelum_ppn": 1379000,
-          "ppn_10_persen": 137900,
-          "grand_total": 1516900
+          "grand_total": 1530690,
+          "ppn_11_persen": 151690
         },
         "40000": {
           "km": 40000,
@@ -246,8 +246,8 @@
           ],
           "subtotal_spare_part": 1476500,
           "total_sebelum_ppn": 2726500,
-          "ppn_10_persen": 272650,
-          "grand_total": 2999150
+          "grand_total": 3026415,
+          "ppn_11_persen": 299915
         },
         "50000": {
           "km": 50000,
@@ -286,8 +286,8 @@
           ],
           "subtotal_spare_part": 879000,
           "total_sebelum_ppn": 1379000,
-          "ppn_10_persen": 137900,
-          "grand_total": 1516900
+          "grand_total": 1530690,
+          "ppn_11_persen": 151690
         },
         "60000": {
           "km": 60000,
@@ -347,8 +347,8 @@
           ],
           "subtotal_spare_part": 1683500,
           "total_sebelum_ppn": 2683500,
-          "ppn_10_persen": 268350,
-          "grand_total": 2951850
+          "grand_total": 2978685,
+          "ppn_11_persen": 295185
         },
         "70000": {
           "km": 70000,
@@ -387,8 +387,8 @@
           ],
           "subtotal_spare_part": 879000,
           "total_sebelum_ppn": 1379000,
-          "ppn_10_persen": 137900,
-          "grand_total": 1516900
+          "grand_total": 1530690,
+          "ppn_11_persen": 151690
         },
         "80000": {
           "km": 80000,
@@ -469,8 +469,8 @@
           ],
           "subtotal_spare_part": 2551500,
           "total_sebelum_ppn": 3801500,
-          "ppn_10_persen": 380150,
-          "grand_total": 4181650
+          "grand_total": 4219665,
+          "ppn_11_persen": 418165
         },
         "90000": {
           "km": 90000,
@@ -509,8 +509,8 @@
           ],
           "subtotal_spare_part": 879000,
           "total_sebelum_ppn": 1379000,
-          "ppn_10_persen": 137900,
-          "grand_total": 1516900
+          "grand_total": 1530690,
+          "ppn_11_persen": 151690
         },
         "100000": {
           "km": 100000,
@@ -563,10 +563,102 @@
           ],
           "subtotal_spare_part": 2286500,
           "total_sebelum_ppn": 3286500,
-          "ppn_10_persen": 328650,
-          "grand_total": 3615150
+          "grand_total": 3648015,
+          "ppn_11_persen": 361515
         }
-      }
+      },
+      "layanan_khusus": [
+        {
+          "id": "xpander_ganti_oli_saja",
+          "nama": "Ganti Oli Mesin Saja (Quick Lube)",
+          "kategori": "Quick Service / Pelumasan",
+          "estimasi_waktu": "30 - 45 Menit",
+          "jasa": 150000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin MMGO (4 Liter)",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Gasket Drain Plug (Ring Baut Oli)",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            }
+          ],
+          "subtotal_spare_part": 586000,
+          "total_sebelum_ppn": 736000,
+          "ppn_11_persen": 80960,
+          "grand_total": 816960,
+          "keterangan": "Penggantian oli mesin MMGO 0W-20 + saringan oli + ring baut oli, pengerjaan express tanpa inspeksi menyeluruh 10.000 KM."
+        },
+        {
+          "id": "xpander_tune_up",
+          "nama": "Tune Up & Throttle Body Cleaning",
+          "kategori": "Mesin & Performa",
+          "estimasi_waktu": "60 Menit",
+          "jasa": 250000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush & Throttle Cleaner",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            }
+          ],
+          "subtotal_spare_part": 140000,
+          "total_sebelum_ppn": 390000,
+          "ppn_11_persen": 42900,
+          "grand_total": 432900,
+          "keterangan": "Pembersihan kerak ruang bakar, throttle body intake, reset ECU kalibrasi idle, dan pengecekan busi."
+        },
+        {
+          "id": "xpander_servis_rem",
+          "nama": "Servis & Pembersihan Rem 4 Roda",
+          "kategori": "Sistem Pengereman",
+          "estimasi_waktu": "45 - 60 Menit",
+          "jasa": 200000,
+          "spare_part": [
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner Spray",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            }
+          ],
+          "subtotal_spare_part": 67500,
+          "total_sebelum_ppn": 267500,
+          "ppn_11_persen": 29425,
+          "grand_total": 296925,
+          "keterangan": "Bongkar dan bersihkan kampas rem depan cakram dan belakang tromol, pelumasan pin caliper, dan penyetelan celah handbrake."
+        },
+        {
+          "id": "xpander_spooring_balancing",
+          "nama": "Spooring 3D & Balancing 4 Roda",
+          "kategori": "Roda & Kemudi",
+          "estimasi_waktu": "45 Menit",
+          "jasa": 250000,
+          "spare_part": [],
+          "subtotal_spare_part": 0,
+          "total_sebelum_ppn": 250000,
+          "ppn_11_persen": 27500,
+          "grand_total": 277500,
+          "keterangan": "Penyelarasan sudut toe, camber, caster dengan sensor 3D computerized + timbel balancing 4 roda untuk kenyamanan berkendara."
+        }
+      ]
     },
     "all_new_pajero_sport": {
       "nama_lengkap": "All New Pajero Sport (ANPS)",
@@ -617,8 +709,8 @@
           ],
           "subtotal_spare_part": 1575000,
           "total_sebelum_ppn": 2175000,
-          "ppn_10_persen": 217500,
-          "grand_total": 2392500
+          "grand_total": 2414250,
+          "ppn_11_persen": 239250
         },
         "20000": {
           "km": 20000,
@@ -671,8 +763,8 @@
           ],
           "subtotal_spare_part": 1633000,
           "total_sebelum_ppn": 3033000,
-          "ppn_10_persen": 297800,
-          "grand_total": 3275800
+          "grand_total": 3366630,
+          "ppn_11_persen": 333630
         },
         "30000": {
           "km": 30000,
@@ -718,8 +810,8 @@
           ],
           "subtotal_spare_part": 1575000,
           "total_sebelum_ppn": 2175000,
-          "ppn_10_persen": 212000,
-          "grand_total": 2332000
+          "grand_total": 2414250,
+          "ppn_11_persen": 239250
         },
         "40000": {
           "km": 40000,
@@ -798,10 +890,10 @@
               "total": 67500
             }
           ],
-          "subtotal_spare_part": 2958500,
-          "total_sebelum_ppn": 4758500,
-          "ppn_10_persen": 450350,
-          "grand_total": 4953850
+          "subtotal_spare_part": 2758500,
+          "total_sebelum_ppn": 4558500,
+          "grand_total": 5059935,
+          "ppn_11_persen": 501435
         },
         "50000": {
           "km": 50000,
@@ -847,8 +939,8 @@
           ],
           "subtotal_spare_part": 1575000,
           "total_sebelum_ppn": 2175000,
-          "ppn_10_persen": 212000,
-          "grand_total": 2332000
+          "grand_total": 2414250,
+          "ppn_11_persen": 239250
         },
         "60000": {
           "km": 60000,
@@ -915,8 +1007,8 @@
           ],
           "subtotal_spare_part": 2233500,
           "total_sebelum_ppn": 3633500,
-          "ppn_10_persen": 363350,
-          "grand_total": 3996850
+          "grand_total": 4033185,
+          "ppn_11_persen": 399685
         },
         "70000": {
           "km": 70000,
@@ -962,8 +1054,8 @@
           ],
           "subtotal_spare_part": 1575000,
           "total_sebelum_ppn": 2175000,
-          "ppn_10_persen": 133500,
-          "grand_total": 1468500
+          "grand_total": 2414250,
+          "ppn_11_persen": 239250
         },
         "80000": {
           "km": 80000,
@@ -1049,10 +1141,10 @@
               "total": 55000
             }
           ],
-          "subtotal_spare_part": 3718500,
-          "total_sebelum_ppn": 5518500,
-          "ppn_10_persen": 551850,
-          "grand_total": 6070350
+          "subtotal_spare_part": 4048500,
+          "total_sebelum_ppn": 5848500,
+          "grand_total": 6491835,
+          "ppn_11_persen": 643335
         },
         "90000": {
           "km": 90000,
@@ -1098,8 +1190,8 @@
           ],
           "subtotal_spare_part": 1575000,
           "total_sebelum_ppn": 2175000,
-          "ppn_10_persen": 157500,
-          "grand_total": 1732500
+          "grand_total": 2414250,
+          "ppn_11_persen": 239250
         },
         "100000": {
           "km": 100000,
@@ -1145,10 +1237,89 @@
           ],
           "subtotal_spare_part": 1587500,
           "total_sebelum_ppn": 2987500,
-          "ppn_10_persen": 158750,
-          "grand_total": 1746250
+          "grand_total": 3316125,
+          "ppn_11_persen": 328625
         }
-      }
+      },
+      "layanan_khusus": [
+        {
+          "id": "anps_ganti_oli_saja",
+          "nama": "Ganti Oli Mesin Diesel Saja (Quick Lube)",
+          "kategori": "Quick Service / Pelumasan",
+          "estimasi_waktu": "30 - 45 Menit",
+          "jasa": 200000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320368",
+              "nama": "Oil Mesin Diesel MMGO DL-1 (7 Liter)",
+              "qty": 7,
+              "harga_satuan": 145000,
+              "total": 1015000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter Diesel Pajero Sport",
+              "qty": 1,
+              "harga_satuan": 185000,
+              "total": 185000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Gasket Drain Plug",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            }
+          ],
+          "subtotal_spare_part": 1215000,
+          "total_sebelum_ppn": 1415000,
+          "ppn_11_persen": 155650,
+          "grand_total": 1570650,
+          "keterangan": "Penggantian oli mesin diesel turbo MMGO 7 Liter + saringan oli diesel asli + ring baut karter oli."
+        },
+        {
+          "id": "anps_purging_diesel",
+          "nama": "Diesel Purging & Injector Cleaner",
+          "kategori": "Mesin & Performa",
+          "estimasi_waktu": "60 Menit",
+          "jasa": 300000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ100724",
+              "nama": "Diesel Purge Canister",
+              "qty": 1,
+              "harga_satuan": 220000,
+              "total": 220000
+            }
+          ],
+          "subtotal_spare_part": 220000,
+          "total_sebelum_ppn": 520000,
+          "ppn_11_persen": 57200,
+          "grand_total": 577200,
+          "keterangan": "Pembersihan injektor common-rail diesel, ruang bakar, dan pompa injeksi dengan cairan purge langsung tanpa membongkar mesin."
+        },
+        {
+          "id": "anps_servis_rem",
+          "nama": "Brake Overhaul & Pembersihan Rem 4 Roda SUV",
+          "kategori": "Sistem Pengereman",
+          "estimasi_waktu": "60 Menit",
+          "jasa": 250000,
+          "spare_part": [
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner Spray",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            }
+          ],
+          "subtotal_spare_part": 67500,
+          "total_sebelum_ppn": 317500,
+          "ppn_11_persen": 34925,
+          "grand_total": 352425,
+          "keterangan": "Pembersihan 4 rem cakram SUV, pelumasan pin caliper tahan panas, dan pengecekan ketebalan piringan rotor."
+        }
+      ]
     },
     "pajero_sport_cr45": {
       "nama_lengkap": "Pajero Sport CR45 (Diesel)",
@@ -1241,8 +1412,8 @@
           ],
           "subtotal_spare_part": 1433000,
           "total_sebelum_ppn": 2033000,
-          "ppn_10_persen": 201300,
-          "grand_total": 2214300
+          "grand_total": 2256630,
+          "ppn_11_persen": 223630
         },
         "20000": {
           "km": 20000,
@@ -1309,8 +1480,8 @@
           ],
           "subtotal_spare_part": 2232000,
           "total_sebelum_ppn": 3632000,
-          "ppn_10_persen": 363200,
-          "grand_total": 3995200
+          "grand_total": 4031520,
+          "ppn_11_persen": 399520
         },
         "30000": {
           "km": 30000,
@@ -1356,8 +1527,8 @@
           ],
           "subtotal_spare_part": 1433000,
           "total_sebelum_ppn": 2033000,
-          "ppn_10_persen": 162500,
-          "grand_total": 1787500
+          "grand_total": 2256630,
+          "ppn_11_persen": 223630
         },
         "40000": {
           "km": 40000,
@@ -1450,10 +1621,10 @@
               "total": 55000
             }
           ],
-          "subtotal_spare_part": 5574000,
-          "total_sebelum_ppn": 7374000,
-          "ppn_10_persen": 746000,
-          "grand_total": 8206000
+          "subtotal_spare_part": 5774000,
+          "total_sebelum_ppn": 7574000,
+          "grand_total": 8407140,
+          "ppn_11_persen": 833140
         },
         "50000": {
           "km": 50000,
@@ -1576,8 +1747,8 @@
           ],
           "subtotal_spare_part": 5976000,
           "total_sebelum_ppn": 7576000,
-          "ppn_10_persen": 757600,
-          "grand_total": 8333600
+          "grand_total": 8409360,
+          "ppn_11_persen": 833360
         },
         "60000": {
           "km": 60000,
@@ -1644,8 +1815,8 @@
           ],
           "subtotal_spare_part": 2232000,
           "total_sebelum_ppn": 3632000,
-          "ppn_10_persen": 363200,
-          "grand_total": 3995200
+          "grand_total": 4031520,
+          "ppn_11_persen": 399520
         },
         "70000": {
           "km": 70000,
@@ -1691,8 +1862,8 @@
           ],
           "subtotal_spare_part": 1433000,
           "total_sebelum_ppn": 2033000,
-          "ppn_10_persen": 203300,
-          "grand_total": 2236300
+          "grand_total": 2256630,
+          "ppn_11_persen": 223630
         },
         "80000": {
           "km": 80000,
@@ -1787,8 +1958,8 @@
           ],
           "subtotal_spare_part": 5774000,
           "total_sebelum_ppn": 7574000,
-          "ppn_10_persen": 757400,
-          "grand_total": 8331400
+          "grand_total": 8407140,
+          "ppn_11_persen": 833140
         },
         "90000": {
           "km": 90000,
@@ -1834,8 +2005,8 @@
           ],
           "subtotal_spare_part": 1433000,
           "total_sebelum_ppn": 2033000,
-          "ppn_10_persen": 172300,
-          "grand_total": 1895300
+          "grand_total": 2256630,
+          "ppn_11_persen": 223630
         },
         "100000": {
           "km": 100000,
@@ -1965,140 +2136,219 @@
           ],
           "subtotal_spare_part": 6031000,
           "total_sebelum_ppn": 7631000,
-          "ppn_10_persen": 763100,
-          "grand_total": 8394100
+          "grand_total": 8470410,
+          "ppn_11_persen": 839410
         }
-      }
+      },
+      "layanan_khusus": [
+        {
+          "id": "anps_ganti_oli_saja",
+          "nama": "Ganti Oli Mesin Diesel Saja (Quick Lube)",
+          "kategori": "Quick Service / Pelumasan",
+          "estimasi_waktu": "30 - 45 Menit",
+          "jasa": 200000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320368",
+              "nama": "Oil Mesin Diesel MMGO DL-1 (7 Liter)",
+              "qty": 7,
+              "harga_satuan": 145000,
+              "total": 1015000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter Diesel Pajero Sport",
+              "qty": 1,
+              "harga_satuan": 185000,
+              "total": 185000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Gasket Drain Plug",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            }
+          ],
+          "subtotal_spare_part": 1215000,
+          "total_sebelum_ppn": 1415000,
+          "ppn_11_persen": 155650,
+          "grand_total": 1570650,
+          "keterangan": "Penggantian oli mesin diesel turbo MMGO 7 Liter + saringan oli diesel asli + ring baut karter oli."
+        },
+        {
+          "id": "anps_purging_diesel",
+          "nama": "Diesel Purging & Injector Cleaner",
+          "kategori": "Mesin & Performa",
+          "estimasi_waktu": "60 Menit",
+          "jasa": 300000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ100724",
+              "nama": "Diesel Purge Canister",
+              "qty": 1,
+              "harga_satuan": 220000,
+              "total": 220000
+            }
+          ],
+          "subtotal_spare_part": 220000,
+          "total_sebelum_ppn": 520000,
+          "ppn_11_persen": 57200,
+          "grand_total": 577200,
+          "keterangan": "Pembersihan injektor common-rail diesel, ruang bakar, dan pompa injeksi dengan cairan purge langsung tanpa membongkar mesin."
+        },
+        {
+          "id": "anps_servis_rem",
+          "nama": "Brake Overhaul & Pembersihan Rem 4 Roda SUV",
+          "kategori": "Sistem Pengereman",
+          "estimasi_waktu": "60 Menit",
+          "jasa": 250000,
+          "spare_part": [
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner Spray",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            }
+          ],
+          "subtotal_spare_part": 67500,
+          "total_sebelum_ppn": 317500,
+          "ppn_11_persen": 34925,
+          "grand_total": 352425,
+          "keterangan": "Pembersihan 4 rem cakram SUV, pelumasan pin caliper tahan panas, dan pengecekan ketebalan piringan rotor."
+        }
+      ]
     }
   },
   "ringkasan_biaya": {
     "xpander": {
       "10000": {
-        "grand_total": 1516900,
+        "grand_total": 1530690,
         "free_service": true
       },
       "20000": {
-        "grand_total": 2141150,
+        "grand_total": 2160615,
         "free_service": true
       },
       "30000": {
-        "grand_total": 1516900,
+        "grand_total": 1530690,
         "free_service": true
       },
       "40000": {
-        "grand_total": 2999150,
+        "grand_total": 3026415,
         "free_service": true
       },
       "50000": {
-        "grand_total": 1516900,
+        "grand_total": 1530690,
         "free_service": true
       },
       "60000": {
-        "grand_total": 2951850,
+        "grand_total": 2978685,
         "free_service": false
       },
       "70000": {
-        "grand_total": 1516900,
+        "grand_total": 1530690,
         "free_service": false
       },
       "80000": {
-        "grand_total": 4181650,
+        "grand_total": 4219665,
         "free_service": false
       },
       "90000": {
-        "grand_total": 1516900,
+        "grand_total": 1530690,
         "free_service": false
       },
       "100000": {
-        "grand_total": 3615150,
+        "grand_total": 3648015,
         "free_service": false
       }
     },
     "all_new_pajero_sport": {
       "10000": {
-        "grand_total": 2392500,
+        "grand_total": 2414250,
         "free_service": true
       },
       "20000": {
-        "grand_total": 3275800,
+        "grand_total": 3366630,
         "free_service": true
       },
       "30000": {
-        "grand_total": 2332000,
+        "grand_total": 2414250,
         "free_service": true
       },
       "40000": {
-        "grand_total": 4953850,
+        "grand_total": 5059935,
         "free_service": true
       },
       "50000": {
-        "grand_total": 2332000,
+        "grand_total": 2414250,
         "free_service": true
       },
       "60000": {
-        "grand_total": 3996850,
+        "grand_total": 4033185,
         "free_service": false
       },
       "70000": {
-        "grand_total": 1468500,
+        "grand_total": 2414250,
         "free_service": false
       },
       "80000": {
-        "grand_total": 6070350,
+        "grand_total": 6491835,
         "free_service": false
       },
       "90000": {
-        "grand_total": 1732500,
+        "grand_total": 2414250,
         "free_service": false
       },
       "100000": {
-        "grand_total": 1746250,
+        "grand_total": 3316125,
         "free_service": false
       }
     },
     "pajero_sport_cr45": {
-      "interval_antara_5K_15K_dst": {
-        "grand_total": 1287000,
-        "free_service": false
-      },
       "10000": {
-        "grand_total": 2214300,
+        "grand_total": 2256630,
         "free_service": true
       },
       "20000": {
-        "grand_total": 3995200,
+        "grand_total": 4031520,
         "free_service": true
       },
       "30000": {
-        "grand_total": 1787500,
+        "grand_total": 2256630,
         "free_service": true
       },
       "40000": {
-        "grand_total": 8206000,
+        "grand_total": 8407140,
         "free_service": true
       },
       "50000": {
-        "grand_total": 8333600,
+        "grand_total": 8409360,
         "free_service": true
       },
       "60000": {
-        "grand_total": 3995200,
+        "grand_total": 4031520,
         "free_service": false
       },
       "70000": {
-        "grand_total": 2236300,
+        "grand_total": 2256630,
         "free_service": false
       },
       "80000": {
-        "grand_total": 8331400,
+        "grand_total": 8407140,
         "free_service": false
       },
       "90000": {
-        "grand_total": 1895300,
+        "grand_total": 2256630,
         "free_service": false
       },
       "100000": {
-        "grand_total": 8394100,
+        "grand_total": 8470410,
+        "free_service": false
+      },
+      "interval_antara_5K_15K_dst": {
+        "grand_total": 1298700,
         "free_service": false
       }
     }

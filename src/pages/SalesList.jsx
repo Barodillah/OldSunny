@@ -1,36 +1,273 @@
-import { useState, useMemo, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useState, useMemo, useEffect, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
-  HiOutlineChevronRight,
-  HiOutlineShieldCheck,
   HiOutlineMagnifyingGlass,
   HiOutlineXMark,
   HiOutlineUser,
   HiOutlineCheckBadge,
+  HiOutlineInformationCircle,
   HiOutlineSparkles,
-  HiOutlineInformationCircle
 } from 'react-icons/hi2'
 import {
   RiAwardLine,
   RiWhatsappLine,
-  RiShieldCheckLine
+  RiShieldCheckLine,
 } from 'react-icons/ri'
 import {
   TOP_SALES_TRADING_CARDS,
-  NEXT_RANKED_SALES
+  NEXT_RANKED_SALES,
+  DEFAULT_SALES_PHOTO,
+  transformSalesFromApi,
 } from '../data/salesData.js'
 import './SalesList.css'
 
+gsap.registerPlugin(ScrollTrigger)
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
+
 export default function SalesList() {
   const location = useLocation()
+  const [salesList, setSalesList] = useState([])
   const [selectedConsultantModal, setSelectedConsultantModal] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
+
+  const highlightSectionRef = useRef(null)
+  const tradingCardsContainerRef = useRef(null)
+  const cursorPopRef = useRef(null)
+  const [hoveredConsultant, setHoveredConsultant] = useState(
+    TOP_SALES_TRADING_CARDS[0]
+  )
 
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [location.pathname])
+
+  // Fetch data sales dari database MySQL
+  useEffect(() => {
+    let isMounted = true
+
+    const fetchSales = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/sales?status=active`)
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`)
+        const json = await res.json()
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          const transformed = transformSalesFromApi(json.data)
+          if (isMounted) {
+            setSalesList(transformed)
+            setHoveredConsultant(transformed[0])
+          }
+        }
+      } catch (err) {
+        console.warn('Fallback ke data statis sales:', err)
+      }
+    }
+
+    fetchSales()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  // Top 3 (Rank 01 - 03) & Next Ranked (Rank 04+)
+  const topSalesCards = useMemo(() => {
+    return salesList.length > 0
+      ? salesList.slice(0, 3)
+      : TOP_SALES_TRADING_CARDS
+  }, [salesList])
+
+  const nextRankedSales = useMemo(() => {
+    return salesList.length > 0
+      ? salesList.slice(3)
+      : NEXT_RANKED_SALES
+  }, [salesList])
+
+  // Cursor Pop Position Tracking
+  const updateCursorPopPosition = (clientX, clientY, immediate = false) => {
+    if (!cursorPopRef.current) return
+    const popWidth = 295
+    const popHeight = 230
+    const padding = 16
+
+    let posX = clientX + 18
+    let posY = clientY + 18
+
+    // Flip to left if it would overflow right viewport edge
+    if (posX + popWidth > window.innerWidth - padding) {
+      posX = clientX - popWidth - 18
+    }
+
+    // Flip to top if it would overflow bottom viewport edge
+    if (posY + popHeight > window.innerHeight - padding) {
+      posY = clientY - popHeight - 18
+    }
+
+    posX = Math.max(padding, posX)
+    posY = Math.max(padding, posY)
+
+    if (immediate) {
+      gsap.set(cursorPopRef.current, { x: posX, y: posY })
+    } else {
+      gsap.to(cursorPopRef.current, {
+        x: posX,
+        y: posY,
+        duration: 0.16,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      })
+    }
+  }
+
+  const handleCardMouseEnter = (consultant, e) => {
+    setHoveredConsultant(consultant)
+
+    if (cursorPopRef.current) {
+      updateCursorPopPosition(e.clientX, e.clientY, true)
+      gsap.killTweensOf(cursorPopRef.current)
+      gsap.set(cursorPopRef.current, { visibility: 'visible' })
+      gsap.fromTo(
+        cursorPopRef.current,
+        { scale: 0.88, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.22,
+          ease: 'back.out(1.6)',
+          overwrite: 'auto',
+        }
+      )
+    }
+  }
+
+  const handleCardMouseMove = (e) => {
+    updateCursorPopPosition(e.clientX, e.clientY, false)
+  }
+
+  const handleCardMouseLeave = () => {
+    if (cursorPopRef.current) {
+      gsap.to(cursorPopRef.current, {
+        scale: 0.88,
+        opacity: 0,
+        duration: 0.18,
+        ease: 'power2.in',
+        overwrite: 'auto',
+        onComplete: () => {
+          if (cursorPopRef.current) {
+            gsap.set(cursorPopRef.current, { visibility: 'hidden' })
+          }
+        },
+      })
+    }
+  }
+
+  // GSAP ScrollTrigger Entrance Animation (Sama persis seperti SalesOfTheMonthSection.jsx)
+  useEffect(() => {
+    if (!highlightSectionRef.current || !tradingCardsContainerRef.current) return
+
+    const cards = tradingCardsContainerRef.current.querySelectorAll('.trading-card-item')
+    const headerCopy = highlightSectionRef.current.querySelector('.hall-header-copy')
+
+    const ctx = gsap.context(() => {
+      // 1. Header entrance
+      if (headerCopy) {
+        gsap.fromTo(
+          headerCopy,
+          {
+            y: 32,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.75,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: highlightSectionRef.current,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        )
+      }
+
+      // 2. Trading cards staggered entrance and photo slide shutter
+      cards.forEach((card, i) => {
+        const shutter = card.querySelector('.card-photo-shutter')
+        const photo = card.querySelector('.card-portrait-img')
+        const direction = card.getAttribute('data-slide-direction') || 'top'
+
+        // Card container entrance
+        gsap.fromTo(
+          card,
+          {
+            y: 70,
+            opacity: 0,
+            scale: 0.94,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.85,
+            delay: i * 0.15,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: tradingCardsContainerRef.current,
+              start: 'top 82%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        )
+
+        // Photo shutter slide open: revealing photo from top or bottom
+        if (shutter) {
+          const targetYPercent = direction === 'bottom' ? 102 : -102
+          gsap.fromTo(
+            shutter,
+            { yPercent: 0 },
+            {
+              yPercent: targetYPercent,
+              duration: 1.1,
+              delay: 0.18 + i * 0.15,
+              ease: 'power3.inOut',
+              scrollTrigger: {
+                trigger: tradingCardsContainerRef.current,
+                start: 'top 82%',
+                toggleActions: 'play none none reverse',
+              },
+            }
+          )
+        }
+
+        // Photo smooth settle
+        if (photo) {
+          gsap.fromTo(
+            photo,
+            { scale: 1.22 },
+            {
+              scale: 1,
+              duration: 1.25,
+              delay: 0.18 + i * 0.15,
+              ease: 'power2.out',
+              scrollTrigger: {
+                trigger: tradingCardsContainerRef.current,
+                start: 'top 82%',
+                toggleActions: 'play none none reverse',
+              },
+            }
+          )
+        }
+      })
+    }, highlightSectionRef)
+
+    return () => ctx.revert()
+  }, [])
 
   // Keyboard navigation for escape key to close modal
   useEffect(() => {
@@ -46,22 +283,57 @@ export default function SalesList() {
   const openWhatsApp = (consultant) => {
     const text = encodeURIComponent(
       consultant.whatsappMessage ||
-      `Halo Bpk/Ibu ${consultant.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Mitsubishi Sun Margahayu.`
+        `Halo Bpk/Ibu ${consultant.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Mitsubishi Sun Margahayu.`
     )
-    window.open(`https://wa.me/${consultant.whatsappNumber}?text=${text}`, '_blank', 'noopener,noreferrer')
+    window.open(
+      `https://wa.me/${consultant.whatsappNumber}?text=${text}`,
+      '_blank',
+      'noopener,noreferrer'
+    )
   }
 
-  // Filtered Next Ranked Sales (Rank 04 to 08)
+  // Filtered Next Ranked Sales (Rank 04 ke atas)
   const filteredRankedSales = useMemo(() => {
-    let list = NEXT_RANKED_SALES
+    let list = nextRankedSales
 
     if (selectedCategory !== 'all') {
       list = list.filter((item) => {
-        const spec = (item.specialization + ' ' + item.title).toLowerCase()
-        if (selectedCategory === 'fleet') return spec.includes('fleet') || spec.includes('niaga') || spec.includes('l300') || spec.includes('triton')
-        if (selectedCategory === 'ev') return spec.includes('ev') || spec.includes('listrik') || spec.includes('pengisian')
-        if (selectedCategory === 'crossover') return spec.includes('crossover') || spec.includes('mpv') || spec.includes('first-time')
-        if (selectedCategory === 'finance') return spec.includes('bunga') || spec.includes('pembiayaan') || spec.includes('tukar') || spec.includes('trade-in')
+        const spec = (
+          (item.specialization || '') +
+          ' ' +
+          (item.title || '')
+        ).toLowerCase()
+        if (selectedCategory === 'fleet')
+          return (
+            spec.includes('fleet') ||
+            spec.includes('niaga') ||
+            spec.includes('l300') ||
+            spec.includes('triton') ||
+            spec.includes('armada') ||
+            spec.includes('koperasi')
+          )
+        if (selectedCategory === 'ev')
+          return (
+            spec.includes('ev') ||
+            spec.includes('listrik') ||
+            spec.includes('pengisian')
+          )
+        if (selectedCategory === 'crossover')
+          return (
+            spec.includes('crossover') ||
+            spec.includes('mpv') ||
+            spec.includes('first-time') ||
+            spec.includes('suv')
+          )
+        if (selectedCategory === 'finance')
+          return (
+            spec.includes('bunga') ||
+            spec.includes('pembiayaan') ||
+            spec.includes('tukar') ||
+            spec.includes('trade-in') ||
+            spec.includes('cicilan') ||
+            spec.includes('promo')
+          )
         return true
       })
     }
@@ -78,15 +350,18 @@ export default function SalesList() {
     }
 
     return list
-  }, [selectedCategory, searchQuery])
+  }, [nextRankedSales, selectedCategory, searchQuery])
 
   return (
     <div className="sales-page">
-
       {/* ====================================================================
           SECTION 1: TOP 3 HIGHLIGHT (PERSIS SEPERTI SalesOfTheMonthSection.jsx)
           ==================================================================== */}
-      <section className="sales-highlight-wrapper" aria-labelledby="highlight-title">
+      <section
+        ref={highlightSectionRef}
+        className="sales-highlight-wrapper"
+        aria-labelledby="highlight-title"
+      >
         {/* Background Video */}
         <div className="sales-video-wrapper">
           <video
@@ -113,20 +388,28 @@ export default function SalesList() {
                 Sales Satisfaction of the Month
               </h2>
               <p className="hall-subtitle">
-                Top 3 Sales berperingkat tertinggi dengan dedikasi prima, skor kepuasan Net Promoter Score (NPS) tertinggi, dan respon konsultasi terbaik.
+                Top 3 Sales berperingkat tertinggi dengan dedikasi prima, skor
+                kepuasan Net Promoter Score (NPS) tertinggi, dan respon konsultasi
+                terbaik.
               </p>
             </div>
           </div>
 
-          {/* 3 TRADING CARDS GRID (SAMA PERSIS DENGAN SalesOfTheMonthSection.jsx) */}
-          <div className="trading-cards-grid">
-            {TOP_SALES_TRADING_CARDS.map((consultant) => {
+          {/* 3 TRADING CARDS GRID (DENGAN ANIMASI SHUTTER DAN HOVER POPUP) */}
+          <div ref={tradingCardsContainerRef} className="trading-cards-grid">
+            {topSalesCards.map((consultant) => {
               const isInverted = consultant.isInverted
 
               return (
                 <article
-                  key={consultant.id}
-                  className={`trading-card-item ${consultant.themeStyle} ${isInverted ? 'is-inverted' : ''}`}
+                  key={consultant.rank || consultant.id}
+                  className={`trading-card-item ${consultant.themeStyle} ${
+                    isInverted ? 'is-inverted' : ''
+                  }`}
+                  data-slide-direction={consultant.slideDirection}
+                  onMouseEnter={(e) => handleCardMouseEnter(consultant, e)}
+                  onMouseMove={handleCardMouseMove}
+                  onMouseLeave={handleCardMouseLeave}
                   onClick={() => setSelectedConsultantModal(consultant)}
                   tabIndex={0}
                   onKeyDown={(e) => {
@@ -143,24 +426,41 @@ export default function SalesList() {
                       <div className="card-content-block">
                         <div className="card-top-nav-row">
                           {/* Circular Emblem with Rank Number */}
-                          <div className="circle-rank-emblem" aria-label={`Peringkat ${consultant.rank}`}>
-                            <span className="emblem-number">{consultant.rank}</span>
+                          <div
+                            className="circle-rank-emblem"
+                            aria-label={`Peringkat ${consultant.rank}`}
+                          >
+                            <span className="emblem-number">
+                              {consultant.rank}
+                            </span>
                           </div>
 
                           {/* Tenure & NPS Badge */}
                           <div className="card-meta-badge">
-                            <span className="badge-since">Since {consultant.joinedYear}</span>
-                            <span className="badge-nps">{consultant.npsScore} NPS</span>
+                            <span className="badge-since">
+                              Since {consultant.joinedYear}
+                            </span>
+                            <span className="badge-nps">
+                              {consultant.npsScore === '-'
+                                ? '-'
+                                : `${consultant.npsScore} NPS`}
+                            </span>
                           </div>
                         </div>
 
                         <div className="card-identity-group">
-                          <h3 className="card-consultant-name">{consultant.name}</h3>
+                          <h3 className="card-consultant-name">
+                            {consultant.name}
+                          </h3>
                         </div>
                       </div>
 
-                      {/* Bottom Photo Block with Bottom-Right Floating CTA */}
+                      {/* Bottom Photo Block with Slide Shutter & Bottom-Right Floating CTA */}
                       <div className="card-photo-block">
+                        <div
+                          className={`card-photo-shutter shutter-${consultant.slideDirection}`}
+                        />
+
                         <div className="card-photo-floating-actions pos-bottom-right">
                           <button
                             type="button"
@@ -193,14 +493,21 @@ export default function SalesList() {
                           alt={`Foto ${consultant.name}`}
                           className="card-portrait-img"
                           loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_SALES_PHOTO
+                          }}
                         />
                       </div>
                     </div>
                   ) : (
                     /* STANDARD CARD (RANKS 1 & 3: PHOTO ON TOP, TEXT ON BOTTOM) */
                     <div className="card-inner-wrapper">
-                      {/* Top Photo Block with Top-Right Floating CTA */}
+                      {/* Top Photo Block with Slide Shutter & Top-Right Floating CTA */}
                       <div className="card-photo-block">
+                        <div
+                          className={`card-photo-shutter shutter-${consultant.slideDirection}`}
+                        />
+
                         <div className="card-photo-floating-actions pos-top-right">
                           <button
                             type="button"
@@ -233,25 +540,41 @@ export default function SalesList() {
                           alt={`Foto ${consultant.name}`}
                           className="card-portrait-img"
                           loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_SALES_PHOTO
+                          }}
                         />
                       </div>
 
                       {/* Bottom Content Block */}
                       <div className="card-content-block">
                         <div className="card-identity-group">
-                          <h3 className="card-consultant-name">{consultant.name}</h3>
+                          <h3 className="card-consultant-name">
+                            {consultant.name}
+                          </h3>
                         </div>
 
                         <div className="card-bottom-nav-row">
                           {/* Circular Emblem with Rank Number */}
-                          <div className="circle-rank-emblem" aria-label={`Peringkat ${consultant.rank}`}>
-                            <span className="emblem-number">{consultant.rank}</span>
+                          <div
+                            className="circle-rank-emblem"
+                            aria-label={`Peringkat ${consultant.rank}`}
+                          >
+                            <span className="emblem-number">
+                              {consultant.rank}
+                            </span>
                           </div>
 
                           {/* Tenure & NPS Badge */}
                           <div className="card-meta-badge">
-                            <span className="badge-since">Since {consultant.joinedYear}</span>
-                            <span className="badge-nps">{consultant.npsScore} NPS</span>
+                            <span className="badge-since">
+                              Since {consultant.joinedYear}
+                            </span>
+                            <span className="badge-nps">
+                              {consultant.npsScore === '-'
+                                ? '-'
+                                : `${consultant.npsScore} NPS`}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -261,13 +584,103 @@ export default function SalesList() {
               )
             })}
           </div>
+
+          {/* FLOATING CURSOR POP CARD (POPOVER DATA LAINNYA) */}
+          <div
+            ref={cursorPopRef}
+            className="sales-cursor-pop"
+            aria-hidden="true"
+          >
+            {hoveredConsultant && (
+              <div className="cursor-pop-content">
+                {/* Top Meta Bar: Rank & NIK */}
+                <div className="pop-header-row">
+                  <span
+                    className={`pop-rank-badge rank-${hoveredConsultant.rankNumber}`}
+                  >
+                    <RiAwardLine size={13} />
+                    TOP #{hoveredConsultant.rank}
+                  </span>
+                  <span className="pop-nik-badge">
+                    <HiOutlineCheckBadge size={13} className="text-emerald" />
+                    {hoveredConsultant.nik}
+                  </span>
+                </div>
+
+                {/* Name & Title */}
+                <div className="pop-identity-block">
+                  <h4 className="pop-consultant-name">
+                    {hoveredConsultant.name}
+                  </h4>
+                  <p className="pop-consultant-role">
+                    {hoveredConsultant.title}
+                  </p>
+                </div>
+
+                <div className="pop-divider" />
+
+                {/* Detail Rows: Specialization & Tenure */}
+                <div className="pop-details-list">
+                  <div className="pop-detail-item">
+                    <HiOutlineSparkles size={14} className="pop-icon text-gold" />
+                    <div className="pop-detail-text">
+                      <span className="pop-detail-label">Spesialisasi</span>
+                      <span className="pop-detail-val">
+                        {hoveredConsultant.specialization}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pop-detail-item">
+                    <HiOutlineCheckBadge
+                      size={14}
+                      className="pop-icon text-emerald"
+                    />
+                    <div className="pop-detail-text">
+                      <span className="pop-detail-label">Pengalaman Kerja</span>
+                      <span className="pop-detail-val">
+                        {hoveredConsultant.tenure} ({hoveredConsultant.joinedSince})
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dual Metric Box Row: CSI Score & PKT Time Rate */}
+                <div className="pop-metrics-row">
+                  <div className="pop-metric-box">
+                    <span className="pop-metric-caption">Indeks CSI</span>
+                    <span className="pop-metric-value">
+                      {hoveredConsultant.csiScore || '-'}
+                    </span>
+                    <span className="pop-metric-sub">Kepuasan Pelanggan</span>
+                  </div>
+                  <div className="pop-metric-box">
+                    <span className="pop-metric-caption">PKT Time Rate</span>
+                    <span className="pop-metric-value text-emerald">
+                      {hoveredConsultant.pktTimeRate || '-'}
+                    </span>
+                    <span className="pop-metric-sub">Rata-rata SPK ke PKT</span>
+                  </div>
+                </div>
+
+                {/* Bottom Quick Hint */}
+                <div className="pop-bottom-hint">
+                  <HiOutlineInformationCircle size={13} />
+                  <span>Klik kartu untuk profil & sertifikasi lengkap</span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
       {/* ====================================================================
           SECTION 2: CARD LIST KECIL SALES SELANJUTNYA (MENANDAKAN PERINGKAT)
           ==================================================================== */}
-      <section className="sales-ranked-wrapper" aria-labelledby="ranked-list-title">
+      <section
+        className="sales-ranked-wrapper"
+        aria-labelledby="ranked-list-title"
+      >
         <div className="sales-section-container">
           <div className="hall-header-row">
             <div className="hall-header-copy">
@@ -276,7 +689,9 @@ export default function SalesList() {
                 <span>Peringkat Kepuasan Selanjutnya</span>
               </div>
               <p className="hall-subtitle">
-                Konsultan resmi terverifikasi dengan nomor urut peringkat prestasi, spesialisasi unit kendaraan, dan kepatuhan transaksi dealer resmi.
+                Konsultan resmi terverifikasi dengan nomor urut peringkat
+                prestasi, spesialisasi unit kendaraan, dan kepatuhan transaksi
+                dealer resmi.
               </p>
             </div>
           </div>
@@ -286,35 +701,45 @@ export default function SalesList() {
             <div className="ranked-category-chips">
               <button
                 type="button"
-                className={`ranked-chip-btn ${selectedCategory === 'all' ? 'active' : ''}`}
+                className={`ranked-chip-btn ${
+                  selectedCategory === 'all' ? 'active' : ''
+                }`}
                 onClick={() => setSelectedCategory('all')}
               >
-                Semua ({NEXT_RANKED_SALES.length})
+                Semua ({nextRankedSales.length})
               </button>
               <button
                 type="button"
-                className={`ranked-chip-btn ${selectedCategory === 'fleet' ? 'active' : ''}`}
+                className={`ranked-chip-btn ${
+                  selectedCategory === 'fleet' ? 'active' : ''
+                }`}
                 onClick={() => setSelectedCategory('fleet')}
               >
                 Fleet & Komersial
               </button>
               <button
                 type="button"
-                className={`ranked-chip-btn ${selectedCategory === 'ev' ? 'active' : ''}`}
+                className={`ranked-chip-btn ${
+                  selectedCategory === 'ev' ? 'active' : ''
+                }`}
                 onClick={() => setSelectedCategory('ev')}
               >
                 EV & Ramah Lingkungan
               </button>
               <button
                 type="button"
-                className={`ranked-chip-btn ${selectedCategory === 'crossover' ? 'active' : ''}`}
+                className={`ranked-chip-btn ${
+                  selectedCategory === 'crossover' ? 'active' : ''
+                }`}
                 onClick={() => setSelectedCategory('crossover')}
               >
                 Crossover & MPV
               </button>
               <button
                 type="button"
-                className={`ranked-chip-btn ${selectedCategory === 'finance' ? 'active' : ''}`}
+                className={`ranked-chip-btn ${
+                  selectedCategory === 'finance' ? 'active' : ''
+                }`}
                 onClick={() => setSelectedCategory('finance')}
               >
                 Pembiayaan & Trade-In
@@ -322,7 +747,10 @@ export default function SalesList() {
             </div>
 
             <div className="ranked-search-wrapper">
-              <HiOutlineMagnifyingGlass className="ranked-search-icon" size={18} />
+              <HiOutlineMagnifyingGlass
+                className="ranked-search-icon"
+                size={18}
+              />
               <input
                 type="text"
                 placeholder="Cari nama, NIK, spesialisasi..."
@@ -346,7 +774,9 @@ export default function SalesList() {
           {/* Small Ranked Cards Grid ("Card List Kecil Menandakan Peringkat") */}
           {filteredRankedSales.length === 0 ? (
             <div className="ranked-empty-box">
-              <p className="ranked-empty-title">Tidak ada wiraniaga yang sesuai dengan pencarian "{searchQuery}"</p>
+              <p className="ranked-empty-title">
+                Tidak ada wiraniaga yang sesuai dengan pencarian "{searchQuery}"
+              </p>
               <button
                 type="button"
                 className="ranked-empty-reset"
@@ -375,7 +805,10 @@ export default function SalesList() {
                   {/* Card Header: Rank Badge + Avatar + Basic Details */}
                   <div className="ranked-card-header">
                     {/* Big Prominent Rank Badge */}
-                    <div className="ranked-num-pill" title={`Peringkat #${sales.rank}`}>
+                    <div
+                      className="ranked-num-pill"
+                      title={`Peringkat #${sales.rank}`}
+                    >
                       <span className="ranked-num-val">{sales.rank}</span>
                     </div>
 
@@ -386,6 +819,9 @@ export default function SalesList() {
                           src={sales.photoUrl}
                           alt={sales.name}
                           className="ranked-avatar-img"
+                          onError={(e) => {
+                            e.currentTarget.src = DEFAULT_SALES_PHOTO
+                          }}
                         />
                       ) : (
                         <span>{sales.initials || 'SL'}</span>
@@ -410,12 +846,19 @@ export default function SalesList() {
                     <div className="ranked-spec-box">
                       <div className="spec-label-row">
                         <span className="spec-dot" />
-                        <strong className="spec-title">Fokus & Spesialisasi:</strong>
+                        <strong className="spec-title">
+                          Fokus & Spesialisasi:
+                        </strong>
                       </div>
                       <p className="spec-focus-desc">{sales.specialization}</p>
                       <p className="spec-branch-meta">
-                        <HiOutlineCheckBadge size={13} className="text-emerald" />
-                        <span>Pengalaman {sales.tenure} • {sales.joinedSince}</span>
+                        <HiOutlineCheckBadge
+                          size={13}
+                          className="text-emerald"
+                        />
+                        <span>
+                          Pengalaman {sales.tenure} • {sales.joinedSince}
+                        </span>
                       </p>
                     </div>
 
@@ -423,16 +866,20 @@ export default function SalesList() {
                     <div className="ranked-scores-grid">
                       <div className="score-pill score-nps-highlight">
                         <span className="score-lbl">Skor NPS</span>
-                        <strong className="score-val">{sales.npsScore}</strong>
+                        <strong className="score-val">
+                          {sales.npsScore || '-'}
+                        </strong>
                       </div>
                       <div className="score-pill">
                         <span className="score-lbl">Audit CSI</span>
-                        <strong className="score-val">{sales.csiScore.split('/')[0].trim()}</strong>
+                        <strong className="score-val">
+                          {(sales.csiScore || '-').split('/')[0].trim()}
+                        </strong>
                       </div>
                       <div className="score-pill">
                         <span className="score-lbl">PKT Time Rate</span>
                         <strong className="score-val score-val-pkt">
-                          {sales.pktTimeRate || '3 Hari'}
+                          {sales.pktTimeRate || '-'}
                         </strong>
                       </div>
                     </div>
@@ -511,6 +958,9 @@ export default function SalesList() {
                       src={selectedConsultantModal.photoUrl}
                       alt={selectedConsultantModal.name}
                       className="modal-consultant-avatar"
+                      onError={(e) => {
+                        e.currentTarget.src = DEFAULT_SALES_PHOTO
+                      }}
                     />
                   ) : (
                     <div className="modal-consultant-initials">
@@ -520,14 +970,21 @@ export default function SalesList() {
 
                   <div className="modal-consultant-primary">
                     <div className="modal-badge-status">
-                      <HiOutlineCheckBadge size={16} className="text-emerald" />
+                      <HiOutlineCheckBadge
+                        size={16}
+                        className="text-emerald"
+                      />
                       <span>Aktif Terverifikasi Dealer Resmi</span>
                     </div>
-                    <h3 id="modal-consultant-name" className="modal-consultant-title">
+                    <h3
+                      id="modal-consultant-name"
+                      className="modal-consultant-title"
+                    >
                       {selectedConsultantModal.name}
                     </h3>
                     <p className="modal-consultant-nik">
-                      NIK: <strong>{selectedConsultantModal.nik}</strong> • {selectedConsultantModal.joinedSince}
+                      NIK: <strong>{selectedConsultantModal.nik}</strong> •{' '}
+                      {selectedConsultantModal.joinedSince}
                     </p>
                     <p className="modal-consultant-role">
                       {selectedConsultantModal.title}
@@ -539,32 +996,54 @@ export default function SalesList() {
                 <div className="modal-metrics-grid">
                   <div className="modal-metric-card">
                     <span className="modal-metric-label">Skor NPS</span>
-                    <span className="modal-metric-number">{selectedConsultantModal.npsScore}</span>
-                    <span className="modal-metric-sub">Net Promoter Score</span>
+                    <span className="modal-metric-number">
+                      {selectedConsultantModal.npsScore || '-'}
+                    </span>
+                    <span className="modal-metric-sub">
+                      Net Promoter Score
+                    </span>
                   </div>
                   <div className="modal-metric-card">
                     <span className="modal-metric-label">Indeks CSI</span>
-                    <span className="modal-metric-number">{selectedConsultantModal.csiScore || '98.0 / 100'}</span>
+                    <span className="modal-metric-number">
+                      {selectedConsultantModal.csiScore || '-'}
+                    </span>
                     <span className="modal-metric-sub">Customer Service</span>
                   </div>
                   <div className="modal-metric-card">
                     <span className="modal-metric-label">PKT Time Rate</span>
-                    <span className="modal-metric-number text-emerald">{selectedConsultantModal.pktTimeRate || '3 Hari'}</span>
-                    <span className="modal-metric-sub">Rata-rata SPK ke PKT</span>
+                    <span className="modal-metric-number text-emerald">
+                      {selectedConsultantModal.pktTimeRate || '-'}
+                    </span>
+                    <span className="modal-metric-sub">
+                      Rata-rata SPK ke PKT
+                    </span>
                   </div>
                 </div>
 
                 {/* Area of Focus */}
                 <div className="modal-detail-section">
-                  <h5 className="modal-section-title">Bidang Spesialisasi & Unit:</h5>
-                  <p className="modal-section-text">{selectedConsultantModal.specialization}</p>
+                  <h5 className="modal-section-title">
+                    Bidang Spesialisasi & Unit:
+                  </h5>
+                  <p className="modal-section-text">
+                    {selectedConsultantModal.specialization}
+                  </p>
                 </div>
 
                 {/* Safety Transfer Reminder */}
                 <div className="modal-safety-alert">
-                  <HiOutlineInformationCircle size={18} className="text-accent-red flex-shrink-0" />
+                  <HiOutlineInformationCircle
+                    size={18}
+                    className="text-accent-red flex-shrink-0"
+                  />
                   <span>
-                    Seluruh pembayaran uang muka (DP) dan pelunasan hanya ditransfer ke rekening bank resmi <strong>PT Sun Star Prima Motor (BCA: 3425419999)</strong>, bukan rekening pribadi.
+                    Seluruh pembayaran uang muka (DP) dan pelunasan hanya
+                    ditransfer ke rekening bank resmi{' '}
+                    <strong>
+                      PT Sun Star Prima Motor (BCA: 3425419999)
+                    </strong>
+                    , bukan rekening pribadi.
                   </span>
                 </div>
 

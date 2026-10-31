@@ -1,0 +1,1291 @@
+/* ==========================================================================
+   PORTAL EXTENDED SMART PACKAGE STYLES (PUBLIC KNOWLEDGE)
+   Clean, Minimalist, Full-Width Architecture
+   ========================================================================== */
+
+.portal-ext-page {
+  width: 100%;
+  max-width: 100%;
+  padding-bottom: 3.5rem;
+  box-sizing: border-box;
+  font-family: inherit;
+  color: #0f172a;
+}
+
+/* Loading State */
+.ext-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  gap: 1rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.spin-slow {
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.text-red {
+  color: #E3000C;
+}
+
+/* ==========================================================================
+   HEADER ROW & ACTION BUTTONS (FULL WIDTH)
+   ========================================================================== */
+.ext-header-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+  width: 100%;
+}
+
+.ext-title-group {
+  width: 100%;
+  max-width: 100%;
+}
+
+.ext-title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0.75rem;
+  background: #fef2f2;
+  color: #E3000C;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  border: 1px solid rgba(227, 0, 12, 0.15);
+}
+
+.ext-title-group h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.25;
+}
+
+.ext-title-group p {
+  font-size: 0.88rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.55;
+  width: 100%;
+  max-width: 100%;
+}
+
+.ext-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.ext-btn-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1rem;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.ext-btn-preview:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.ext-btn-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.65rem 1rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.ext-btn-reset:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.ext-btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.4rem;
+  background: #E3000C;
+  color: #ffffff;
+  border: 1px solid #E3000C;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(227, 0, 12, 0.25);
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+
+.ext-btn-save:hover:not(:disabled) {
+  background: #c8000a;
+  border-color: #c8000a;
+  box-shadow: 0 6px 18px rgba(227, 0, 12, 0.35);
+  transform: translateY(-1px);
+}
+
+.ext-btn-save:disabled,
+.ext-btn-reset:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   ALERTS & FEEDBACK BANNERS
+   ========================================================================== */
+.ext-unsaved-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  border-left: 4px solid #f59e0b;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.ext-unsaved-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 280px;
+}
+
+.ext-unsaved-icon {
+  color: #f59e0b;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ext-unsaved-content strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #92400e;
+  margin-bottom: 0.2rem;
+}
+
+.ext-unsaved-content p {
+  margin: 0;
+  font-size: 0.83rem;
+  color: #b45309;
+  line-height: 1.45;
+}
+
+.ext-btn-quick-save {
+  padding: 0.55rem 1.15rem;
+  background: #f59e0b;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.ext-btn-quick-save:hover:not(:disabled) {
+  background: #d97706;
+}
+
+.ext-feedback-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.ext-feedback-success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.ext-feedback-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.ext-feedback-icon {
+  flex-shrink: 0;
+}
+
+.ext-feedback-text {
+  flex: 1;
+}
+
+.ext-feedback-close {
+  background: none;
+  border: none;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+.ext-feedback-close:hover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   NAVIGATION TABS
+   ========================================================================== */
+.ext-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 1.75rem;
+  overflow-x: auto;
+}
+
+.ext-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.25rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.ext-tab-btn:hover {
+  color: #0f172a;
+}
+
+.ext-tab-btn.is-active {
+  color: #E3000C;
+  border-bottom-color: #E3000C;
+}
+
+.ext-tab-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  background: #f1f5f9;
+  color: #475569;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.ext-tab-btn.is-active .ext-tab-badge {
+  background: #fef2f2;
+  color: #E3000C;
+}
+
+/* ==========================================================================
+   CARDS & PANELS
+   ========================================================================== */
+.ext-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.04);
+  margin-bottom: 1.75rem;
+}
+
+.ext-meta-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.ext-card-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.25rem 0;
+}
+
+.ext-card-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.ext-date-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: #f8fafc;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.ext-date-input-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.ext-date-input {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  padding: 0.35rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: #0f172a;
+}
+
+/* Variant Chips */
+.ext-variant-section {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.ext-variant-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.ext-variant-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.ext-variant-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.ext-variant-chip.permanent {
+  background: #f8fafc;
+  color: #475569;
+}
+
+.ext-chip-remove {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s ease;
+}
+
+.ext-chip-remove:hover {
+  color: #E3000C;
+}
+
+.ext-btn-add-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: #ffffff;
+  border: 1px dashed #94a3b8;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ext-btn-add-chip:hover {
+  border-color: #E3000C;
+  color: #E3000C;
+  background: #fef2f2;
+}
+
+/* ==========================================================================
+   TIERS PRICING GRID
+   ========================================================================== */
+.ext-tiers-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.ext-section-heading {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.25rem 0;
+}
+
+.ext-section-sub {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.ext-vat-note {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #166534;
+  background: #f0fdf4;
+  padding: 0.25rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #bbf7d0;
+}
+
+.ext-tiers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .ext-tiers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .ext-tiers-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ext-tier-card {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.18s ease;
+}
+
+.ext-tier-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 24px -6px rgba(15, 23, 42, 0.08);
+}
+
+.ext-tier-card.is-recommended {
+  border-color: #E3000C;
+  background: linear-gradient(180deg, #ffffff 0%, #fffbfb 100%);
+  box-shadow: 0 8px 24px -6px rgba(227, 0, 12, 0.12);
+}
+
+.ext-tier-recommended-ribbon {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #E3000C;
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 2px 8px rgba(227, 0, 12, 0.3);
+}
+
+.ext-tier-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.ext-tier-code {
+  font-size: 1.35rem;
+  font-weight: 850;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.ext-tier-duration {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.ext-tier-main-price {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.85rem;
+  border: 1px solid #f1f5f9;
+}
+
+.ext-price-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.ext-price-val {
+  font-size: 1.25rem;
+  font-weight: 850;
+  color: #E3000C;
+  letter-spacing: -0.015em;
+}
+
+.ext-tier-exc-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-bottom: 1.25rem;
+  padding: 0 0.25rem;
+}
+
+.ext-tier-exc-price strong {
+  color: #334155;
+  font-weight: 700;
+}
+
+.ext-tier-actions {
+  margin-top: auto;
+}
+
+.ext-btn-edit-tier {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.65rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ext-btn-edit-tier:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* ==========================================================================
+   SIMULATOR PREVIEW BOX
+   ========================================================================== */
+.ext-simulator-card {
+  background: #fafafa;
+  border: 1px dashed #cbd5e1;
+}
+
+.ext-sim-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.ext-sim-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ext-sim-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.2rem 0;
+}
+
+.ext-sim-desc {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.ext-sim-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  background: #e2e8f0;
+  color: #475569;
+  border-radius: 999px;
+}
+
+.ext-sim-box {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 1.25rem;
+  border: 1px solid #e2e8f0;
+}
+
+.ext-sim-card-inner {
+  background: #ffffff;
+  border: 1.5px solid #E3000C;
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 16px -4px rgba(227, 0, 12, 0.1);
+}
+
+.ext-sim-pkg-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ext-sim-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #fef2f2;
+  color: #E3000C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ext-sim-title-line {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.ext-sim-title-line h5 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.ext-sim-save-tag {
+  background: #fef2f2;
+  color: #E3000C;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(227, 0, 12, 0.2);
+}
+
+.ext-sim-pkg-header p {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.ext-sim-info-strip {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #475569;
+  background: #f8fafc;
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.ext-sim-tiers-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .ext-sim-tiers-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.ext-sim-tier-pill {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0.85rem 0.65rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ext-sim-tier-pill.is-selected {
+  border-color: #E3000C;
+  background: #fef2f2;
+}
+
+.ext-sim-pill-rec {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #E3000C;
+  color: #ffffff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+}
+
+.ext-sim-pill-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.ext-sim-pill-price {
+  font-size: 0.82rem;
+  font-weight: 750;
+  color: #E3000C;
+}
+
+/* ==========================================================================
+   TAB 3: BENEFITS
+   ========================================================================== */
+.ext-cost-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  border-left: 4px solid #E3000C;
+}
+
+.ext-cost-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+}
+
+.ext-cost-icon-box {
+  width: 50px;
+  height: 50px;
+  background: #fef2f2;
+  color: #E3000C;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ext-cost-text {
+  flex: 1;
+}
+
+.ext-cost-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #0f172a;
+  margin-bottom: 0.45rem;
+  letter-spacing: 0.03em;
+}
+
+.ext-cost-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  box-sizing: border-box;
+  margin-bottom: 0.4rem;
+}
+
+.ext-cost-input:focus {
+  outline: none;
+  border-color: #E3000C;
+  box-shadow: 0 0 0 3px rgba(227, 0, 12, 0.1);
+}
+
+.ext-cost-help {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.ext-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+@media (max-width: 768px) {
+  .ext-benefits-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ext-benefit-col-card {
+  padding: 1.5rem;
+}
+
+.ext-benefit-col-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 1.25rem;
+}
+
+.ext-col-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.2rem 0;
+}
+
+.ext-col-desc {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.ext-btn-add-benefit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.ext-btn-add-benefit:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.ext-benefit-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ext-benefit-item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.85rem;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 10px;
+  transition: all 0.15s ease;
+}
+
+.ext-benefit-item-row:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+.ext-benefit-check-circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ext-benefit-check-circle.secondary {
+  background: #fef2f2;
+  color: #E3000C;
+}
+
+.ext-benefit-item-text {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.45;
+}
+
+.ext-btn-remove-benefit {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s ease;
+}
+
+.ext-btn-remove-benefit:hover {
+  background: #fee2e2;
+  color: #E3000C;
+}
+
+.ext-ai-info-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.ext-ai-info-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.ext-ai-info-header h4 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #166534;
+  margin: 0 0 0.35rem 0;
+}
+
+.ext-ai-info-header p {
+  font-size: 0.84rem;
+  color: #15803d;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.ext-ai-info-header code {
+  background: #dcfce7;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   MODALS
+   ========================================================================== */
+.ext-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.ext-modal-card {
+  background: #ffffff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 40px -8px rgba(15, 23, 42, 0.25);
+  overflow: hidden;
+  animation: modalEnter 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.ext-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.ext-modal-title {
+  font-size: 1.15rem;
+  font-weight: 850;
+  color: #0f172a;
+  margin: 0 0 0.2rem 0;
+}
+
+.ext-modal-sub {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.ext-modal-close {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 6px;
+}
+
+.ext-modal-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.ext-modal-form {
+  padding: 1.5rem;
+}
+
+.ext-form-group {
+  margin-bottom: 1.25rem;
+}
+
+.ext-form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 750;
+  color: #334155;
+  margin-bottom: 0.45rem;
+}
+
+.ext-form-label .req {
+  color: #E3000C;
+}
+
+.ext-input-price-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.ext-currency-prefix {
+  padding: 0.65rem 0.85rem;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-right: 1.5px solid #cbd5e1;
+}
+
+.ext-modal-input {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+  box-sizing: border-box;
+}
+
+.ext-modal-input:focus {
+  outline: none;
+}
+
+.ext-input-price-wrapper:focus-within {
+  border-color: #E3000C;
+  box-shadow: 0 0 0 3px rgba(227, 0, 12, 0.1);
+}
+
+.ext-input-preview-idr {
+  display: block;
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 0.35rem;
+}
+
+.ext-input-preview-idr strong {
+  color: #E3000C;
+}
+
+.ext-modal-textarea {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  color: #0f172a;
+  font-family: inherit;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.ext-modal-textarea:focus {
+  outline: none;
+  border-color: #E3000C;
+  box-shadow: 0 0 0 3px rgba(227, 0, 12, 0.1);
+}
+
+.ext-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.ext-btn-cancel {
+  padding: 0.65rem 1.15rem;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ext-btn-cancel:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.ext-btn-submit {
+  padding: 0.65rem 1.25rem;
+  background: #E3000C;
+  border: 1px solid #E3000C;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(227, 0, 12, 0.25);
+  transition: all 0.15s ease;
+}
+
+.ext-btn-submit:hover {
+  background: #c8000a;
+}
+
+/* Danger Reset Modal */
+.ext-modal-danger {
+  padding: 1.5rem;
+}
+
+.ext-danger-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ext-modal-warning-text {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.55;
+  margin: 1rem 0 1.5rem 0;
+}
+
+.ext-modal-warning-text code {
+  background: #f1f5f9;
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #0f172a;
+}
+
+.ext-btn-danger {
+  padding: 0.65rem 1.25rem;
+  background: #E3000C;
+  border: 1px solid #E3000C;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(227, 0, 12, 0.25);
+}
+
+.ext-btn-danger:hover {
+  background: #c8000a;
+}
+

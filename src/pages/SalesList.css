@@ -13,7 +13,7 @@
 
 /* Ensure trading card photos are immediately unobstructed and visible */
 .sales-page .card-photo-shutter {
-  display: none !important;
+  /* Diaktifkan dan dianimasikan oleh GSAP ScrollTrigger */
 }
 
 /* --------------------------------------------------------------------------

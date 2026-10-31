@@ -1,3 +1,86 @@
+import { calculateTenure, isIsoDate } from '../utils/tenureHelper.js'
+
+export const DEFAULT_SALES_PHOTO =
+  'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg'
+
+/**
+ * Transform data sales dari API MySQL (PortalSales) ke format komponen publik
+ * Skor NPS, Indeks CSI, PKT Time Rate dikosongkan dan bernilai '-'
+ */
+export function transformSalesFromApi(apiSalesList) {
+  if (!Array.isArray(apiSalesList)) return []
+
+  return apiSalesList.map((s, index) => {
+    const rankNum = index + 1
+    const rankStr = String(rankNum).padStart(2, '0')
+    const photo =
+      s.photo_url && typeof s.photo_url === 'string' && s.photo_url.trim()
+        ? s.photo_url.trim()
+        : DEFAULT_SALES_PHOTO
+
+    // Formatting masa kerja
+    const dynamicTenure = calculateTenure(s.tenure)
+    const joinedYear =
+      s.joined_year ||
+      (s.tenure && isIsoDate(s.tenure) ? s.tenure.split('-')[0] : '2024')
+    const joinedSince = `Bergabung sejak ${joinedYear}`
+
+    // Theme & direction styling untuk Top 3
+    let themeStyle = 'card-cream-hero'
+    let slideDirection = 'top'
+    let isInverted = false
+
+    if (index === 1) {
+      themeStyle = 'card-dark'
+      slideDirection = 'bottom'
+      isInverted = true
+    } else if (index === 2) {
+      themeStyle = 'card-accent-red'
+      slideDirection = 'top'
+      isInverted = false
+    }
+
+    const initials = s.name
+      ? s.name
+          .split(' ')
+          .filter(Boolean)
+          .map((w) => w[0])
+          .join('')
+          .slice(0, 2)
+          .toUpperCase()
+      : 'SL'
+
+    const cleanPhone = s.phone
+      ? s.phone.replace(/^0/, '62').replace(/[^0-9]/g, '')
+      : '6281288347777'
+
+    return {
+      id: s.id || `sales-${rankNum}`,
+      rank: rankStr,
+      rankNumber: rankNum,
+      isInverted,
+      slideDirection,
+      name: s.name || 'Sales Consultant',
+      title: s.position || 'Sales Consultant',
+      tenure: dynamicTenure,
+      joinedYear,
+      npsScore: '-',
+      nik: s.nik || 'SNY-SLS-XXXX',
+      joinedSince,
+      specialization: s.specialization || 'Konsultasi Kendaraan Resmi Mitsubishi',
+      photoUrl: photo,
+      csiScore: '-',
+      pktTimeRate: '-',
+      themeStyle,
+      whatsappNumber: cleanPhone,
+      whatsappMessage: `Halo Bpk/Ibu ${s.name}, saya ingin konsultasi mengenai unit kendaraan resmi di Mitsubishi Sun Margahayu.`,
+      initials,
+      supervisor: s.supervisor || null,
+      raw: s,
+    }
+  })
+}
+
 export const TOP_SALES_TRADING_CARDS = [
   {
     id: 'champion',
@@ -9,17 +92,17 @@ export const TOP_SALES_TRADING_CARDS = [
     title: 'Senior Sales Executive',
     tenure: '6 Tahun',
     joinedYear: '2020',
-    npsScore: '+96',
+    npsScore: '-',
     nik: 'SNY-SLS-0412',
     joinedSince: 'Bergabung sejak 2020',
     specialization: 'SUV & Varian Hybrid',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
-    csiScore: '99.4 / 100',
-    pktTimeRate: '2 Hari',
+    photoUrl: DEFAULT_SALES_PHOTO,
+    csiScore: '-',
+    pktTimeRate: '-',
     themeStyle: 'card-cream-hero',
     whatsappNumber: '6281289001234',
     whatsappMessage:
-      'Halo Bpk Rian Ardiansyah, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Mitsubishi Sun Margahayu.',
+      'Halo Bpk/Ibu Agnes, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Mitsubishi Sun Margahayu.',
   },
   {
     id: 'rank-2',
@@ -31,17 +114,17 @@ export const TOP_SALES_TRADING_CARDS = [
     title: 'Sales Specialist',
     tenure: '4 Tahun',
     joinedYear: '2022',
-    npsScore: '+92',
+    npsScore: '-',
     nik: 'SNY-SLS-0588',
     joinedSince: 'Bergabung sejak 2022',
     specialization: 'Family MPV & Crossover',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
-    csiScore: '98.8 / 100',
-    pktTimeRate: '3 Hari',
+    photoUrl: DEFAULT_SALES_PHOTO,
+    csiScore: '-',
+    pktTimeRate: '-',
     themeStyle: 'card-dark',
     whatsappNumber: '6281377889900',
     whatsappMessage:
-      'Halo Ibu Dewi Sartika, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Mitsubishi Sun Margahayu.',
+      'Halo Bpk/Ibu Amin, saya ingin konsultasi kendaraan resmi melalui rekomendasi Sales Satisfaction Mitsubishi Sun Margahayu.',
   },
   {
     id: 'rank-3',
@@ -53,13 +136,13 @@ export const TOP_SALES_TRADING_CARDS = [
     title: 'Junior Sales Advisor',
     tenure: '2.5 Tahun',
     joinedYear: '2023',
-    npsScore: '+89',
+    npsScore: '-',
     nik: 'SNY-SLS-0721',
     joinedSince: 'Bergabung sejak 2023',
     specialization: 'Uji Jalan & Pembiayaan Syariah',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
-    csiScore: '98.2 / 100',
-    pktTimeRate: '3 Hari',
+    photoUrl: DEFAULT_SALES_PHOTO,
+    csiScore: '-',
+    pktTimeRate: '-',
     themeStyle: 'card-accent-red',
     whatsappNumber: '6281544332211',
     whatsappMessage:
@@ -79,11 +162,11 @@ export const NEXT_RANKED_SALES = [
     joinedYear: '2019',
     tenure: '7 Tahun',
     specialization: 'Fleet Niaga & Komersial (L300 & Triton)',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
+    photoUrl: DEFAULT_SALES_PHOTO,
     initials: 'SR',
-    npsScore: '+88',
-    csiScore: '97.9 / 100',
-    pktTimeRate: '3 Hari',
+    npsScore: '-',
+    csiScore: '-',
+    pktTimeRate: '-',
     whatsappNumber: '6281122334455',
     whatsappMessage:
       'Halo Ibu Siti Rahmawati, saya ingin konsultasi pengadaan unit fleet dari Mitsubishi Sun Margahayu.',
@@ -99,11 +182,11 @@ export const NEXT_RANKED_SALES = [
     joinedYear: '2023',
     tenure: '3 Tahun',
     specialization: 'Mobil Listrik & Ekosistem Pengisian Daya',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
+    photoUrl: DEFAULT_SALES_PHOTO,
     initials: 'DN',
-    npsScore: '+87',
-    csiScore: '97.6 / 100',
-    pktTimeRate: '4 Hari',
+    npsScore: '-',
+    csiScore: '-',
+    pktTimeRate: '-',
     whatsappNumber: '6281233445566',
     whatsappMessage:
       'Halo Bpk Dimas Nugroho, saya ingin konsultasi unit kendaraan listrik dari Mitsubishi Sun Margahayu.',
@@ -119,11 +202,11 @@ export const NEXT_RANKED_SALES = [
     joinedYear: '2024',
     tenure: '2 Tahun',
     specialization: 'Compact Crossover & First-Time Buyers',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
+    photoUrl: DEFAULT_SALES_PHOTO,
     initials: 'AP',
-    npsScore: '+86',
-    csiScore: '97.4 / 100',
-    pktTimeRate: '4 Hari',
+    npsScore: '-',
+    csiScore: '-',
+    pktTimeRate: '-',
     whatsappNumber: '6281355667788',
     whatsappMessage:
       'Halo Ibu Anisa Permata, saya ingin konsultasi mobil pertama melalui Mitsubishi Sun Margahayu.',
@@ -139,11 +222,11 @@ export const NEXT_RANKED_SALES = [
     joinedYear: '2021',
     tenure: '5 Tahun',
     specialization: 'Simulasi Bunga Rendah & Tenor Fleksibel',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
+    photoUrl: DEFAULT_SALES_PHOTO,
     initials: 'FM',
-    npsScore: '+86',
-    csiScore: '97.2 / 100',
-    pktTimeRate: '4 Hari',
+    npsScore: '-',
+    csiScore: '-',
+    pktTimeRate: '-',
     whatsappNumber: '6281466778899',
     whatsappMessage:
       'Halo Bpk Fajar Maulana, saya ingin konsultasi pembiayaan kendaraan Mitsubishi Sun Margahayu.',
@@ -159,11 +242,11 @@ export const NEXT_RANKED_SALES = [
     joinedYear: '2022',
     tenure: '4 Tahun',
     specialization: 'Tukar Tambah Semua Merk (Fair Price)',
-    photoUrl: 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg',
+    photoUrl: DEFAULT_SALES_PHOTO,
     initials: 'HW',
-    npsScore: '+85',
-    csiScore: '97.0 / 100',
-    pktTimeRate: '5 Hari',
+    npsScore: '-',
+    csiScore: '-',
+    pktTimeRate: '-',
     whatsappNumber: '6281577889900',
     whatsappMessage:
       'Halo Bpk Hendra Wijaya, saya ingin konsultasi tukar tambah kendaraan di Mitsubishi Sun Margahayu.',

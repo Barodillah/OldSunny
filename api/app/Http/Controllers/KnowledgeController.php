@@ -19,6 +19,12 @@ class KnowledgeController extends Controller
         if ($k === 'spare_part' || $k === 'spareparts' || $k === 'spare_parts') {
             return 'sparepart';
         }
+        if ($k === 'extended_package' || $k === 'extended_smart_package' || $k === 'extended_smart' || $k === 'smart_package') {
+            return 'extended_smart';
+        }
+        if ($k === 'service_data' || $k === 'service' || $k === 'perawatan' || $k === 'perawatan_berkala' || $k === 'mitsubishi_perawatan_berkala') {
+            return 'service_data';
+        }
         return $k;
     }
 
@@ -36,6 +42,17 @@ class KnowledgeController extends Controller
         if ($normalizedKey === 'sparepart') {
             $keysToSearch[] = 'spare_part';
             $keysToSearch[] = 'spareparts';
+        }
+        if ($normalizedKey === 'extended_smart') {
+            $keysToSearch[] = 'extended_package';
+            $keysToSearch[] = 'extended_smart_package';
+            $keysToSearch[] = 'smart_package';
+        }
+        if ($normalizedKey === 'service_data') {
+            $keysToSearch[] = 'perawatan';
+            $keysToSearch[] = 'perawatan_berkala';
+            $keysToSearch[] = 'service';
+            $keysToSearch[] = 'mitsubishi_perawatan_berkala';
         }
 
         $item = KnowledgeItem::whereIn('key', $keysToSearch)->first();
@@ -300,6 +317,77 @@ class KnowledgeController extends Controller
             }
         }
 
+        if ($key === 'service_data' || $key === 'perawatan' || $key === 'perawatan_berkala') {
+            $paths = [
+                base_path('../knowledge/mitsubishi_perawatan_berkala.json'),
+                base_path('../mitsubishi_perawatan_berkala.json'),
+            ];
+
+            $content = null;
+            foreach ($paths as $p) {
+                if (file_exists($p)) {
+                    $content = file_get_contents($p);
+                    break;
+                }
+            }
+
+            if ($content) {
+                $payload = json_decode($content, true);
+                if ($payload) {
+                    $modelsCount = count($payload['kendaraan'] ?? []);
+                    return KnowledgeItem::create([
+                        'key' => 'service_data',
+                        'title' => 'Master Data Estimasi & Jadwal Perawatan Berkala Mitsubishi',
+                        'category' => 'aftersales_service',
+                        'payload' => $payload,
+                        'metadata' => [
+                            'brand' => 'Mitsubishi Motors',
+                            'total_models' => $modelsCount,
+                            'last_sync' => now()->toISOString()
+                        ],
+                        'is_active' => true,
+                        'updated_by' => 'System Seed'
+                    ]);
+                }
+            }
+        }
+
+        if ($key === 'extended_smart' || $key === 'extended_package' || $key === 'extended_smart_package') {
+            $paths = [
+                base_path('../knowledge/extended_smart_package.json'),
+                base_path('../extended_smart_package.json'),
+            ];
+
+            $content = null;
+            foreach ($paths as $p) {
+                if (file_exists($p)) {
+                    $content = file_get_contents($p);
+                    break;
+                }
+            }
+
+            if ($content) {
+                $payload = json_decode($content, true);
+                if ($payload) {
+                    $pkgData = $payload['extended_smart_package'] ?? $payload;
+                    $effectiveDate = $pkgData['xpander_series']['effective_date'] ?? '2026-07-01';
+                    return KnowledgeItem::create([
+                        'key' => 'extended_smart',
+                        'title' => 'Program Extended SMART Package Mitsubishi Motors',
+                        'category' => 'aftersales_service',
+                        'payload' => $payload,
+                        'metadata' => [
+                            'brand' => 'Mitsubishi Motors',
+                            'effective_date' => $effectiveDate,
+                            'last_sync' => now()->toISOString()
+                        ],
+                        'is_active' => true,
+                        'updated_by' => 'System Seed'
+                    ]);
+                }
+            }
+        }
+
         return null;
     }
 
@@ -350,6 +438,42 @@ class KnowledgeController extends Controller
             $targetFiles = [
                 base_path('../knowledge/sparepart.json'),
                 base_path('../sparepart.json')
+            ];
+
+            $jsonString = json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+            foreach ($targetFiles as $file) {
+                try {
+                    if (file_exists($file) || is_writable(dirname($file))) {
+                        file_put_contents($file, $jsonString);
+                    }
+                } catch (\Throwable $e) {
+                    // Non-fatal
+                }
+            }
+        }
+
+        if ($key === 'extended_smart' || $key === 'extended_package' || $key === 'extended_smart_package') {
+            $targetFiles = [
+                base_path('../knowledge/extended_smart_package.json')
+            ];
+
+            $jsonString = json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+            foreach ($targetFiles as $file) {
+                try {
+                    if (file_exists($file) || is_writable(dirname($file))) {
+                        file_put_contents($file, $jsonString);
+                    }
+                } catch (\Throwable $e) {
+                    // Non-fatal
+                }
+            }
+        }
+
+        if ($key === 'service_data' || $key === 'perawatan' || $key === 'perawatan_berkala') {
+            $targetFiles = [
+                base_path('../knowledge/mitsubishi_perawatan_berkala.json')
             ];
 
             $jsonString = json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

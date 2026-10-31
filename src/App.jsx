@@ -43,6 +43,8 @@ import PortalPriceList from './portal/pages/PortalPriceList.jsx'
 import PortalAccessories from './portal/pages/PortalAccessories.jsx'
 import PortalSparepart from './portal/pages/PortalSparepart.jsx'
 import PortalPromoEvent from './portal/pages/PortalPromoEvent.jsx'
+import PortalExtendedPackage from './portal/pages/PortalExtendedPackage.jsx'
+import PortalServiceData from './portal/pages/PortalServiceData.jsx'
 import PortalArticles from './portal/pages/PortalArticles.jsx'
 import PortalArticleEditor from './portal/pages/PortalArticleEditor.jsx'
 
@@ -78,6 +80,8 @@ function App() {
             <Route path="knowledge/accessories" element={<PortalAccessories />} />
             <Route path="knowledge/sparepart" element={<PortalSparepart />} />
             <Route path="knowledge/promo-event" element={<PortalPromoEvent />} />
+            <Route path="knowledge/extended-package" element={<PortalExtendedPackage />} />
+            <Route path="knowledge/service-data" element={<PortalServiceData />} />
             <Route path="articles" element={<PortalArticles />} />
             <Route path="articles/create" element={<PortalArticleEditor />} />
             <Route path="articles/edit/:id" element={<PortalArticleEditor />} />

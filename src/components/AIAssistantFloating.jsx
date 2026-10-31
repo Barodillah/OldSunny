@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import {
@@ -1212,13 +1212,13 @@ export default function AIAssistantFloating({ prefilledAction, onClosePrefill })
                               </button>
                             )}
 
-                            <a
-                              href="tel:082210928822"
+                            <Link
+                              to="/booking"
                               className="chat-action-btn action-btn-emergency"
                             >
-                              <HiOutlinePhone size={15} />
-                              <span>Hotline Servis</span>
-                            </a>
+                              <HiOutlineCalendar size={15} />
+                              <span>Booking Langsung</span>
+                            </Link>
                           </>
                         )}
 

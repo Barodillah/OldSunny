@@ -23,7 +23,20 @@ class SunnyAiService
         // 1. Coba ambil knowledge dinamis dari tabel MySQL knowledge_items
         try {
             $normalizedKey = str_replace('-', '_', strtolower(trim($key)));
-            $dbItem = \App\Models\KnowledgeItem::where('key', $normalizedKey)->where('is_active', true)->first();
+            $keysToCheck = [$normalizedKey];
+            if ($normalizedKey === 'perawatan' || $normalizedKey === 'service_data' || $normalizedKey === 'perawatan_berkala') {
+                $keysToCheck = ['service_data', 'perawatan', 'perawatan_berkala'];
+            }
+            if ($normalizedKey === 'accessories' || $normalizedKey === 'aksesoris') {
+                $keysToCheck = ['accessories', 'aksesoris'];
+            }
+            if ($normalizedKey === 'sparepart' || $normalizedKey === 'spare_part') {
+                $keysToCheck = ['sparepart', 'spare_part', 'spareparts'];
+            }
+            if ($normalizedKey === 'extended_smart' || $normalizedKey === 'extended_package' || $normalizedKey === 'extended_smart_package') {
+                $keysToCheck = ['extended_smart', 'extended_package', 'extended_smart_package'];
+            }
+            $dbItem = \App\Models\KnowledgeItem::whereIn('key', $keysToCheck)->where('is_active', true)->first();
             if ($dbItem && !empty($dbItem->payload)) {
                 return is_array($dbItem->payload) ? $dbItem->payload : (json_decode($dbItem->payload, true) ?: []);
             }
@@ -39,8 +52,8 @@ class SunnyAiService
             'sparepart' => 'sparepart.json',
             'aksesoris' => 'aksesoris.json',
             'perawatan' => 'mitsubishi_perawatan_berkala.json',
+            'service_data' => 'mitsubishi_perawatan_berkala.json',
             'simulasi_kredit' => 'simulasi_kredit.json',
-            'soft_selling_ac' => 'soft_selling_additional_services.json',
             'extended_smart' => 'extended_smart_package.json',
             'promo' => 'promo/promo_oktober_2026.json',
             'destinator' => 'fitur/destinator.json',
@@ -96,7 +109,6 @@ class SunnyAiService
         $aksesoris = $this->getKnowledge('accessories') ?? ($this->getKnowledge('aksesoris') ?? []);
         $simulasi = $this->getKnowledge('simulasi_kredit') ?? [];
         $perawatan = $this->getKnowledge('perawatan') ?? [];
-        $acSoft = $this->getKnowledge('soft_selling_ac') ?? [];
         $esp = $this->getKnowledge('extended_smart') ?? [];
         $destinator = $this->getKnowledge('destinator') ?? [];
 
@@ -227,6 +239,133 @@ class SunnyAiService
             }
         } catch (\Throwable $e) {
             // Silently fallback
+        }
+
+        // Build Extended SMART Package snippet
+        $espSnippet = "";
+        $espData = $esp['extended_smart_package'] ?? $esp;
+        if (!empty($espData)) {
+            $benefits = $espData['benefits'] ?? [];
+            if (!empty($benefits['cost_saving'])) {
+                $espSnippet .= "• Penghematan: {$benefits['cost_saving']}\n";
+            }
+            if (!empty($benefits['free_services'])) {
+                $espSnippet .= "• Gratis Layanan:\n";
+                foreach ($benefits['free_services'] as $fs) {
+                    $espSnippet .= "  - {$fs}\n";
+                }
+            }
+            if (!empty($benefits['additional_benefits'])) {
+                $espSnippet .= "• Keuntungan Tambahan:\n";
+                foreach ($benefits['additional_benefits'] as $ab) {
+                    $espSnippet .= "  - {$ab}\n";
+                }
+            }
+
+            // Xpander Series
+            if (!empty($espData['xpander_series'])) {
+                $xp = $espData['xpander_series'];
+                $variants = implode(', ', $xp['include_car_variant'] ?? ['Xpander', 'Xpander Cross', 'Xforce']);
+                $espSnippet .= "\n**Extended SMART Package — Xpander Series (Model: {$variants})**\n";
+                $espSnippet .= "Syarat: KM >= 50.000 atau setelah paket SMART awal habis.\n";
+                $espSnippet .= "Tarif Resmi (Termasuk PPN):\n";
+                foreach ($xp['prices_including_vat'] ?? [] as $t) {
+                    $type = $t['type'] ?? '';
+                    $price = $t['after'] ?? ($t['price'] ?? 0);
+                    $duration = match($type) {
+                        '1XPM' => '6 Bulan',
+                        '2XPM' => '12 Bulan / 1 Tahun',
+                        '4XPM' => '24 Bulan / 2 Tahun',
+                        '6XPM' => '36 Bulan / 3 Tahun',
+                        default => ''
+                    };
+                    $espSnippet .= "  - {$type} ({$duration}): Rp " . number_format($price, 0, ',', '.') . "\n";
+                }
+            }
+
+            // Pajero Sport
+            if (!empty($espData['pajero_sport'])) {
+                $pj = $espData['pajero_sport'];
+                $espSnippet .= "\n**Extended SMART Package — Pajero Sport**\n";
+                $espSnippet .= "Syarat: KM >= 50.000 atau setelah paket SMART awal habis.\n";
+                $espSnippet .= "Tarif Resmi (Termasuk PPN):\n";
+                foreach ($pj['prices_including_vat'] ?? [] as $t) {
+                    $type = $t['type'] ?? '';
+                    $price = $t['price'] ?? ($t['after'] ?? 0);
+                    $duration = match($type) {
+                        '1XPM' => '6 Bulan',
+                        '2XPM' => '12 Bulan / 1 Tahun',
+                        '4XPM' => '24 Bulan / 2 Tahun',
+                        '6XPM' => '36 Bulan / 3 Tahun',
+                        default => ''
+                    };
+                    $espSnippet .= "  - {$type} ({$duration}): Rp " . number_format($price, 0, ',', '.') . "\n";
+                }
+            }
+        }
+
+        // Build Perawatan Berkala & Free Service snippet (Service Data)
+        $perawatanSnippet = "";
+        if (!empty($perawatan)) {
+            $kebijakan = $perawatan['kebijakan_free_service'] ?? [];
+            if (!empty($kebijakan['keterangan_cakupan'])) {
+                $perawatanSnippet .= "• Kebijakan MMKSI Free Service: {$kebijakan['keterangan_cakupan']}
+";
+            }
+            if (!empty($kebijakan['batas_waktu']['keterangan'])) {
+                $perawatanSnippet .= "• Batas Waktu Free Service: {$kebijakan['batas_waktu']['keterangan']}
+";
+            }
+            if (!empty($kebijakan['catatan_penting']) && is_array($kebijakan['catatan_penting'])) {
+                $perawatanSnippet .= "• Catatan Penting & Garansi Tambahan:
+";
+                foreach (array_slice($kebijakan['catatan_penting'], 0, 8) as $cp) {
+                    $perawatanSnippet .= "  - {$cp}
+";
+                }
+            }
+
+            // Dynamic Periodic Maintenance & Special Services per Model
+            $kendaraanList = $perawatan['kendaraan'] ?? [];
+            foreach ($kendaraanList as $modelKey => $modelObj) {
+                $namaModel = $modelObj['nama_lengkap'] ?? ucfirst(str_replace('_', ' ', $modelKey));
+                $perawatanSnippet .= "\n**Kendaraan: {$namaModel}**\n";
+
+                // 1. Rincian Servis Berkala (Interval KM Acuan)
+                $intervals = $modelObj['perawatan'] ?? [];
+                if (!empty($intervals)) {
+                    $perawatanSnippet .= "• Estimasi Servis Berkala (Interval KM Acuan):\n";
+                    $keyCheck = [10000, 20000, 40000, 60000, 80000, 100000];
+                    foreach ($keyCheck as $km) {
+                        if (isset($intervals[(string)$km])) {
+                            $info = $intervals[(string)$km];
+                            $status = !empty($info['status_free_service']) ? 'FREE Service (Jasa & Part Gratis MMKSI)' : 'Biaya Mandiri';
+                            $rp = 'Rp ' . number_format($info['grand_total'] ?? 0, 0, ',', '.');
+                            $perawatanSnippet .= "  - KM " . number_format($km, 0, ',', '.') . ": {$rp} [{$status}]\n";
+                        }
+                    }
+                }
+
+                // 2. Layanan Servis Khusus & Quick Service (Non-Interval, misal Ganti Oli Saja, Tune Up, Servis Rem, Spooring)
+                $layananKhusus = $modelObj['layanan_khusus'] ?? [];
+                if (!empty($layananKhusus) && is_array($layananKhusus)) {
+                    $perawatanSnippet .= "• Paket Servis Khusus & Quick Service ({$namaModel}):\n";
+                    foreach ($layananKhusus as $lk) {
+                        $namaLk = $lk['nama'] ?? '';
+                        $rpLk = 'Rp ' . number_format($lk['grand_total'] ?? 0, 0, ',', '.');
+                        $durasi = !empty($lk['estimasi_waktu']) ? " (Estimasi Waktu: {$lk['estimasi_waktu']})" : '';
+                        $desc = !empty($lk['keterangan']) ? " — {$lk['keterangan']}" : '';
+
+                        $partNames = [];
+                        foreach ($lk['spare_part'] ?? [] as $sp) {
+                            $partNames[] = ($sp['nama'] ?? '') . ' (' . ($sp['qty'] ?? 1) . 'x)';
+                        }
+                        $partSummary = !empty($partNames) ? " [Komponen Part: " . implode(', ', $partNames) . "]" : '';
+
+                        $perawatanSnippet .= "  - {$namaLk}: {$rpLk}{$durasi}{$partSummary}{$desc}\n";
+                    }
+                }
+            }
         }
 
         return <<<PROMPT
@@ -381,6 +520,12 @@ JANGAN PERNAH bersikap kaku atau memaksa. Bicaralah selayaknya konsultan ramah y
 
 ### 5. PROGRAM PROMO & EVENT SPESIAL BERJALAN SAAT INI
 {$promoSnippet}
+
+### 6. PROGRAM EXTENDED SMART PACKAGE (PERPANJANGAN PAKET SERVIS SETELAH 50.000 KM)
+{$espSnippet}
+
+### 7. PANDUAN JADWAL & ESTIMASI BIAYA PERAWATAN BERKALA (SERVICE DATA)
+{$perawatanSnippet}
 
 PROMPT;
     }
@@ -715,7 +860,31 @@ PROMPT;
                 'Apakah pengerjaan bodi & cat bisa selesai 1 hari?'
             ];
         }
-        // 3. Booking Servis
+        // 2b. Layanan Ganti Oli Saja & Servis Khusus (Non-Interval)
+        elseif (str_contains($lastUserMsg, 'ganti oli') || str_contains($lastUserMsg, 'oli saja') || str_contains($lastUserMsg, 'tune up') || str_contains($lastUserMsg, 'spooring') || str_contains($lastUserMsg, 'balancing') || str_contains($lastUserMsg, 'servis rem') || str_contains($lastUserMsg, 'rem 4 roda') || str_contains($lastUserMsg, 'purging') || str_contains($lastUserMsg, 'carbon clean')) {
+            $reply = "🛢️ **LAYANAN GANTI OLI SAJA & SERVIS KHUSUS — MITSUBISHI SUN MARGAHAYU**\n\n" .
+                "Bagi Anda yang membutuhkan perawatan berkala cepat tanpa harus mengambil paket inspeksi lengkap 10.000 KM, bengkel resmi kami melayani **Quick Service Resmi**:\n\n" .
+                "• **Mitsubishi Xpander (Ganti Oli Mesin Saja):**\n" .
+                "  - **Estimasi Biaya:** **Rp 816.960** (Termasuk PPN 11%)\n" .
+                "  - **Rincian:** Oli Mesin MMGO 0W-20 (4 Liter) + Filter Oli Asli + Ring Baut Karter + Jasa Mekanik Resmi.\n" .
+                "  - **Estimasi Waktu:** Cepat sekitar 30 - 45 Menit.\n\n" .
+                "• **Pajero Sport (Ganti Oli Mesin Diesel Saja):**\n" .
+                "  - **Estimasi Biaya:** **Rp 1.570.650** (Termasuk PPN 11%)\n" .
+                "  - **Rincian:** Oli Mesin Diesel Turbo DL-1 (7 Liter) + Filter Oli Diesel Asli + Ring Baut Karter + Jasa Mekanik.\n" .
+                "  - **Estimasi Waktu:** Cepat sekitar 30 - 45 Menit.\n\n" .
+                "• **Pilihan Layanan Khusus Lainnya:**\n" .
+                "  - **Tune Up & Throttle Cleaner:** Rp 432.900 (Pembersihan ruang bakar, throttle, & reset ECU)\n" .
+                "  - **Servis Rem 4 Roda:** Rp 296.925 (Bongkar, bersihkan debu, pelumasan caliper)\n" .
+                "  - **Spooring 3D & Balancing:** Rp 277.500 (Sensor 3D computerized)\n\n" .
+                "Semua menggunakan suku cadang dan pelumas resmi MMGO original pabrikan bergaransi.\n\n" .
+                "👉 Apakah Bapak/Ibu berminat booking jadwal ganti oli atau servis khusus ini sekarang? Boleh dibantu tipe mobil dan waktu yang diinginkan?";
+            $quickReplies = [
+                'Saya mau booking ganti oli Xpander',
+                'Saya mau booking ganti oli Pajero Sport',
+                'Berapa lama pengerjaan ganti oli saja?'
+            ];
+        }
+        // 3. Booking Servis Berkala
         elseif (str_contains($lastUserMsg, 'booking') || str_contains($lastUserMsg, 'servis') || str_contains($lastUserMsg, 'service') || str_contains($lastUserMsg, 'bengkel') || str_contains($lastUserMsg, 'jadwal')) {
             $reply = "🔧 **RESERVASI BENGKEL RESMI MITSUBISHI SUN MARGAHAYU**\n\n" .
                 "Bengkel resmi kami melayani perawatan berkala, tune-up, uji rem, spooring-balancing, dan servis AC dengan teknisi bersertifikasi MMKSI.\n\n" .
@@ -777,6 +946,31 @@ PROMPT;
                 'Berapa harga paket oli mesin resmi MMGO?',
                 'Apakah filter AC & kampas rem ready stock?',
                 'Ada paket promo dress-up aksesoris resmi?'
+            ];
+        }
+        // 6b. Extended SMART Package
+        elseif (str_contains($lastUserMsg, 'smart package') || str_contains($lastUserMsg, 'extended smart') || str_contains($lastUserMsg, 'paket smart') || str_contains($lastUserMsg, 'smart paket') || str_contains($lastUserMsg, '50.000 km') || str_contains($lastUserMsg, '50000 km') || str_contains($lastUserMsg, 'perpanjang paket') || str_contains($lastUserMsg, 'smart package pajero') || str_contains($lastUserMsg, 'smart package xpander')) {
+            $espData = $this->getKnowledge('extended_smart');
+            $pkg = $espData['extended_smart_package'] ?? ($espData ?: []);
+            $xpPrices = $pkg['xpander_series']['prices_including_vat'] ?? [];
+            $xpP1 = !empty($xpPrices[0]['after']) ? number_format($xpPrices[0]['after'], 0, ',', '.') : '1.387.500';
+            $xpP2 = !empty($xpPrices[1]['after']) ? number_format($xpPrices[1]['after'], 0, ',', '.') : '2.386.500';
+
+            $reply = "🛡️ **PROGRAM EXTENDED SMART PACKAGE (MMKSI)**\n\n" .
+                "Khusus pelanggan setia Mitsubishi pemilik **Xpander, Xpander Cross, Xforce, dan Pajero Sport** dengan jarak tempuh **>= 50.000 KM** (atau paket SMART bawaan baru telah habis):\n\n" .
+                "✨ **Benefit Perlindungan & Penghematan:**\n" .
+                "• **Hemat Biaya:** Hingga 25% dibandingkan biaya servis berkala reguler tanpa paket.\n" .
+                "• **Gratis Suku Cadang & Jasa:** Bebas dari risiko kenaikan harga suku cadang dan jasa di masa depan.\n" .
+                "• **Perpanjangan Garansi:** Garansi item terbatas diperpanjang 1 tahun atau 30.000 KM.\n" .
+                "• **Diskon Tambahan:** Diskon hingga 30% ban, diskon aki Rp 50.000, serta gratis 24 Hours Emergency Support (24HES) 1 tahun.\n\n" .
+                "💰 **Pilihan Paket Terpopuler (Termasuk PPN):**\n" .
+                "• **Xpander Series & Xforce:** 1XPM (6 bln) Rp {$xpP1} | 2XPM (1 thn - Rekomendasi) Rp {$xpP2}\n" .
+                "• **Pajero Sport:** 1XPM (6 bln) Rp 2.497.500 | 2XPM (1 thn - Rekomendasi) Rp 4.662.000\n\n" .
+                "👉 Anda dapat mendaftarkan paket ini langsung saat melakukan **Booking Servis** di website kami atau saat tiba di bengkel resmi Sun Margahayu. Boleh Sunny bantu daftarkan sekarang?";
+            $quickReplies = [
+                'Saya ingin booking servis dan ambil paket Extended SMART',
+                'Berapa rincian biaya paket 4XPM & 6XPM Xpander?',
+                'Apakah mobil Xforce saya sudah bisa ikut paket ini?'
             ];
         }
         // 7. Complaint / Kritik & Saran

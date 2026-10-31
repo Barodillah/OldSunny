@@ -196,6 +196,8 @@ export default function PortalLayout() {
     { label: 'Aksesoris', path: '/portal/knowledge/accessories' },
     { label: 'Sparepart', path: '/portal/knowledge/sparepart' },
     { label: 'Promo & Event', path: '/portal/knowledge/promo-event' },
+    { label: 'Extended Package', path: '/portal/knowledge/extended-package' },
+    { label: 'Service Data', path: '/portal/knowledge/service-data' },
   ]
 
   // Redirect to login if not authenticated
@@ -213,6 +215,8 @@ export default function PortalLayout() {
     if (location.pathname.includes('/knowledge/accessories')) return 'Public Knowledge - Aksesoris'
     if (location.pathname.includes('/knowledge/sparepart')) return 'Public Knowledge - Sparepart'
     if (location.pathname.includes('/knowledge/promo-event')) return 'Public Knowledge - Promo & Event'
+    if (location.pathname.includes('/knowledge/extended-package')) return 'Public Knowledge - Extended Package'
+    if (location.pathname.includes('/knowledge/service-data')) return 'Public Knowledge - Service Data'
     if (location.pathname.includes('/employees/organization')) return 'Struktur Organisasi Dealer'
     if (location.pathname.includes('/employees/sales')) return 'Manajemen Sales'
     if (location.pathname.includes('/employees/inactive')) return 'Arsip Nonaktif (Employee & Sales)'
