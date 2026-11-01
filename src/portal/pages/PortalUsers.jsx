@@ -16,6 +16,7 @@ import {
   HiOutlineExclamationCircle
 } from 'react-icons/hi2'
 import { RiWhatsappLine } from 'react-icons/ri'
+import ConfirmDialog from '../../components/ConfirmDialog.jsx'
 import './PortalUsers.css'
 
 export default function PortalUsers() {
@@ -316,8 +317,11 @@ export default function PortalUsers() {
     await updateUser(userItem.id, { status: nextStatus })
   }
 
-  // Delete User
-  const handleDelete = async (userItem) => {
+  // Delete User State & Handlers
+  const [userToDelete, setUserToDelete] = useState(null)
+  const [isDeletingUser, setIsDeletingUser] = useState(false)
+
+  const handleDelete = (userItem) => {
     if (userItem.role === 'superadmin') {
       alert('Akun Superadmin Developer terproteksi dan tidak dapat dihapus.')
       return
@@ -328,11 +332,24 @@ export default function PortalUsers() {
       return
     }
 
-    if (window.confirm(`Yakin ingin menghapus akses pengguna ${userItem.name} (${userItem.email})?`)) {
-      const res = await deleteUser(userItem.id)
+    setUserToDelete(userItem)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!userToDelete) return
+    setIsDeletingUser(true)
+    try {
+      const res = await deleteUser(userToDelete.id)
       if (!res.success) {
         alert(res.message || 'Gagal menghapus pengguna.')
+      } else {
+        setUserToDelete(null)
       }
+    } catch (err) {
+      console.error('Delete user error:', err)
+      alert('Terjadi kesalahan jaringan saat menghapus pengguna.')
+    } finally {
+      setIsDeletingUser(false)
     }
   }
 
@@ -989,6 +1006,20 @@ export default function PortalUsers() {
           </div>
         </div>
       )}
+
+      {/* Modal Dialog Konfirmasi Hapus User */}
+      <ConfirmDialog
+        isOpen={Boolean(userToDelete)}
+        onClose={() => !isDeletingUser && setUserToDelete(null)}
+        onConfirm={handleConfirmDelete}
+        title="Hapus Akses Pengguna?"
+        message={`Apakah Anda yakin ingin menghapus akses akun pengguna ${userToDelete?.name} (${userToDelete?.email})? Tindakan ini bersifat permanen dan tidak dapat dibatalkan.`}
+        confirmText={isDeletingUser ? 'Menghapus...' : 'Ya, Hapus Pengguna'}
+        cancelText="Batal"
+        variant="danger"
+        isLoading={isDeletingUser}
+        itemIdentifier={userToDelete ? `${userToDelete.name} (${userToDelete.email})` : null}
+      />
     </div>
   )
 }

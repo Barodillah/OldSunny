@@ -415,7 +415,7 @@ export default function Contact({ onOpenAiChat }) {
             </div>
             <h2 className="channel-title">Kunjungan Showroom</h2>
             <p className="channel-desc">
-              Jl. Ir. H. Juanda No. 35 Bulak Kapal, Bekasi Timur. Uji coba test drive unit dan nikmati fasilitas Noah Coffee gratis.
+              Jl. Ir. H. Juanda No. 35 Bulak Kapal, Bekasi Timur. Uji coba test drive unit dan nikmati fasilitas Noach Coffee gratis.
             </p>
             <a
               href="https://maps.app.goo.gl/avtswtfZ9g7sTkcZ6"
@@ -988,7 +988,7 @@ export default function Contact({ onOpenAiChat }) {
                 </span>
                 <span className="perk-pill">
                   <HiOutlineSparkles className="perk-pill-icon" />
-                  <span>Voucher Noah Coffee Gratis</span>
+                  <span>Voucher Noach Coffee Gratis</span>
                 </span>
                 <span className="perk-pill">
                   <RiToolsLine className="perk-pill-icon" />

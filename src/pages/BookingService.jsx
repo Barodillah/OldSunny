@@ -16,7 +16,7 @@ import {
   HiOutlineShieldCheck,
   HiOutlineQuestionMarkCircle
 } from 'react-icons/hi2'
-import { RiCarLine, RiWhatsappLine } from 'react-icons/ri'
+import { RiCarLine } from 'react-icons/ri'
 import CustomDatePicker from '../components/CustomDatePicker.jsx'
 import './BookingService.css'
 
@@ -518,30 +518,6 @@ export default function BookingService() {
         console.warn('Gagal menyimpan lead booking ke database:', leadErr)
       }
 
-      // 2. Transmisi ke legacy booking API jika tersedia
-      try {
-        const legacyPayload = {
-          tanggal: formData.tanggal,
-          jam: formData.jam,
-          kendaraan: formData.kendaraan,
-          nopol: formData.nopol.toUpperCase().replace(/\s+/g, ''),
-          nomor_rangka: formData.nomorRangka ? formData.nomorRangka.toUpperCase() : '',
-          nama: formData.nama,
-          telp: finalTelp,
-          jenis: `Servis Berkala ${formData.km} KM`,
-          keluhan: (formData.keluhan || '') + smartPackageNote,
-          dealer: 'Mitsubishi Sun Margahayu'
-        }
-
-        await fetch('https://csdwindo.com/api/chat/booking_legacy.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(legacyPayload)
-        })
-      } catch {
-        // Tetap lanjut meski API pihak ketiga offline
-      }
-
       setTimeout(() => {
         setIsLoading(false)
         setCurrentStep(5)
@@ -550,18 +526,6 @@ export default function BookingService() {
       setIsLoading(false)
       setCurrentStep(5)
     }
-  }
-
-  // Generate WhatsApp confirmation
-  const createWhatsAppConfirmation = () => {
-    const finalPhoneUsed = formData.nopolFound && phoneChoice === 'benar'
-      ? (formData.fullPhone || formData.maskedPhone)
-      : (formData.newPhone || formData.verifyPhone)
-    const smartText = formData.extendedSmartPackage
-      ? `\n• Paket SMART: Extended SMART ${formData.extendedSmartPackage.vehicle} (${formData.extendedSmartPackage.tier} - ${formData.extendedSmartPackage.formattedPrice})`
-      : ''
-    const text = `Halo Service Advisor Mitsubishi Sun Margahayu,\n\nSaya telah melakukan booking service melalui website resmi:\n• Kode Booking: ${bookingCode}\n• Nomor Polisi: ${formData.nopol.toUpperCase()}\n${formData.nomorRangka ? `• No. Rangka: ${formData.nomorRangka.toUpperCase()}\n` : ''}• Pemilik: ${formData.nama}\n• Kendaraan: ${formData.kendaraan}\n• Rencana Servis: ${parseInt(formData.km).toLocaleString('id-ID')} KM${smartText}\n• Jadwal: ${formData.tanggal} jam ${formData.jam} WIB\n• No. Telepon: ${finalPhoneUsed}\n\nMohon konfirmasi ketersediaan slot stall. Terima kasih!`
-    return `https://wa.me/6282210928822?text=${encodeURIComponent(text)}`
   }
 
   return (
@@ -1377,16 +1341,6 @@ export default function BookingService() {
 
               {/* Action Buttons */}
               <div className="success-actions-col">
-                <a
-                  href={createWhatsAppConfirmation()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-success-wa"
-                >
-                  <RiWhatsappLine size={20} />
-                  <span>Kirim Bukti Reservasi via WhatsApp</span>
-                </a>
-
                 <Link to="/" className="btn-success-home">
                   <span>Kembali ke Beranda Showroom</span>
                 </Link>

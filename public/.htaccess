@@ -13,10 +13,16 @@
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 3. SPA ROUTING FALLBACK:
-  # Semua URL rute React (misal: /portal/sales-rate, /vehicles, /booking, /sales, dll)
-  # diteruskan ke index.html agar tidak muncul error 404 Apache
-  RewriteRule ^ index.html [L]
+  # 3. DYNAMIC OPEN GRAPH METADATA & SPA ROUTING FALLBACK:
+  # Arahkan ke index.php agar crawler media sosial (WhatsApp, FB, Twitter/X, Telegram, LinkedIn)
+  # menerima thumbnail artikel, judul, dan ringkasan dinamis secara real-time.
+  <IfModule mod_dir.c>
+    DirectoryIndex index.php index.html
+  </IfModule>
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.php [L]
 </IfModule>
 
 # 4. KEAMANAN: Cegah akses langsung ke file tersembunyi

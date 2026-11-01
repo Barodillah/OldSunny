@@ -321,6 +321,44 @@ export function PortalAuthProvider({ children }) {
     }
   }
 
+  // Update Self Profile (Nama, Ava, Password)
+  const updateProfile = async ({ name, avatar, password }) => {
+    if (!user || !user.id) {
+      return { success: false, message: 'Sesi login tidak valid. Silakan masuk kembali.' }
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          user_id: user.id,
+          name,
+          avatar,
+          password: password || undefined
+        })
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        const updatedUser = data.user || { ...user, name, avatar: avatar !== undefined ? avatar : user.avatar }
+        setUser(updatedUser)
+        localStorage.setItem('sunny_portal_current_user', JSON.stringify(updatedUser))
+        refreshUsersFromDb()
+        return { success: true, user: updatedUser, message: data.message }
+      } else {
+        return { success: false, message: data.message || 'Gagal memperbarui profil akun.' }
+      }
+    } catch (err) {
+      console.error('Update profile error:', err)
+      return { success: false, message: 'Gagal terhubung ke server database.' }
+    }
+  }
+
   return (
     <PortalAuthContext.Provider
       value={{
@@ -335,6 +373,7 @@ export function PortalAuthProvider({ children }) {
         addUser,
         updateUser,
         deleteUser,
+        updateProfile,
         refreshUsersFromDb
       }}
     >

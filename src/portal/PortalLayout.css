@@ -746,3 +746,35 @@
     padding: 0.85rem 0.75rem 2rem 0.75rem;
   }
 }
+
+.portal-user-profile-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+  border-radius: 8px;
+  padding: 0.2rem 0.3rem;
+  margin: -0.2rem -0.3rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.portal-user-profile-link:hover {
+  background-color: rgba(226, 232, 240, 0.65);
+}
+
+.portal-user-profile-link:hover .portal-user-name {
+  color: #e3000c;
+}
+
+.portal-user-card.is-active-profile {
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+  box-shadow: 0 0 0 2px rgba(227, 0, 12, 0.12);
+}
+
+.portal-user-card.is-active-profile .portal-user-name {
+  color: #b91c1c;
+}

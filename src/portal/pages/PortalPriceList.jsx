@@ -21,6 +21,7 @@ import {
   HiOutlinePencilSquare
 } from 'react-icons/hi2'
 import { RiCarLine, RiSteering2Line, RiTruckLine } from 'react-icons/ri'
+import ConfirmDialog from '../../components/ConfirmDialog.jsx'
 import './PortalPriceList.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost/OldSunny/api/public/api'
@@ -597,11 +598,9 @@ export default function PortalPriceList() {
   }
 
   // Reset to initial file defaults
-  const handleResetToDefault = async () => {
-    if (!window.confirm('Apakah Anda yakin ingin mereset seluruh data harga OTR ke pengaturan default awal?')) {
-      return
-    }
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false)
 
+  const handleExecuteResetToDefault = async () => {
     setSaving(true)
     try {
       const res = await fetch(`${API_BASE_URL}/knowledge/price-list/reset`, {
@@ -616,6 +615,7 @@ export default function PortalPriceList() {
           type: 'success',
           text: 'Data harga OTR berhasil dikembalikan ke pengaturan default awal.'
         })
+        setIsResetDialogOpen(false)
       } else {
         showToast(json.message || 'Gagal mereset data.', 'error', 4500)
         setFeedback({ type: 'error', text: json.message || 'Gagal mereset data.' })
@@ -681,7 +681,7 @@ export default function PortalPriceList() {
           <button
             type="button"
             className="pl-btn-reset"
-            onClick={handleResetToDefault}
+            onClick={() => setIsResetDialogOpen(true)}
             disabled={saving}
             title="Kembalikan data ke awal (default vehicle-list.json)"
           >
@@ -1493,6 +1493,19 @@ export default function PortalPriceList() {
           </div>
         </div>
       )}
+
+      {/* Reusable Confirm Dialog for Reset Price List */}
+      <ConfirmDialog
+        isOpen={isResetDialogOpen}
+        onClose={() => !saving && setIsResetDialogOpen(false)}
+        onConfirm={handleExecuteResetToDefault}
+        title="Reset Data Harga OTR ke Awal?"
+        message="Seluruh konfigurasi harga OTR, penyesuaian varian tipe, dan model pilihan showroom akan dikembalikan ke data default awal (vehicle-list.json). Tindakan ini tidak dapat dibatalkan."
+        confirmText={saving ? 'Mereset Data...' : 'Ya, Reset ke Awal'}
+        cancelText="Batal"
+        variant="warning"
+        isLoading={saving}
+      />
     </div>
   )
 }

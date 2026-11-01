@@ -47,6 +47,8 @@ import PortalExtendedPackage from './portal/pages/PortalExtendedPackage.jsx'
 import PortalServiceData from './portal/pages/PortalServiceData.jsx'
 import PortalArticles from './portal/pages/PortalArticles.jsx'
 import PortalArticleEditor from './portal/pages/PortalArticleEditor.jsx'
+import PortalProfile from './portal/pages/PortalProfile.jsx'
+import RouteSeoManager from './components/RouteSeoManager.jsx'
 
 function App() {
   const [selectedAiService, setSelectedAiService] = useState(null)
@@ -62,6 +64,7 @@ function App() {
 
   return (
     <PortalAuthProvider>
+      <RouteSeoManager />
       {isPortalRoute ? (
         <Routes>
           <Route path="/portal/login" element={<PortalLogin />} />
@@ -87,6 +90,7 @@ function App() {
             <Route path="articles/edit/:id" element={<PortalArticleEditor />} />
             <Route path="sales-rate" element={<PortalSalesRate />} />
             <Route path="users" element={<PortalUsers />} />
+            <Route path="profile" element={<PortalProfile />} />
           </Route>
           <Route path="/portal/*" element={<NotFound />} />
         </Routes>

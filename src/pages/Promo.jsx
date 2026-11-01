@@ -116,7 +116,7 @@ const PROMO_ITEMS = [
     validity: 'Setiap Sabtu & Minggu (09.00 - 16.00 WIB)',
     highlight: 'Rasakan impresi berkendara New XFORCE & Xpander sambil menikmati hospitalitas dealer.',
     bullets: [
-      'Free flow Noah Coffee espresso bar & snack playground anak 100% gratis',
+      'Free Voucher Noach Coffee Bekasi & snack playground anak 100% gratis',
       'Hadiah langsung lucky dip merchandise eksklusif bagi setiap peserta test drive',
       'Hadiah doorprize alat elektronik rumah tangga bagi SPK yang diterbitkan di lokasi event'
     ],

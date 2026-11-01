@@ -9,6 +9,7 @@ import WarningNoticeSection from '../components/WarningNoticeSection.jsx'
 import GoogleReviewsEmbed from '../components/GoogleReviewsEmbed.jsx'
 import SunnyAssistantSection from '../components/SunnyAssistantSection.jsx'
 import NewsSection from '../components/NewsSection.jsx'
+import { openSunnyChat } from '../utils/sunnySessionStorage.js'
 
 export default function Home({ onOpenAiChat }) {
   const navigate = useNavigate()
@@ -57,15 +58,7 @@ export default function Home({ onOpenAiChat }) {
   }
 
   const handleSelectSunny = () => {
-    const elem = document.getElementById('sunny-assistant')
-    if (elem) {
-      elem.scrollIntoView({ behavior: 'smooth' })
-    } else if (onOpenAiChat) {
-      onOpenAiChat({
-        id: 'sunny_consult',
-        title: 'Konsultasi Asisten Sunny 24 Jam',
-      })
-    }
+    openSunnyChat()
   }
 
   return (

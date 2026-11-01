@@ -78,8 +78,8 @@ Route::get('/dashboard/stats', function () {
         }
     }
 
-    $avgResponseTime = count($diffs) > 0 
-        ? round(array_sum($diffs) / count($diffs), 1) 
+    $avgResponseTime = count($diffs) > 0
+        ? round(array_sum($diffs) / count($diffs), 1)
         : 1.5;
 
     return response()->json([
@@ -121,7 +121,7 @@ Route::post('/auth/login', function (Request $request) {
     if (!$user) {
         return response()->json([
             'success' => false,
-            'message' => "Pengguna dengan identitas '{$identifier}' tidak terdaftar di database MySQL."
+            'message' => "Pengguna dengan identitas '{$identifier}' tidak terdaftar di database."
         ], 404);
     }
 
@@ -266,7 +266,7 @@ Route::post('/auth/request-otp', function (Request $request) {
             </div>
         ", function ($message) use ($user) {
             $message->to($user->email, $user->name)
-                    ->subject("Kode OTP Reset Kata Sandi - Portal Sunny Margahayu");
+                ->subject("Kode OTP Reset Kata Sandi - Portal Sunny Margahayu");
         });
         $emailSent = true;
     } catch (\Throwable $mailErr) {
@@ -346,6 +346,86 @@ Route::post('/auth/verify-otp', function (Request $request) {
     return response()->json([
         'success' => true,
         'message' => 'Kata sandi berhasil diperbarui di database! Silakan masuk dengan kata sandi baru.'
+    ]);
+});
+
+
+// 3.5. Auth: Update Self Profile (Nama, Ava, Password)
+Route::put('/auth/profile', function (Request $request) {
+    $rawInput = $request->json()->all() ?: $request->all();
+    if (empty($rawInput)) {
+        $rawContent = $request->getContent();
+        if (!empty($rawContent)) {
+            $decoded = json_decode($rawContent, true);
+            if (is_array($decoded)) {
+                $rawInput = $decoded;
+            }
+        }
+    }
+
+    $userId = $request->header('X-User-Id') ?: ($rawInput['user_id'] ?? $request->input('user_id'));
+
+    if (!$userId) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Identitas pengguna tidak ditemukan.'
+        ], 401);
+    }
+
+    $user = User::find($userId);
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Pengguna tidak ditemukan di database.'
+        ], 404);
+    }
+
+    $name = trim((string) ($rawInput['name'] ?? $request->input('name', '')));
+    $avatar = array_key_exists('avatar', $rawInput) ? $rawInput['avatar'] : ($request->has('avatar') ? $request->input('avatar') : null);
+    $password = array_key_exists('password', $rawInput) ? $rawInput['password'] : ($request->has('password') ? $request->input('password') : null);
+
+    if (empty($name)) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Nama lengkap wajib diisi.'
+        ], 422);
+    }
+
+    if (!empty($password) && strlen((string) $password) < 6) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Kata sandi baru minimal 6 karakter.'
+        ], 422);
+    }
+
+    $user->name = $name;
+    if ($avatar !== null) {
+        $trimmedAvatar = trim((string) $avatar);
+        $user->avatar = !empty($trimmedAvatar) ? $trimmedAvatar : null;
+    }
+
+    if (!empty($password)) {
+        $user->password = Hash::make((string) $password);
+    }
+
+    $user->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Profil berhasil diperbarui.',
+        'user' => [
+            'id' => (string) $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'nik' => $user->nik,
+            'position' => $user->position,
+            'role' => $user->role,
+            'department' => $user->department,
+            'avatar' => $user->avatar,
+            'status' => $user->status,
+            'created_at' => $user->created_at
+        ]
     ]);
 });
 

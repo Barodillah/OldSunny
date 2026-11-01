@@ -18,7 +18,7 @@ const FACILITY_FAQS = [
     id: 'faq-free',
     question: 'Apakah seluruh fasilitas ini gratis digunakan?',
     answer:
-      'Ya, seluruh fasilitas seperti Shuttle Service, Voucher Noah Coffee, Kids Zone Playground, Snack Corner, dan area kerja Wi-Fi 6 dapat dinikmati 100% gratis oleh setiap pelanggan showroom dan bengkel resmi Sun Margahayu.'
+      'Ya, seluruh fasilitas seperti Shuttle Service, Voucher Noach Coffee, Kids Zone Playground, Snack Corner, dan area kerja Wi-Fi 6 dapat dinikmati 100% gratis oleh setiap pelanggan showroom dan bengkel resmi Sun Margahayu.'
   },
   {
     id: 'faq-shuttle',
@@ -143,10 +143,10 @@ export default function Facilities({ onOpenAiChat }) {
     },
     {
       id: 'noah-coffee',
-      title: 'Voucher Noah Coffee Eksklusif',
+      title: 'Voucher Noach Coffee Eksklusif',
       tag: 'Specialty Coffee & Pastry',
       image: 'https://bewhy.id/wp-content/uploads/url_6ad2dd787306e5.19436225.jpg',
-      lead: 'Kerja sama istimewa bersama cafe artisan Noah Coffee untuk menghadirkan seduhan kopi arabika pilihan secara cuma-cuma.',
+      lead: 'Kerja sama istimewa bersama cafe artisan Noach Coffee untuk menghadirkan seduhan kopi arabika pilihan secara cuma-cuma.',
       points: [
         'Voucher kopi spesialti gratis untuk setiap pelanggan servis berkala',
         'Pilihan seduhan espresso, caffe latte, cold brew, hingga artisan tea',

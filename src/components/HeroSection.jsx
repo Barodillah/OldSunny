@@ -10,6 +10,7 @@ import {
 } from 'react-icons/hi2'
 import { RiCarLine, RiCustomerService2Line } from 'react-icons/ri'
 import SimulasiKreditModal from './SimulasiKreditModal'
+import { openSunnyChat } from '../utils/sunnySessionStorage.js'
 
 export default function HeroSection({ onSelectService, onSelectEmergency, onSelectTrust, onSelectSunny }) {
   const navigate = useNavigate()
@@ -74,20 +75,20 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
       title: 'Simulasi Kredit',
       subtitle: 'DP & angsuran tanpa biaya tersembunyi',
       icon: HiOutlineCalculator,
-      badge: 'SIMULASI KREDIT',
+      badge: 'FLEXIBLE',
       accentColor: '#FDC700',
       imageUrl: 'https://bewhy.id/wp-content/uploads/url_6ab0a0964447f8.27266986.png',
       angle: 2,
       yOffset: -4,
     },
     {
-      id: 'bodypaint',
-      title: 'Cat & Body Oven',
-      subtitle: 'Reparasi warna standar pabrik',
+      id: 'accessories',
+      title: 'Aksesoris',
+      subtitle: 'Original Parts & Accesories',
       icon: HiOutlinePaintBrush,
-      badge: 'BODY REPAIR',
+      badge: 'STYLISH',
       accentColor: '#E3000C',
-      imageUrl: 'https://bewhy.id/wp-content/uploads/url_6acf19f5415295.43153383.webp',
+      imageUrl: 'https://cssunmotor.com/wp-content/uploads/url_6ae06595127852.82425066.webp',
       angle: 6,
       yOffset: 14,
     },
@@ -153,14 +154,10 @@ export default function HeroSection({ onSelectService, onSelectEmergency, onSele
                 onMouseLeave={() => setHoveredCard(null)}
                 onClick={() => {
                   if (card.id === 'sunny') {
-                    if (onSelectSunny) onSelectSunny()
-                    else {
-                      const elem = document.getElementById('sunny-assistant')
-                      if (elem) elem.scrollIntoView({ behavior: 'smooth' })
-                      else if (onSelectEmergency) onSelectEmergency()
-                    }
+                    openSunnyChat()
                   }
                   else if (card.id === 'vehicles') navigate('/vehicles')
+                  else if (card.id === 'accessories') navigate('/accessories')
                   else if (card.id === 'trust') navigate('/organization')
                   else if (card.id === 'booking') navigate('/booking')
                   else if (card.id === 'credit') setIsSimulasiModalOpen(true)

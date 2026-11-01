@@ -34,6 +34,7 @@ import {
   submitArticleComment,
   fetchArticlesFromBackend
 } from '../utils/articleStorage'
+import { updateDocumentMeta, DEFAULT_SEO } from '../utils/seo.js'
 import './ArticleDetail.css'
 
 // ============================================================================
@@ -341,6 +342,43 @@ export default function ArticleDetail() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [articleSlug])
+
+  // Dynamic SEO & Open Graph Metadata for Article Detail
+  useEffect(() => {
+    if (isLoading) {
+      updateDocumentMeta({
+        title: 'Memuat Artikel... | Mitsubishi Sun Margahayu',
+        description: 'Memuat artikel resmi Mitsubishi Sun Star Motor Margahayu Bekasi...',
+      })
+      return
+    }
+
+    if (!article) {
+      updateDocumentMeta({
+        title: 'Artikel Tidak Ditemukan | Mitsubishi Sun Margahayu',
+        description: 'Artikel atau berita yang Anda cari tidak tersedia di sistem portal kami.',
+      })
+      return
+    }
+
+    const cleanTitle = article.title ? `${article.title} | Mitsubishi Sun Margahayu` : DEFAULT_SEO.title
+    const cleanSummary = article.summary || DEFAULT_SEO.description
+    const cleanImage = article.imageUrl || article.image_url || DEFAULT_SEO.image
+    const cleanAuthor = article.author || 'PT. Sun Star Motor Margahayu'
+    const tagsString = Array.isArray(article.tags) && article.tags.length > 0
+      ? article.tags.join(', ')
+      : `${article.category || 'berita'}, mitsubishi bekasi, sun margahayu`
+
+    updateDocumentMeta({
+      title: cleanTitle,
+      description: cleanSummary,
+      image: cleanImage,
+      type: 'article',
+      author: cleanAuthor,
+      keywords: tagsString,
+      url: window.location.href,
+    })
+  }, [article, isLoading])
 
   // Track Reading Progress as user scrolls through the article container
   useEffect(() => {

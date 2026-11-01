@@ -11,7 +11,9 @@ import {
   HiOutlineXMark,
   HiOutlineDevicePhoneMobile,
   HiOutlineSparkles,
-  HiOutlineCheckCircle
+  HiOutlineCheckCircle,
+  HiOutlineEye,
+  HiOutlineEyeSlash
 } from 'react-icons/hi2'
 import './PortalLogin.css'
 
@@ -22,6 +24,7 @@ export default function PortalLogin() {
   // Form State
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(true)
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
@@ -34,6 +37,8 @@ export default function PortalLogin() {
   const [resetOtpCode, setResetOtpCode] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [sentEmailTarget, setSentEmailTarget] = useState('')
   const [forgotError, setForgotError] = useState('')
   const [isOtpLoading, setIsOtpLoading] = useState(false)
@@ -225,14 +230,23 @@ export default function PortalLogin() {
               <HiOutlineLockClosed className="portal-input-icon" size={18} />
               <input
                 id="portal-password"
-                type="password"
-                className="portal-input"
+                type={showPassword ? 'text' : 'password'}
+                className="portal-input has-toggle"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
                 required
               />
+              <button
+                type="button"
+                className="portal-password-toggle"
+                onClick={() => setShowPassword((prev) => !prev)}
+                title={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+              >
+                {showPassword ? <HiOutlineEyeSlash size={18} /> : <HiOutlineEye size={18} />}
+              </button>
             </div>
           </div>
 
@@ -374,13 +388,22 @@ export default function PortalLogin() {
                   <div className="portal-input-wrapper">
                     <HiOutlineLockClosed className="portal-input-icon" size={18} />
                     <input
-                      type="password"
-                      className="portal-input"
+                      type={showNewPassword ? 'text' : 'password'}
+                      className="portal-input has-toggle"
                       placeholder="••••••••"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       required
                     />
+                    <button
+                      type="button"
+                      className="portal-password-toggle"
+                      onClick={() => setShowNewPassword((prev) => !prev)}
+                      title={showNewPassword ? 'Sembunyikan kata sandi baru' : 'Tampilkan kata sandi baru'}
+                      aria-label={showNewPassword ? 'Sembunyikan kata sandi baru' : 'Tampilkan kata sandi baru'}
+                    >
+                      {showNewPassword ? <HiOutlineEyeSlash size={18} /> : <HiOutlineEye size={18} />}
+                    </button>
                   </div>
                 </div>
 
@@ -389,13 +412,22 @@ export default function PortalLogin() {
                   <div className="portal-input-wrapper">
                     <HiOutlineLockClosed className="portal-input-icon" size={18} />
                     <input
-                      type="password"
-                      className="portal-input"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      className="portal-input has-toggle"
                       placeholder="••••••••"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                     />
+                    <button
+                      type="button"
+                      className="portal-password-toggle"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      title={showConfirmPassword ? 'Sembunyikan konfirmasi kata sandi' : 'Tampilkan konfirmasi kata sandi'}
+                      aria-label={showConfirmPassword ? 'Sembunyikan konfirmasi kata sandi' : 'Tampilkan konfirmasi kata sandi'}
+                    >
+                      {showConfirmPassword ? <HiOutlineEyeSlash size={18} /> : <HiOutlineEye size={18} />}
+                    </button>
                   </div>
                 </div>
 

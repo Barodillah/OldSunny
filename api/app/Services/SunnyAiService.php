@@ -168,7 +168,8 @@ class SunnyAiService
         $accList = $aksesoris['mitsubishi_accessories'] ?? $aksesoris;
         if (!empty($accList) && is_array($accList)) {
             foreach ($accList as $vModel => $cats) {
-                if (!is_array($cats)) continue;
+                if (!is_array($cats))
+                    continue;
                 $aksesorisSnippet .= "\n**Model: {$vModel}**\n";
                 // Paket
                 if (!empty($cats['paket_aksesoris'])) {
@@ -229,9 +230,12 @@ class SunnyAiService
                 $pLabel = is_object($p) ? $p->action_button_label : ($p['action_button_label'] ?? '');
 
                 $promoSnippet .= "\n**[{$pCat}] {$pTitle}**\n";
-                if ($pVehicles) $promoSnippet .= "• Berlaku Untuk: {$pVehicles}\n";
-                if ($pValidity) $promoSnippet .= "• Periode: {$pValidity}\n";
-                if ($pHighlight) $promoSnippet .= "• Ringkasan: {$pHighlight}\n";
+                if ($pVehicles)
+                    $promoSnippet .= "• Berlaku Untuk: {$pVehicles}\n";
+                if ($pValidity)
+                    $promoSnippet .= "• Periode: {$pValidity}\n";
+                if ($pHighlight)
+                    $promoSnippet .= "• Ringkasan: {$pHighlight}\n";
                 if ($pLinkActive && !empty($pLink)) {
                     $lbl = !empty($pLabel) ? $pLabel : 'Form Pendaftaran / Klaim';
                     $promoSnippet .= "• Link Akses Langsung ({$lbl}): {$pLink}\n";
@@ -272,7 +276,7 @@ class SunnyAiService
                 foreach ($xp['prices_including_vat'] ?? [] as $t) {
                     $type = $t['type'] ?? '';
                     $price = $t['after'] ?? ($t['price'] ?? 0);
-                    $duration = match($type) {
+                    $duration = match ($type) {
                         '1XPM' => '6 Bulan',
                         '2XPM' => '12 Bulan / 1 Tahun',
                         '4XPM' => '24 Bulan / 2 Tahun',
@@ -292,7 +296,7 @@ class SunnyAiService
                 foreach ($pj['prices_including_vat'] ?? [] as $t) {
                     $type = $t['type'] ?? '';
                     $price = $t['price'] ?? ($t['after'] ?? 0);
-                    $duration = match($type) {
+                    $duration = match ($type) {
                         '1XPM' => '6 Bulan',
                         '2XPM' => '12 Bulan / 1 Tahun',
                         '4XPM' => '24 Bulan / 2 Tahun',
@@ -337,8 +341,8 @@ class SunnyAiService
                     $perawatanSnippet .= "• Estimasi Servis Berkala (Interval KM Acuan):\n";
                     $keyCheck = [10000, 20000, 40000, 60000, 80000, 100000];
                     foreach ($keyCheck as $km) {
-                        if (isset($intervals[(string)$km])) {
-                            $info = $intervals[(string)$km];
+                        if (isset($intervals[(string) $km])) {
+                            $info = $intervals[(string) $km];
                             $status = !empty($info['status_free_service']) ? 'FREE Service (Jasa & Part Gratis MMKSI)' : 'Biaya Mandiri';
                             $rp = 'Rp ' . number_format($info['grand_total'] ?? 0, 0, ',', '.');
                             $perawatanSnippet .= "  - KM " . number_format($km, 0, ',', '.') . ": {$rp} [{$status}]\n";
@@ -403,7 +407,7 @@ Kamu adalah **Sunny**, Asisten Pintar 24 Jam resmi dari **PT Sun Star Prima Moto
 
 ## FASILITAS DEALER & HOSPITALITAS UNGGULAN (100% GRATIS)
 - Ruang Tunggu VIP Lounge mewah ber-AC dan sofa nyaman
-- **Voucher Noah Coffee Gratis** untuk setiap pelanggan showroom & servis
+- **Voucher Noach Coffee Gratis** untuk setiap pelanggan showroom & servis
 - **Kids Zone Playground** mandi bola ceria & mainan edukasi higienis berstandar SNI
 - **Enjoy Room** dengan bean bag empuk & pencahayaan ramah mata untuk relaksasi
 - **Work From Anywhere (WFA) Station** dengan Wi-Fi 6 berkecepatan tinggi & stopkontak lengkap
@@ -890,7 +894,7 @@ PROMPT;
                 "Bengkel resmi kami melayani perawatan berkala, tune-up, uji rem, spooring-balancing, dan servis AC dengan teknisi bersertifikasi MMKSI.\n\n" .
                 "• **Jam Operasional:** Senin–Jumat 08:00–16:30 WIB | Sabtu 08:00–15:00 WIB\n" .
                 "• **Slot Jam Booking:** 08:00, 09:00, 10:00, 11:00, 13:00 WIB\n" .
-                "• **Fasilitas Pengunjung:** Voucher Noah Coffee gratis, Kids Zone playground, WFA Wi-Fi 6, dan Free Shuttle Service.\n\n" .
+                "• **Fasilitas Pengunjung:** Voucher Noach Coffee gratis, Kids Zone playground, WFA Wi-Fi 6, dan Free Shuttle Service.\n\n" .
                 "👉 Boleh diinfokan rencana **hari & jam kedatangan**, **tipe mobil**, serta **keluhan servis** Anda? Sunny bantu siapkan jadwal terbaiknya!";
             $quickReplies = [
                 'Saya mau booking jadwal servis berkala minggu ini',

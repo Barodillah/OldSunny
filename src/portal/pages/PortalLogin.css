@@ -222,6 +222,38 @@
   box-shadow: 0 0 0 3px rgba(227, 0, 12, 0.12);
 }
 
+.portal-input.has-toggle {
+  padding-right: 2.65rem;
+}
+
+.portal-password-toggle {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0.3rem;
+  color: #94a3b8;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  z-index: 2;
+}
+
+.portal-password-toggle:hover {
+  color: #0f172a;
+  background-color: rgba(148, 163, 184, 0.15);
+}
+
+.portal-password-toggle:focus-visible {
+  outline: 2px solid #E3000C;
+  outline-offset: 1px;
+}
+
 .portal-form-options {
   display: flex;
   align-items: center;

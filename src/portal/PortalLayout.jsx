@@ -211,6 +211,7 @@ export default function PortalLayout() {
   }
 
   const getPageTitle = () => {
+    if (location.pathname === '/portal/profile' || location.pathname.includes('/portal/profile')) return 'Pengaturan Profil Akun'
     if (location.pathname.includes('/knowledge/price-list')) return 'Public Knowledge - Price List'
     if (location.pathname.includes('/knowledge/accessories')) return 'Public Knowledge - Aksesoris'
     if (location.pathname.includes('/knowledge/sparepart')) return 'Public Knowledge - Sparepart'
@@ -524,19 +525,25 @@ export default function PortalLayout() {
 
           {/* User Bottom Card */}
           <div className="portal-sidebar-footer">
-            <div className="portal-user-card">
-              <img
-                src={user.avatar || 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg'}
-                alt={user.name}
-                className="portal-user-avatar"
-                onError={(e) => {
-                  e.currentTarget.src = 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg'
-                }}
-              />
-              <div className="portal-user-meta">
-                <span className="portal-user-name">{user.name}</span>
-                <span className="portal-user-position">{user.position}</span>
-              </div>
+            <div className={`portal-user-card ${location.pathname === '/portal/profile' ? 'is-active-profile' : ''}`}>
+              <Link
+                to="/portal/profile"
+                className="portal-user-profile-link"
+                title="Buka Pengaturan Profil Saya"
+              >
+                <img
+                  src={user.avatar || 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg'}
+                  alt={user.name}
+                  className="portal-user-avatar"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://bewhy.id/wp-content/uploads/asset_6ad472d88f4b22.95376401.jpg'
+                  }}
+                />
+                <div className="portal-user-meta">
+                  <span className="portal-user-name">{user.name}</span>
+                  <span className="portal-user-position">{user.position}</span>
+                </div>
+              </Link>
               <button
                 type="button"
                 className="portal-btn-logout"
