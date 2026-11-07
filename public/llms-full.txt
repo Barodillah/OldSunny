@@ -1,0 +1,378 @@
+# Dokumentasi Konteks Lengkap AI (Live Database): Mitsubishi Sun Margahayu Bekasi
+
+> Dokumen ini (`llms-full.txt`) dihasilkan secara dinamis langsung dari database MySQL PT Sun Star Prima Motor Margahayu Bekasi (Sinkronisasi terakhir: 2026-11-07 16:12:57 WIB). Menyajikan data real-time untuk harga OTR per varian, promo aktif, paket servis Extended SMART, estimasi perawatan berkala, katalog aksesoris & suku cadang, struktur manajemen aktif, daftar sales resmi terverifikasi, arsip personel nonaktif (anti-penipuan), artikel terbaru, serta FAQ dinamis.
+
+---
+
+## 1. Identitas Hukum, Lokasi & Rekening Resmi (Anti-Fraud)
+- **Nama Badan Hukum**: PT Sun Star Prima Motor
+- **Nama Cabang**: Mitsubishi Sun Margahayu Bekasi (Kode Cabang: SM-MGH-01)
+- **Otorisasi Resmi**: Dealer 3S (Sales, Service, Spare Parts) + Authorized Body & Paint Mitsubishi Motors (MMKSI) & Mitsubishi Fuso (KTB)
+- **Alamat**: Jl. Ir. H. Juanda No. 35 Bulak Kapal, RT.001/RW.001, Aren Jaya, Kec. Bekasi Timur, Kota Bekasi, Jawa Barat 17111
+- **Koordinat GPS**: -6.250846761200644, 107.02451547363883
+- **Google Maps**: https://maps.app.goo.gl/avtswtfZ9g7sTkcZ6
+- **Satu-satunya Rekening Bank Sah**: **BCA 3425419999** atas nama **PT SUN STAR PRIMA MOTOR**
+- **Peringatan Anti-Penipuan**: Segala transaksi SPK, booking fee, DP, pelunasan unit, pembayaran servis bengkel, Body & Paint, maupun suku cadang HANYA SAH jika ditransfer ke rekening BCA 3425419999 a.n. PT Sun Star Prima Motor. Dilarang mentransfer ke rekening pribadi sales/karyawan.
+- **Kontak Resmi**:
+  - Telepon Hunting & Darurat SOS 24 Jam: (021) 8834 7777
+  - WhatsApp CS Sales / Penjualan: 0813-1874-7300
+  - WhatsApp Layanan Servis & Booking: 0822-1092-8822
+  - WhatsApp Customer Satisfaction Manager (CSM): 0851-8332-5604
+  - Email: info@sunmargahayu.co.id / csm@sunmargahayu.co.id
+
+---
+
+## 2. Daftar Lengkap Harga OTR Kendaraan dari Database (Periode: Oktober 2026)
+
+### A. Kendaraan Penumpang & Niaga Ringan (Mitsubishi Motors)
+#### Mitsubishi Destinator (Premium MPV / SUV)
+- 1.5L Ultimate Premium (4x2) A/T: Rp 517.000.000
+- 1.5L Ultimate (4x2) A/T: Rp 487.000.000
+- 1.5L Exceed (4x2) A/T: Rp 427.000.000
+- 1.5L GLS (4x2) A/T: Rp 402.000.000
+- *Biaya Tambahan Opsi/Warna*: Warna Putih: +Rp 2.500.000
+
+#### Mitsubishi New Xforce (Compact SUV)
+- HEV (Hybrid Electric Vehicle): Rp 460.000.000
+- Ultimate: Rp 399.000.000
+- Exceed: Rp 388.000.000
+- *Biaya Tambahan Opsi/Warna*: Premium Package New Xforce Hev: +Rp 30.000.000, Premium Package: +Rp 25.000.000, Warna Putih: +Rp 1.500.000
+
+#### Mitsubishi New Xpander (Family MPV)
+- Ultimate CVT (Black Interior): Rp 348.000.000
+- Ultimate MT (Black Interior): Rp 332.000.000
+- Exceed Tourer CVT: Rp 302.500.000
+- Exceed Tourer MT: Rp 293.000.000
+- GLS CVT: Rp 283.500.000
+- GLS MT: Rp 274.500.000
+- *Biaya Tambahan Opsi/Warna*: Warna Putih: +Rp 1.500.000
+
+#### Mitsubishi New Xpander Cross (Crossover MPV)
+- Cross Premium CVT: Rp 374.000.000
+- Cross MT: Rp 348.000.000
+- *Biaya Tambahan Opsi/Warna*: Warna Putih: +Rp 1.500.000, Two Tone: +Rp 3.500.000
+
+#### Mitsubishi New Pajero Sport (SUV 4x4 / 4x2)
+- Dakar Ultimate 4x4 AT: Rp 794.000.000
+- Dakar Ultimate 4x2 AT: Rp 733.000.000
+- Dakar 4x2 AT: Rp 679.000.000
+- Exceed 4x2 AT: Rp 606.000.000
+- Exceed 4x2 MT: Rp 591.000.000
+- GLX 4x4 MT: Rp 620.500.000
+- *Biaya Tambahan Opsi/Warna*: Warna Putih: +Rp 3.000.000
+
+#### Mitsubishi All New Triton (Double & Single Cabin Pickup)
+- DC Ultimate 4x4 AT: Rp 571.500.000
+- DC Exceed 4x4 MT: Rp 537.000.000
+- DC GLS 4x4 MT: Rp 492.500.000
+- DC HDX 4x4 MT: Rp 473.500.000
+- SC HDX 4x4 MT: Rp 418.500.000
+- SC GLX 4x2 MT: Rp 340.000.000
+
+#### Mitsubishi Colt L300 Euro 4 (Commercial Pickup)
+- CC 4x2 MT: Rp 255.000.000
+- PU FB-R 4x2 MT: Rp 260.000.000
+
+### B. Kendaraan Niaga Truk & Bus (Mitsubishi Fuso)
+#### Mitsubishi Fuso Canter
+- FE 71 N (108 PS 4 Ban): Rp 455.000.000
+- FE 73 N (108 PS 6 Ban): Rp 510.000.000
+- FE 71L N (108 PS 4 Ban): Rp 460.000.000
+- FE 74 L N (136 PS 6 Ban): Rp 555.000.000
+- FE 84 G N (136 PS 6 Ban): Rp 565.000.000
+- FE 71L BC N (108 PS 4 Ban): Rp 425.000.000
+- FE 71L BCL N (108 PS 4 Ban): Rp 435.000.000
+- FE 71 BC N (Canter Bus) (108 PS 4 Ban): Rp 745.000.000
+- FE 71 BC N (108 PS 4 Ban): Rp 432.500.000
+- FE 84 G BC N (136 PS 6 Ban): Rp 546.000.000
+- FE 74 N (136 PS 6 Ban): Rp 520.000.000
+- FE 74 HD S N (4x2) (136 PS 6 Ban): Rp 525.000.000
+- FE 74 HD N (136 PS 6 Ban): Rp 540.000.000
+- FE 75 SHD X N (136 PS 6 Ban): Rp 535.000.000
+- FE 75 SHD X N PTO (136 PS 6 Ban): Rp 545.000.000
+- FE 84 SHDX N (4x2) (150 PS 6 Ban): Rp 560.000.000
+- FE 84 GS N (4x2) (150 PS 6 Ban): Rp 570.000.000
+
+#### Mitsubishi Fuso Fighter X
+- FN 62 F HDU (270 PS): Rp 1.335.000.000
+- FN 62 F HDR (270 PS): Rp 1.360.000.000
+- FN 62 F HDR Mini Package (270 PS): Rp 1.370.000.000
+- FN 62 FL HD (270 PS): Rp 1.355.000.000
+- FN 62 FL HD (SLT) TG (270 PS): Rp 1.385.000.000
+- FN 62 FL HDR (270 PS): Rp 1.375.000.000
+- FN 62 FL HDR (SLT) TG (270 PS): Rp 1.405.000.000
+- FN 61 FS (240 PS): Rp 1.105.000.000
+- FN 61 FSL (240 PS): Rp 1.115.000.000
+- FN 61 FSL (SLT) TG (240 PS): Rp 1.145.000.000
+- FN 61 FL HD (270 PS): Rp 1.140.000.000
+- FN 61 FL HD (SLT) TG (270 PS): Rp 1.170.000.000
+- FN 61 FL HDR (270 PS): Rp 1.135.000.000
+- FN 61 FL HDR (SLT) TG (270 PS): Rp 1.185.000.000
+- FN 65 FSL (240 PS): Rp 930.000.000
+- FN 65 FSL HG (240 PS): Rp 945.000.000
+- FN 65 FS HG (240 PS): Rp 915.000.000
+- FN 65 FL HG (240 PS): Rp 945.000.000
+- FN 65 FM HG (240 PS): Rp 920.000.000
+
+#### Mitsubishi Fuso Tractor Head
+- FN 62 F TH (270 PS): Rp 1.415.000.000
+- FN 65 F TH (270 PS): Rp 1.065.000.000
+
+---
+
+## 3. Program Promo & Event Aktif dari Database (6 Program)
+### 1. Program Bunga 0% Tenor hingga 2 Tahun
+- **Kategori**: Leasing (BUNGA 0%)
+- **Target Kendaraan**: New XFORCE, New Xpander, New Xpander Cross
+- **Masa Berlaku**: Berlaku s/d Akhir Bulan Ini
+- **Sorotan**: Angsuran bebas bunga hingga 24 bulan resmi pembiayaan Dipo Star Finance.
+- **Keuntungan Utama**: Bunga 0% dengan pilihan tenor 1 hingga 2 tahun; Gratis asuransi All-Risk komprehensif selama 1 tahun; Bebas biaya provisi dan administrasi kredit resmi
+- **Syarat & Ketentuan**: Berlaku khusus untuk aplikasi kredit via Dipo Star Finance; Uang muka (DP) minimal mengikuti ketentuan paket reguler; Promo dapat digabungkan dengan program gratis servis berkala hingga 50.000 KM
+
+### 2. Paket DP Ringan Mulai Rp 15 Jutaan
+- **Kategori**: Leasing (DP RINGAN)
+- **Target Kendaraan**: New Xpander & New Xpander Cross
+- **Masa Berlaku**: Kuota Terbatas 25 Unit
+- **Sorotan**: Bawa pulang MPV keluarga idaman dengan uang muka terjangkau dan cicilan fleksibel.
+- **Keuntungan Utama**: Uang muka (DP) super ringan mulai Rp 15 jutaan; Pilihan tenor fleksibel panjang hingga 6 tahun; Proses persetujuan (approval) cepat 1x24 jam kerja
+- **Syarat & Ketentuan**: Kelengkapan berkas data nasabah lengkap dan valid; Berlaku untuk seluruh varian New Xpander dan Xpander Cross; Unit siap kirim (ready stock) selama kuota alokasi tersedia
+
+### 3. Subsidi Tukar Tambah (Trade-In) s/d Rp 10 Juta
+- **Kategori**: Leasing (SUBSIDI TRADE-IN)
+- **Target Kendaraan**: Semua Lini Mitsubishi Baru
+- **Masa Berlaku**: Berlaku Setiap Hari
+- **Sorotan**: Tukar mobil lama segala merk dengan harga appraisal pasar tertinggi plus subsidi langsung.
+- **Keuntungan Utama**: Tambahan subsidi cashback langsung hingga Rp 10.000.000; Appraisal transparan di tempat oleh tim spesialis tersertifikasi; Proses tukar tambah cepat, mobil lama langsung jadi pengurang DP unit baru
+- **Syarat & Ketentuan**: Mobil lama bebas dari indikasi bekas tabrakan berat atau banjir; Dokumen kendaraan lama (STNK, BPKB, faktur) lengkap dan sah; Berlaku untuk upgrade ke unit Xpander, Xpander Cross, XFORCE, atau Pajero Sport
+
+### 4. Special Rate & Paket Mewah New Pajero Sport
+- **Kategori**: Leasing (SPECIAL RATE)
+- **Target Kendaraan**: New Pajero Sport Dakar & Exceed
+- **Masa Berlaku**: Berlaku s/d Akhir Bulan Ini
+- **Sorotan**: Bunga rendah kompetitif mulai 2.5% dan paket bonus proteksi ekstra untuk SUV legendaris.
+- **Keuntungan Utama**: Bunga ringan kompetitif mulai 2.5% p.a. tenor 1 tahun; Gratis paket Smart Package servis berkala & suku cadang hingga 50.000 KM / 4 tahun; Bonus kaca film V-Kool kelas VIP dan karpet bludru eksklusif
+- **Syarat & Ketentuan**: Paket leasing resmi rekanan Sun Star Prima Motor; Berlaku untuk Pajero Sport Dakar 4x2, Dakar Ultimate, dan Exceed; Garansi mesin resmi APM tetap berlaku 3 tahun / 100.000 KM
+
+### 5. Showroom Weekend Gathering & Test Drive Berhadiah
+- **Kategori**: Event Showroom (EVENT DEALER)
+- **Target Kendaraan**: Terbuka untuk Seluruh Keluarga & Komunitas
+- **Masa Berlaku**: Setiap Sabtu & Minggu (09.00 - 16.00 WIB)
+- **Sorotan**: Rasakan impresi berkendara New XFORCE & Xpander sambil menikmati hospitalitas dealer.
+- **Keuntungan Utama**: Free flow Noah Coffee espresso bar & snack playground anak 100% gratis; Hadiah langsung lucky dip merchandise eksklusif bagi setiap peserta test drive; Hadiah doorprize alat elektronik rumah tangga bagi SPK yang diterbitkan di lokasi event
+- **Syarat & Ketentuan**: Lokasi acara: Showroom Mitsubishi Sun Star Prima Motor Margahayu (Jl. Ir. H. Juanda No. 35); Peserta test drive wajib membawa SIM A aktif yang masih berlaku; Keluarga dan anak-anak dapat menikmati arena playground Kids Zone
+
+### 6. Promo Servis Berkala & Diskon Sparepart 15%
+- **Kategori**: After Sales (AFTER SALES)
+- **Target Kendaraan**: Seluruh Kendaraan Penumpang & Komersial Mitsubishi
+- **Masa Berlaku**: Senin s/d Jumat (Booking H-1)
+- **Sorotan**: Perawatan berkala di bengkel resmi terpercaya dengan teknisi profesional bersertifikat.
+- **Keuntungan Utama**: Diskon jasa servis berkala 10% dan genuine parts 15%; Gratis general check up menyeluruh pada 15 titik vital kendaraan; Gratis 1 liter oli mesin resmi Mitsubishi Motors Genuine Oil (MMGO)
+- **Syarat & Ketentuan**: Wajib melakukan booking servis minimal 1 hari sebelumnya (H-1); Berlaku di bengkel resmi Sun Star Prima Motor Margahayu; Dapat digabungkan dengan fasilitas antar jemput shuttle service
+
+---
+
+## 4. Paket Extended SMART Package & Estimasi Perawatan Berkala dari Database
+### A. Extended SMART Package (Termasuk PPN 11%)
+- **Xpander, Xpander Cross & Xforce** (Efektif: 2026-07-01):
+  - Paket 1XPM: Rp 1.387.500
+  - Paket 2XPM: Rp 2.386.500
+  - Paket 4XPM: Rp 4.551.000
+  - Paket 6XPM: Rp 6.660.000
+- **Pajero Sport** (Efektif: 2026-07-01):
+  - Paket 1XPM: Rp 2.497.500
+  - Paket 2XPM: Rp 4.662.000
+  - Paket 4XPM: Rp 9.142.000
+  - Paket 6XPM: Rp 13.320.000
+
+### B. Estimasi Biaya Perawatan Berkala (Grand Total Termasuk PPN 11%)
+- **Mitsubishi Xpander**:
+  - 10.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 1.530.690]
+  - 20.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 2.160.615]
+  - 30.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 1.530.690]
+  - 40.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 3.026.415]
+  - 50.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 1.530.690]
+  - 60.000 KM: Rp 2.978.685
+  - 70.000 KM: Rp 1.530.690
+  - 80.000 KM: Rp 4.219.665
+  - 90.000 KM: Rp 1.530.690
+  - 100.000 KM: Rp 3.648.015
+- **All New Pajero Sport (ANPS)**:
+  - 10.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 2.414.250]
+  - 20.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 3.366.630]
+  - 30.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 2.414.250]
+  - 40.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 5.059.935]
+  - 50.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 2.414.250]
+  - 60.000 KM: Rp 4.033.185
+  - 70.000 KM: Rp 2.414.250
+  - 80.000 KM: Rp 6.491.835
+  - 90.000 KM: Rp 2.414.250
+  - 100.000 KM: Rp 3.316.125
+- **Pajero Sport CR45 (Diesel)**:
+  - 10.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 2.256.630]
+  - 20.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 4.031.520]
+  - 30.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 2.256.630]
+  - 40.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 8.407.140]
+  - 50.000 KM [GRATIS Program MMKSI s/d 4 Thn, Referensi: Rp 8.409.360]
+  - 60.000 KM: Rp 4.031.520
+  - 70.000 KM: Rp 2.256.630
+  - 80.000 KM: Rp 8.407.140
+  - 90.000 KM: Rp 2.256.630
+  - 100.000 KM: Rp 8.470.410
+
+---
+
+## 5. Katalog Aksesoris Resmi (MGA) & Suku Cadang Fast-Moving dari Database
+### A. Aksesoris Resmi (Mitsubishi Genuine Accessories)
+- **Destinator**: Aero Package (Rp 9.710.000), Aero Plus Package (Rp 13.270.000), Basic Plus Package (Rp 5.420.000), Platinum Plus Package (Rp 18.430.000), Basic Package (Rp 4.280.000), Platinum Package Set (Rp 17.330.000), Engine Hood Emblem (Rp 990.000), Front Corner Extension Set (Rp 3.550.000), Rear Corner Extension Set (Rp 4.170.000), Tailgate Spoiler Set (Rp 2.520.000)
+- **Xpander**: Safety Package (Rp 4.560.000), Basic Package (Rp 1.060.000), Interior Package (Rp 990.000), Side Visor (Rp 630.000), Muffler Cutter Stainless (Rp 180.000), Side Body Moulding (Rp 600.000), Fuel Lid Garnish (Rp 230.000), Engine Hood Emblem (Rp 300.000), Tailgate Spoiler (Rp 1.310.000), Wheel Lock Nut (Rp 530.000)
+- **Xpander_Cross**: Safety Package (Rp 4.560.000), Urban Package (Rp 1.544.000), Engine Hood Emblem (Rp 471.000), Mud Guard (Rp 840.000), Side Visor (Rp 630.000), Fuel Lid Garnish (Rp 240.000), Muffler Cutter Stainless (Rp 180.000), Tailgate Spoiler (Rp 1.310.000), Wheel Lock Nut (Rp 530.000), Scuff Plate (Rp 360.000)
+- **Pajero_Sport**: Aero Plus Package (Rp 23.520.000), Basic Package (Rp 2.480.000), Aero Package (Rp 21.900.000), Hood Emblem (Rp 630.000), Side Window Deflector (Rp 1.630.000), Side Step Garnish (Rp 7.250.000), Exhaust Finisher (Rp 570.000), Wheel Lock Nut (Rp 530.000), Front Airdam (Rp 8.820.000), Rear Airdam (Rp 8.720.000)
+- **Xforce**: PAKET PLATINUM (Rp 14.290.000), PAKET STYLISH (Rp 9.570.000), PAKET SAFETY (Rp 6.020.000), PAKET ACTIVE (Rp 3.180.000), PAKET ULTIMATE DS (Rp 8.750.000), Engine Hood Emblem (Rp 560.000), Front Under Garnish (Rp 2.910.000), Rear Under Garnish (Rp 2.800.000), Side Door Garnish (Rp 3.160.000), Tailgate Spoiler (Rp 1.580.000)
+
+### B. Suku Cadang Fast-Moving (Mitsubishi Genuine Parts - Harga Satuan Sebelum PPN)
+- `1145A019` Belt Timing (Belt T/Belt A) (Pajero Sport CR45): Rp 509.000
+- `1145A020` Arm Timing Belt (Pajero Sport CR45): Rp 915.000
+- `1145A031` Adjuster Timing Belt (Pajero Sport CR45): Rp 990.000
+- `1145A078` Pulley Timing (Pajero Sport CR45): Rp 407.000
+- `1230A045` Oil Filter (Pajero Sport CR45): Rp 275.000
+- `1230A182` Oil Filter (All New Pajero Sport): Rp 210.000
+- `1340A044` Belt Power Steering (Belt P/S) (Pajero Sport CR45): Rp 909.000
+- `1340A181` Fan Belt (Xpander): Rp 137.000
+- `1340A193` Fan Belt (All New Pajero Sport): Rp 184.000
+- `1500A098` Element Air (Filter Udara) (Pajero Sport CR45): Rp 385.000
+- `1500A608` Filter Udara (All New Pajero Sport): Rp 341.000
+- `1500A687` Filter Udara (Xpander): Rp 150.000
+- `1770A233` Fuel Filter (Filter Bahan Bakar) (Pajero Sport CR45): Rp 388.000
+- `1822A086` Busi (Spark Plug) (Xpander): Rp 335.000
+- `4451A140` Fan Belt (All New Pajero Sport): Rp 407.000
+- `4605A284` Pad Set Rem Depan (FR Brake) (Pajero Sport CR45): Rp 867.000
+- `4605A783` Pad Set Rem Belakang (RR Brake) (Pajero Sport CR45): Rp 1.540.000
+- `4605B949` Kanvas Rem Depan (Xpander): Rp 600.000
+- `7803A112` Filter AC (Cabin Air Filter) (All New Pajero Sport): Rp 330.000
+- `7850A002` Filter AC (Cabin Air Filter) (Xpander): Rp 168.000
+
+---
+
+## 6. Struktur Organisasi & Daftar Sales Resmi Terverifikasi dari Database
+### A. Jajaran Manajemen & Supervisor Aktif (7 Pejabat)
+- **Adi Ponco Prasetyo** - Customer Satisfaction Manager (Level: CSM | Divisi: Customer Satisfaction & Quality Assurance | NIK: `SNY-CSM-0205`)
+- **Muhamad Santiko** - Service Manager (Level: MANAGERIAL | Divisi: Bengkel Resmi & Pelayanan Purna Jual | NIK: `SNY-MGR-0311`)
+- **Surie Handayani** - Admin Head (Level: MANAGERIAL | Divisi: Administrasi, Keuangan & Verifikasi Sah | NIK: `SNY-MGR-0324`)
+- **Joko Triono** - Sparepart Manager (Level: MANAGERIAL | Divisi: Suku Cadang Asli Mitsubishi Motors Genuine Parts | NIK: `SNY-MGR-0338`)
+- **Yusuf Anshori** - Supervisor (Level: SUPERVISOR | Divisi: Supervisi Operasional Wiraniaga & Fleet | NIK: `SNY-SPV-0419`)
+- **Riki Melianto** - Supervisor (Level: SUPERVISOR | Divisi: Supervisi Layanan Konsultasi & Test Drive | NIK: `SNY-SPV-0428`)
+- **Fendy Haryanto** - Branch Manager (Level: DIREKSI | Divisi: Branch Executive & Operational Leadership | NIK: `SNY-DIR-0101`)
+
+### B. Daftar Wiraniaga / Sales Consultant Resmi Aktif (5 Orang)
+- **Agnes** (Senior Sales Executive | SPV: Yusuf Anshori | Spesialisasi: SUV & Varian Hybrid | NIK: `SNY-SLS-0412`)
+- **Amin** (Sales Specialist | SPV: Yusuf Anshori | Spesialisasi: Family MPV & Crossover | NIK: `SNY-SLS-0588`)
+- **Bambang Prakoso** (Junior Sales Advisor | SPV: Riki Melianto | Spesialisasi: Uji Jalan & Pembiayaan Syariah | NIK: `SNY-SLS-0721`)
+- **Eko Prasetyo** (Fleet Consultant | SPV: Yusuf Anshori | Spesialisasi: Armada Perusahaan & Koperasi | NIK: `SNY-SLS-0901`)
+- **Fitri Handayani** (Sales Consultant | SPV: Riki Melianto | Spesialisasi: Konsultasi Cicilan Ringan & Promo | NIK: `SNY-SLS-0945`)
+
+### C. Direktori Personel Nonaktif / Resign (Peringatan Anti-Penipuan)
+Nama-nama berikut tercatat berstatus **NONAKTIF** di database kami dan tidak lagi memiliki wewenang mewakili PT Sun Star Prima Motor:
+- Dimas Setiawan (Eks Commercial Vehicle Specialist) - Status: Nonaktif
+
+---
+
+## 7. Daftar Publikasi & Artikel Edukasi Resmi dari Database
+- **[Pembaruan Fasilitas Body & Paint: Ruang Oven Berstandar Ramah Lingkungan Water-Based](https://cssunmotor.com/news/pembaruan-fasilitas-body-paint-water-based)** (Tips & Perawatan): Pengecatan ulang bodi mobil kini menggunakan formulasi cat water-based berkualitas tinggi dengan garansi kilap sempurna dan hasil presisi seperti baru keluar dari pabrik.
+- **[Edukasi Pembelian Unit: Keuntungan Memilih Dealer Resmi Mitsubishi Sun Star Prima Motor](https://cssunmotor.com/news/edukasi-pembelian-unit-dealer-resmi)** (Edukasi & Keamanan): Simak jaminan legalitas faktur kendaraan resmi, pengurusan STNK transparan, serta kepastian unit baru bergaransi resmi langsung dari APM Mitsubishi Motors.
+- **[Program Pengecekan 15 Titik Gratis Menjelang Musim Liburan Panjang](https://cssunmotor.com/news/program-pengecekan-15-titik-gratis)** (Promo & Program): Pastikan mobil kesayangan Anda prima sebelum menempuh rute jarak jauh dengan general check up gratis meliputi aki, rem, pendingin kabin, dan fluida mesin.
+- **[Armada Quick Emergency Service 24 Jam: Siaga Tanggap Darurat di Wilayah Bekasi](https://cssunmotor.com/news/armada-quick-emergency-service-24-jam)** (Tips & Perawatan): Layanan Service on Road modern dan teknisi reaksi cepat siap membantu kendala darurat aki, ban bocor, atau kendala mesin di area Bekasi dan sekitarnya.
+- **[Standar Hospitalitas H.O.M.E: Ruang Tunggu Cafe, Kids Zone, dan Transparansi Perawatan](https://cssunmotor.com/news/standar-hospitalitas-home-dealer)** (Standar Layanan): Konsep baru dealer Sun Margahayu menghadirkan pengalaman servis tanpa jenuh dengan free flow cafe, puluhan board game, arena bermain anak, dan live monitor pengerjaan.
+- **[Waspada Penipuan Pembayaran: 4 Standar Rekening Virtual Sah PT Sun Star Prima Motor](https://cssunmotor.com/news/waspada-penipuan-pembayaran-dealer)** (Edukasi & Keamanan): Pelajari aturan keamanan transaksi resmi agar terhindar dari modus transfer ke rekening pribadi perorangan. Kenali nama rekening sah atas nama perusahaan.
+- **[Panduan Servis Berkala 10.000 KM: Komponen Wajib Dicek Agar Garansi Sah](https://cssunmotor.com/news/panduan-servis-berkala-10000-km)** (Tips & Perawatan): Ketahui titik-titik krusial yang wajib diperiksa teknisi bersertifikat mulai dari kampas rem, rotasi ban presisi, hingga verifikasi oli berbarcode resmi pabrik.
+- **[Peluncuran New XForce Hybrid 2026: Efisiensi Maksimal Tanpa Kompromi Ketangguhan](https://cssunmotor.com/news/peluncuran-new-xforce-hybrid-2026)** (Rilis Unit Baru): Mitsubishi Sun Margahayu secara resmi membuka pemesanan New XForce Hybrid 2026 dengan teknologi pintar 4 mode berkendara adaptif dan konsumsi bahan bakar hingga 24,5 km/liter.
+
+---
+
+## 8. Daftar Pertanyaan Umum (FAQPage) Dinamis
+### Q: Apa saja model mobil unggulan dan harga OTR Mitsubishi terbaru (Oktober 2026) di Sun Margahayu Bekasi?
+A: Berdasarkan database price list resmi periode Oktober 2026, 3 model unggulan kami adalah Mitsubishi New Xforce (Rp 388.000.000 s/d Rp 460.000.000), Mitsubishi Destinator (Rp 402.000.000 s/d Rp 517.000.000), Mitsubishi New Pajero Sport (Rp 591.000.000 s/d Rp 794.000.000). Secara keseluruhan tersedia lini lengkap: Mitsubishi Destinator (4 varian: Rp 402.000.000 s/d Rp 517.000.000); Mitsubishi New Xforce (3 varian: Rp 388.000.000 s/d Rp 460.000.000); Mitsubishi New Xpander (6 varian: Rp 274.500.000 s/d Rp 348.000.000); Mitsubishi New Xpander Cross (2 varian: Rp 348.000.000 s/d Rp 374.000.000); Mitsubishi New Pajero Sport (6 varian: Rp 591.000.000 s/d Rp 794.000.000); Mitsubishi All New Triton (6 varian: Rp 340.000.000 s/d Rp 571.500.000); Mitsubishi Colt L300 Euro 4 (2 varian: Rp 255.000.000 s/d Rp 260.000.000).
+
+### Q: Apa nomor rekening resmi PT Sun Star Prima Motor untuk pembayaran SPK, DP, dan servis?
+A: Seluruh transaksi pemesanan kendaraan (SPK), uang muka (DP), pelunasan, servis bengkel, Body & Paint, maupun suku cadang HANYA SAH apabila ditransfer ke rekening Bank BCA 3425419999 atas nama PT Sun Star Prima Motor. Dilarang keras mentransfer dana ke rekening pribadi sales atau oknum manapun.
+
+### Q: Siapa pimpinan cabang dan bagaimana status verifikasi staf resmi di Mitsubishi Sun Margahayu saat ini?
+A: Direksi/Pimpinan Cabang: Fendy Haryanto (Branch Manager). Customer Satisfaction Manager (CSM): Adi Ponco Prasetyo (Customer Satisfaction Manager). Jajaran Manajer: Muhamad Santiko (Service Manager), Surie Handayani (Admin Head), Joko Triono (Sparepart Manager). Supervisor Sales: Yusuf Anshori, Riki Melianto. Saat ini terdapat 5 Sales Consultant resmi berstatus aktif di database kami, antara lain: Agnes (SPV: Yusuf Anshori), Amin (SPV: Yusuf Anshori), Bambang Prakoso (SPV: Riki Melianto), Eko Prasetyo (SPV: Yusuf Anshori), Fitri Handayani (SPV: Riki Melianto).
+
+### Q: Apakah Mitsubishi Sun Margahayu menyediakan layanan darurat 24 jam dan asisten Sunny AI?
+A: Ya, layanan darurat Service on Road (SOS) di nomor (021) 8834 7777 serta asisten virtual Sunny AI aktif 24 jam penuh setiap hari (dengan rata-rata kecepatan respon chat saat ini ~4.7 detik).
+
+### Q: Berapa daftar harga OTR mobil Mitsubishi terbaru (Oktober 2026) di Sun Margahayu Bekasi?
+A: Daftar harga OTR referensi Bekasi periode Oktober 2026 di database kami: Mitsubishi Destinator (4 varian: Rp 402.000.000 s/d Rp 517.000.000); Mitsubishi New Xforce (3 varian: Rp 388.000.000 s/d Rp 460.000.000); Mitsubishi New Xpander (6 varian: Rp 274.500.000 s/d Rp 348.000.000); Mitsubishi New Xpander Cross (2 varian: Rp 348.000.000 s/d Rp 374.000.000); Mitsubishi New Pajero Sport (6 varian: Rp 591.000.000 s/d Rp 794.000.000); Mitsubishi All New Triton (6 varian: Rp 340.000.000 s/d Rp 571.500.000); Mitsubishi Colt L300 Euro 4 (2 varian: Rp 255.000.000 s/d Rp 260.000.000).
+
+### Q: Berapa tambahan biaya untuk pilihan warna Putih Mutiara atau Two-Tone?
+A: Penyesuaian harga warna khusus berdasarkan data price list resmi saat ini: Mitsubishi Destinator warna putih +Rp 2.500.000, Mitsubishi New Xforce warna putih +Rp 1.500.000, Mitsubishi New Xpander warna putih +Rp 1.500.000, Mitsubishi New Xpander Cross warna putih +Rp 1.500.000, Mitsubishi New Xpander Cross Two-Tone +Rp 3.500.000, Mitsubishi New Pajero Sport warna putih +Rp 3.000.000.
+
+### Q: Apakah pembelian mobil baru Mitsubishi sudah termasuk gratis biaya servis berkala?
+A: Service pada 10.000 km s.d. 50.000 km ditanggung sepenuhnya oleh Mitsubishi (FREE jasa dan spare part) Untuk kendaraan yang telah melewati masa gratis servis, estimasi biaya perawatan berkala Xpander di database kami mulai dari Rp 1.530.690 (servis kecil) hingga Rp 2.978.685 (servis 60.000 KM termasuk PPN 11%).
+
+### Q: Apa saja program promo Mitsubishi yang sedang aktif di Sun Margahayu saat ini?
+A: Terdapat 6 program promo resmi yang sedang aktif di database Mitsubishi Sun Margahayu: Program Bunga 0% Tenor hingga 2 Tahun (New XFORCE, New Xpander, New Xpander Cross, Berlaku s/d Akhir Bulan Ini); Paket DP Ringan Mulai Rp 15 Jutaan (New Xpander & New Xpander Cross, Kuota Terbatas 25 Unit); Subsidi Tukar Tambah (Trade-In) s/d Rp 10 Juta (Semua Lini Mitsubishi Baru, Berlaku Setiap Hari); Special Rate & Paket Mewah New Pajero Sport (New Pajero Sport Dakar & Exceed, Berlaku s/d Akhir Bulan Ini); Showroom Weekend Gathering & Test Drive Berhadiah (Terbuka untuk Seluruh Keluarga & Komunitas, Setiap Sabtu & Minggu (09.00 - 16.00 WIB)); Promo Servis Berkala & Diskon Sparepart 15% (Seluruh Kendaraan Penumpang & Komersial Mitsubishi, Senin s/d Jumat (Booking H-1)).
+
+### Q: Bagaimana rincian promo kredit bunga 0%, DP ringan, dan subsidi tukar tambah (Trade-In)?
+A: Program Bunga 0% Tenor hingga 2 Tahun: Angsuran bebas bunga hingga 24 bulan resmi pembiayaan Dipo Star Finance. Paket DP Ringan Mulai Rp 15 Jutaan: Bawa pulang MPV keluarga idaman dengan uang muka terjangkau dan cicilan fleksibel. Subsidi Tukar Tambah (Trade-In) s/d Rp 10 Juta: Tukar mobil lama segala merk dengan harga appraisal pasar tertinggi plus subsidi langsung. Special Rate & Paket Mewah New Pajero Sport: Bunga rendah kompetitif mulai 2.5% dan paket bonus proteksi ekstra untuk SUV legendaris.
+
+### Q: Apakah tersedia promo diskon servis bengkel dan acara test drive akhir pekan?
+A: Showroom Weekend Gathering & Test Drive Berhadiah (Setiap Sabtu & Minggu (09.00 - 16.00 WIB)): Rasakan impresi berkendara New XFORCE & Xpander sambil menikmati hospitalitas dealer. Promo Servis Berkala & Diskon Sparepart 15% (Senin s/d Jumat (Booking H-1)): Perawatan berkala di bengkel resmi terpercaya dengan teknisi profesional bersertifikat.
+
+### Q: Berapa harga paket Extended SMART Package terbaru untuk Xpander, Xforce, dan Pajero Sport?
+A: Harga resmi paket perpanjangan servis Extended SMART Package (termasuk PPN 11%) di database kami: Untuk Xpander, Xpander Cross, dan Xforce (1XPM: Rp 1.387.500, 2XPM: Rp 2.386.500, 4XPM: Rp 4.551.000, 6XPM: Rp 6.660.000). Untuk Pajero Sport (1XPM: Rp 2.497.500, 2XPM: Rp 4.662.000, 4XPM: Rp 9.142.000, 6XPM: Rp 13.320.000). Pelanggan menghemat biaya perawatan hingga 25% serta mendapatkan gratis jasa, suku cadang berkala, dan perpanjangan layanan darurat 24 jam selama 1 tahun.
+
+### Q: Berapa estimasi biaya servis berkala Mitsubishi dari 10.000 KM hingga di atas 50.000 KM?
+A: Service pada 10.000 km s.d. 50.000 km ditanggung sepenuhnya oleh Mitsubishi (FREE jasa dan spare part) Untuk kendaraan yang telah melewati masa gratis servis, estimasi biaya perawatan berkala Xpander di database kami mulai dari Rp 1.530.690 (servis kecil) hingga Rp 2.978.685 (servis 60.000 KM termasuk PPN 11%).
+
+### Q: Bagaimana prosedur booking servis online dan jam batas penerimaan walk-in di bengkel Sun Margahayu?
+A: Pelanggan dapat melakukan booking servis online di halaman Booking Service dengan memasukkan nomor polisi kendaraan, memilih kelipatan kilometer, dan memilih slot jam kedatangan. Bengkel buka Senin s/d Jumat pukul 08:00 - 16:30 WIB dan Sabtu pukul 08:00 - 15:00 WIB, dengan batas penerimaan walk-in tanpa booking pukul 11:00 WIB.
+
+### Q: Kendala darurat apa saja yang dilayani oleh Mitsubishi Service on Road 24 Jam?
+A: Tim mekanik Service on Road melayani bantuan darurat 24/7 di jalan maupun di rumah wilayah Bekasi dan Jabodetabek untuk kondisi mobil mogok, jumper atau penggantian aki drop, ban kempis, kunci tertinggal, pemeriksaan diagnostik kelistrikan, serta koordinasi mobil derek (towing) resmi.
+
+### Q: Berapa nomor telepon darurat Service on Road Mitsubishi Sun Margahayu?
+A: Hubungi Hotline Darurat SOS 24 Jam di (021) 8834 7777, WhatsApp Layanan Servis di 0822-1092-8822, atau kirim titik koordinat GPS Anda langsung melalui formulir Service on Road di website ini.
+
+### Q: Apakah seluruh fasilitas seperti Noach Coffee, Shuttle Service, dan Kids Zone gratis digunakan?
+A: Ya, seluruh fasilitas hospitality meliputi Voucher Noach Coffee, Free Shuttle Service (antar-jemput radius 15 km), Kids Zone Playground, Enjoy Room Bean Bag, Snack Corner, dan WFA Station Wi-Fi 6 dapat dinikmati 100% gratis oleh pelanggan showroom dan bengkel resmi Sun Margahayu.
+
+### Q: Bagaimana cara memesan layanan Free Shuttle Service saat mobil sedang diservis?
+A: Cukup informasikan tujuan antar-jemput Anda kepada Service Advisor saat registrasi servis di bengkel atau tanyakan lebih awal melalui asisten virtual Sunny AI. Pengemudi resmi kami siap mengantar dan menjemput Anda kembali saat mobil selesai diservis.
+
+### Q: Apakah ada program acara showroom atau promo bengkel yang sedang berlangsung saat ini?
+A: Showroom Weekend Gathering & Test Drive Berhadiah (Setiap Sabtu & Minggu (09.00 - 16.00 WIB)): Rasakan impresi berkendara New XFORCE & Xpander sambil menikmati hospitalitas dealer. Promo Servis Berkala & Diskon Sparepart 15% (Senin s/d Jumat (Booking H-1)): Perawatan berkala di bengkel resmi terpercaya dengan teknisi profesional bersertifikat.
+
+### Q: Apakah tersedia fasilitas perbaikan bodi dan cat (Authorized Body & Paint)?
+A: Tersedia fasilitas Authorized Body & Paint berstandar MMKSI lengkap dengan Oven Spray Booth, pencampuran warna terkomputerisasi, suku cadang panel orisinal, serta layanan klaim asuransi maupun perbaikan mandiri.
+
+### Q: Apa saja aksesoris resmi Mitsubishi Genuine Accessories (MGA) yang tersedia beserta harganya?
+A: Katalog Mitsubishi Genuine Accessories (MGA) resmi tersedia untuk model: Destinator (contoh: Aero Package Rp 9.710.000), Xpander (contoh: Safety Package Rp 4.560.000), Xpander_Cross (contoh: Safety Package Rp 4.560.000), Pajero_Sport (contoh: Aero Plus Package Rp 23.520.000), Xforce (contoh: PAKET PLATINUM Rp 14.290.000). Seluruh aksesoris dijamin orisinal, presisi tanpa merusak garansi kelistrikan/bodi, dan dapat dipasang langsung di bengkel Sun Margahayu.
+
+### Q: Berapa harga suku cadang fast-moving asli (Mitsubishi Genuine Parts) di bengkel resmi?
+A: Database suku cadang kami mencatat 43 item fast-moving Mitsubishi Genuine Parts berstatus selalu tersedia (always available), di antaranya: Belt Timing (Belt T/Belt A) (1145A019: Rp 509.000), Arm Timing Belt (1145A020: Rp 915.000), Adjuster Timing Belt (1145A031: Rp 990.000), Pulley Timing (1145A078: Rp 407.000), Oil Filter (1230A045: Rp 275.000) (harga sebelum PPN 11%).
+
+### Q: Siapa saja daftar Sales Consultant resmi yang aktif dan terverifikasi di Mitsubishi Sun Margahayu?
+A: Saat ini terdapat 5 Sales Consultant resmi berstatus aktif di database kami, antara lain: Agnes (SPV: Yusuf Anshori), Amin (SPV: Yusuf Anshori), Bambang Prakoso (SPV: Riki Melianto), Eko Prasetyo (SPV: Yusuf Anshori), Fitri Handayani (SPV: Riki Melianto).
+
+### Q: Bagaimana cara memverifikasi mantan sales/karyawan yang sudah nonaktif agar terhindar dari penipuan?
+A: Tercatat 1 personel nonaktif di direktori transparansi database kami (seperti Dimas Setiawan (Eks Sales)). Mereka sudah tidak lagi memiliki wewenang mewakili PT Sun Star Prima Motor. Pastikan seluruh pembayaran hanya ditransfer ke rekening resmi Bank BCA 3425419999 a.n. PT Sun Star Prima Motor.
+
+### Q: Bagaimana susunan pimpinan cabang dan manajemen aktif PT Sun Star Prima Motor Margahayu saat ini?
+A: Direksi/Pimpinan Cabang: Fendy Haryanto (Branch Manager). Customer Satisfaction Manager (CSM): Adi Ponco Prasetyo (Customer Satisfaction Manager). Jajaran Manajer: Muhamad Santiko (Service Manager), Surie Handayani (Admin Head), Joko Triono (Sparepart Manager). Supervisor Sales: Yusuf Anshori, Riki Melianto.
+
+### Q: Bagaimana kebijakan transparansi terkait perubahan jabatan atau personel yang sudah tidak aktif?
+A: Tercatat 1 personel nonaktif di direktori transparansi database kami (seperti Dimas Setiawan (Eks Sales)). Mereka sudah tidak lagi memiliki wewenang mewakili PT Sun Star Prima Motor. Pastikan seluruh pembayaran hanya ditransfer ke rekening resmi Bank BCA 3425419999 a.n. PT Sun Star Prima Motor.
+
+### Q: Apa saja artikel berita dan panduan otomotif terbaru dari Mitsubishi Sun Margahayu?
+A: Saat ini terdapat 8 publikasi dan artikel edukasi resmi di portal berita kami. Artikel terbaru meliputi: "Pembaruan Fasilitas Body & Paint: Ruang Oven Berstandar Ramah Lingkungan Water-Based" (Tips & Perawatan), "Edukasi Pembelian Unit: Keuntungan Memilih Dealer Resmi Mitsubishi Sun Star Prima Motor" (Edukasi & Keamanan), "Program Pengecekan 15 Titik Gratis Menjelang Musim Liburan Panjang" (Promo & Program), "Armada Quick Emergency Service 24 Jam: Siaga Tanggap Darurat di Wilayah Bekasi" (Tips & Perawatan).
+
+### Q: Apakah konsumen dapat berdiskusi atau menanyakan isi artikel langsung ke Sunny AI?
+A: Ya, pada setiap halaman artikel tersedia tombol konsultasi langsung dengan Sunny AI serta kolom komentar publik yang dimoderasi oleh tim internal dealer.
+
+### Q: Berapa nomor WhatsApp resmi untuk divisi Penjualan (Sales), Servis Bengkel, dan Pengaduan CSM?
+A: Saluran WhatsApp resmi terbagi menjadi 3 divisi utama: CS Sales / Penjualan Unit Baru di 0813-1874-7300, Layanan Servis & Booking Bengkel di 0822-1092-8822, serta Customer Satisfaction Manager (CSM) di 0851-8332-5604. Telepon hunting dan darurat 24 jam dapat dihubungi di (021) 8834 7777.
+
+### Q: Siapa pejabat Customer Satisfaction Manager (CSM) yang menangani laporan keluhan pelanggan?
+A: Laporan keluhan pelanggan diaudit dan ditangani langsung oleh Adi Ponco Prasetyo (Customer Satisfaction Manager) beserta pimpinan cabang PT Sun Star Prima Motor dengan jaminan kerahasiaan data pelapor dan tindak lanjut maksimal 1x24 jam kerja.
+

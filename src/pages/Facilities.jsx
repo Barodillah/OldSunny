@@ -7,38 +7,9 @@ import {
   HiOutlineArrowLeft,
   HiOutlineCheck,
   HiOutlineChatBubbleLeftRight,
-  HiOutlineQuestionMarkCircle,
-  HiOutlineChevronDown
 } from 'react-icons/hi2'
 import GoogleReviewsEmbed from '../components/GoogleReviewsEmbed.jsx'
 import './Facilities.css'
-
-const FACILITY_FAQS = [
-  {
-    id: 'faq-free',
-    question: 'Apakah seluruh fasilitas ini gratis digunakan?',
-    answer:
-      'Ya, seluruh fasilitas seperti Shuttle Service, Voucher Noach Coffee, Kids Zone Playground, Snack Corner, dan area kerja Wi-Fi 6 dapat dinikmati 100% gratis oleh setiap pelanggan showroom dan bengkel resmi Sun Margahayu.'
-  },
-  {
-    id: 'faq-shuttle',
-    question: 'Bagaimana cara memesan layanan Shuttle Service?',
-    answer:
-      'Anda cukup menginformasikan rencana perjalanan Anda ke Service Advisor saat melakukan registrasi servis kendaraan, atau menanyakannya lebih awal ke Asisten AI Sunny. Staf kami akan menyiapkan pengemudi dan armada shuttle.'
-  },
-  {
-    id: 'faq-hours',
-    question: 'Berapa jam operasional Playground & Cafe Lounge?',
-    answer:
-      'Fasilitas ramah keluarga dan lounge buka setiap hari mengikuti jadwal operasional bengkel resmi Sun Margahayu, mulai pukul 08.00 hingga 17.00 WIB.'
-  },
-  {
-    id: 'faq-work',
-    question: 'Apakah ada area kerja yang tenang untuk meeting online?',
-    answer:
-      'Tersedia meja kerja Work From Anywhere yang nyaman dengan colokan listrik universal di setiap kursi, koneksi Wi-Fi 6 berkecepatan tinggi, dan pencahayaan yang mendukung produktivitas kerja Anda.'
-  }
-]
 
 export default function Facilities({ onOpenAiChat }) {
   // Playground & Cafe gallery items
@@ -217,11 +188,6 @@ export default function Facilities({ onOpenAiChat }) {
   const [activePerkIndex, setActivePerkIndex] = useState(0)
   const [isPlaygroundPaused, setIsPlaygroundPaused] = useState(false)
   const [isPerkPaused, setIsPerkPaused] = useState(false)
-  const [openFaqId, setOpenFaqId] = useState('faq-free')
-
-  const toggleFaq = (id) => {
-    setOpenFaqId((prev) => (prev === id ? null : id))
-  }
 
   // 1. Auto-rotate Playground & Cafe slider every 3 seconds (infinite loop)
   useEffect(() => {
@@ -656,56 +622,9 @@ export default function Facilities({ onOpenAiChat }) {
       {/* 4. GOOGLE REVIEWS EMBED SECTION */}
       <GoogleReviewsEmbed />
 
-      {/* 5. SECTION 5: PANDUAN KUNJUNGAN & FAQ (Informasi Nyata & Berguna) */}
+      {/* 5. SECTION 5: PANDUAN KUNJUNGAN CTA BANNER */}
       <section className="fac-guide-section" aria-label="Panduan Kunjungan Fasilitas">
         <div className="fac-guide-container">
-          <div className="fac-guide-header">
-            <span className="fac-pill-outline">Panduan Kunjungan</span>
-            <h2 className="fac-guide-title">Pertanyaan Umum Seputar Fasilitas Dealer</h2>
-            <p className="fac-guide-subtitle">
-              Seluruh fasilitas kami sediakan untuk menunjang kenyamanan maksimal Anda selama berkunjung.
-            </p>
-          </div>
-
-          <div className="fac-faq-grid" role="region" aria-label="Accordion Pertanyaan Umum Fasilitas">
-            {FACILITY_FAQS.map((faq) => {
-              const isOpen = openFaqId === faq.id
-              return (
-                <div
-                  key={faq.id}
-                  className={`fac-faq-item ${isOpen ? 'is-open' : ''}`}
-                >
-                  <button
-                    type="button"
-                    className="fac-faq-trigger"
-                    onClick={() => toggleFaq(faq.id)}
-                    aria-expanded={isOpen}
-                    aria-controls={`faq-answer-${faq.id}`}
-                    id={`faq-trigger-${faq.id}`}
-                  >
-                    <div className="fac-faq-q">
-                      <HiOutlineQuestionMarkCircle size={20} className="faq-icon" />
-                      <span>{faq.question}</span>
-                    </div>
-                    <HiOutlineChevronDown className="fac-faq-chevron" aria-hidden="true" />
-                  </button>
-
-                  <div
-                    id={`faq-answer-${faq.id}`}
-                    className="fac-faq-collapse"
-                    role="region"
-                    aria-labelledby={`faq-trigger-${faq.id}`}
-                  >
-                    <div className="fac-faq-collapse-inner">
-                      <p className="fac-faq-a">{faq.answer}</p>
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Bottom Action Footer */}
           <div className="fac-bottom-cta-banner">
             <div className="fac-cta-banner-left">
               <h3 className="fac-cta-banner-title">Punya Pertanyaan Spesifik tentang Kunjungan Anda?</h3>

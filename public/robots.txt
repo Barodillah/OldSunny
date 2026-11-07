@@ -1,0 +1,68 @@
+# ============================================================================
+# robots.txt - Mitsubishi Sun Margahayu Bekasi (PT Sun Star Prima Motor)
+# Official Domain: https://cssunmotor.com
+# ============================================================================
+
+# 1. Default Rules for All Search Engine Crawlers
+# PENTING: Jangan blokir /api/ karena Googlebot WRS (Web Rendering Service)
+# membutuhkan akses fetch ke /api/articles, /api/promos, /api/sales, dan /api/knowledge
+# saat merender komponen React SPA.
+User-agent: *
+Allow: /
+Allow: /api/
+Disallow: /portal
+Disallow: /portal/
+Disallow: /400
+Disallow: /403
+Disallow: /404
+Disallow: /429
+Disallow: /500
+Disallow: /503
+Disallow: /error/
+
+# 2. Explicit Permissions for AI & Answer Engine Crawlers (AEO / GEO)
+User-agent: Googlebot
+Allow: /
+Allow: /api/
+Disallow: /portal/
+
+User-agent: Bingbot
+Allow: /
+Allow: /api/
+Disallow: /portal/
+
+User-agent: GPTBot
+Allow: /
+Allow: /api/
+Disallow: /portal/
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /api/
+Disallow: /portal/
+
+User-agent: OAI-SearchBot
+Allow: /
+Allow: /api/
+Disallow: /portal/
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /api/
+Disallow: /portal/
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /api/
+Disallow: /portal/
+
+User-agent: Google-Extended
+Allow: /
+Allow: /api/
+Disallow: /portal/
+
+# 3. Sitemaps & AI Knowledge Indexes
+Sitemap: https://cssunmotor.com/sitemap.xml
+# LLMs Reference: https://cssunmotor.com/llms.txt
+# LLMs Full Context: https://cssunmotor.com/llms-full.txt
+

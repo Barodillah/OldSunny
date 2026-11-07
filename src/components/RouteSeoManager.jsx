@@ -1,41 +1,92 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { PAGE_SEO_CONFIG, updateDocumentMeta, DEFAULT_SEO } from '../utils/seo.js'
+import {
+  PAGE_SEO_CONFIG,
+  updateDocumentMeta,
+  DEFAULT_SEO,
+  setJsonLd,
+  removeJsonLd,
+  getAutoDealerSchema,
+  getBreadcrumbSchema,
+  getPageFaqSchema,
+  getVehicleCatalogSchema,
+  fetchDynamicSeoData,
+} from '../utils/seo.js'
 
-/**
- * RouteSeoManager - Listens to route changes and applies corresponding SEO meta data.
- * Skips article detail routes (/news/:slug, /article/:slug) because ArticleDetail.jsx
- * supplies real-time, article-specific meta tags (title, summary, thumbnail).
- */
+const ERROR_ROUTES = new Set(['/400', '/403', '/404', '/429', '/500', '/503'])
+
+// Synchronizes route metadata, robots directives, and live database-backed Schema.org JSON-LD blocks.
 export default function RouteSeoManager() {
   const location = useLocation()
   const pathname = location.pathname.replace(/\/+$/, '') || '/'
+  const [dynamicTick, setDynamicTick] = useState(0)
 
   useEffect(() => {
-    // 1. Article detail routes are handled by ArticleDetail.jsx directly
+    fetchDynamicSeoData()
+
+    const handleDynamicUpdate = () => {
+      setDynamicTick((prev) => prev + 1)
+    }
+
+    window.addEventListener('sunny-dynamic-seo-updated', handleDynamicUpdate)
+    return () => {
+      window.removeEventListener('sunny-dynamic-seo-updated', handleDynamicUpdate)
+    }
+  }, [])
+
+  useEffect(() => {
+    // Article detail routes manage their own dynamic metadata and NewsArticle schema in ArticleDetail.jsx.
     if (pathname.startsWith('/news/') || pathname.startsWith('/article/')) {
+      setJsonLd('schema-autodealer', getAutoDealerSchema())
+      removeJsonLd('schema-faq')
+      removeJsonLd('schema-vehicles')
       return
     }
 
-    // 2. Portal Management routes
+    removeJsonLd('schema-article')
+
     if (pathname.startsWith('/portal')) {
-      if (pathname === '/portal/login') {
-        updateDocumentMeta({
-          title: 'Masuk Portal Manajemen | Mitsubishi Sun Margahayu',
-          description: 'Akses masuk portal operasional internal dealer PT Sun Star Motor Margahayu.',
-          type: 'website',
-        })
-      } else {
-        updateDocumentMeta({
-          title: 'Portal Manajemen Operasional | Mitsubishi Sun Margahayu',
-          description: 'Sistem operasional internal dealer, analitik leads, Sunny AI, dan manajemen data Sun Margahayu.',
-          type: 'website',
-        })
-      }
+      removeJsonLd('schema-autodealer')
+      removeJsonLd('schema-breadcrumb')
+      removeJsonLd('schema-faq')
+      removeJsonLd('schema-vehicles')
+
+      updateDocumentMeta({
+        title:
+          pathname === '/portal/login'
+            ? 'Masuk Portal Manajemen | Mitsubishi Sun Margahayu'
+            : 'Portal Manajemen Operasional | Mitsubishi Sun Margahayu',
+        description:
+          'Sistem operasional internal dealer, analitik leads, Sunny AI, dan manajemen data PT Sun Star Prima Motor Margahayu.',
+        type: 'website',
+        robots: 'noindex, nofollow',
+      })
       return
     }
 
-    // 3. Match against static public route configuration
+    if (ERROR_ROUTES.has(pathname) || pathname.startsWith('/error/')) {
+      removeJsonLd('schema-breadcrumb')
+      removeJsonLd('schema-faq')
+      removeJsonLd('schema-vehicles')
+      updateDocumentMeta({
+        title: 'Halaman Tidak Tersedia | Mitsubishi Sun Margahayu',
+        description: DEFAULT_SEO.description,
+        type: 'website',
+        robots: 'noindex, nofollow',
+      })
+      return
+    }
+
+    setJsonLd('schema-autodealer', getAutoDealerSchema())
+    setJsonLd('schema-breadcrumb', getBreadcrumbSchema(pathname))
+    setJsonLd('schema-faq', getPageFaqSchema(pathname))
+
+    if (pathname === '/vehicles' || pathname === '/vehicle-list') {
+      setJsonLd('schema-vehicles', getVehicleCatalogSchema())
+    } else {
+      removeJsonLd('schema-vehicles')
+    }
+
     const matchedConfig = PAGE_SEO_CONFIG[pathname]
     if (matchedConfig) {
       updateDocumentMeta({
@@ -44,17 +95,16 @@ export default function RouteSeoManager() {
         type: 'website',
       })
     } else {
-      // 4. Default fallback for unmatched routes
       updateDocumentMeta({
         title: DEFAULT_SEO.title,
         description: DEFAULT_SEO.description,
         image: DEFAULT_SEO.image,
         url: window.location.href,
         type: 'website',
+        robots: 'noindex, follow',
       })
     }
-  }, [pathname])
+  }, [pathname, dynamicTick])
 
   return null
 }
-

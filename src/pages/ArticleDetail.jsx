@@ -28,13 +28,22 @@ import { RiWhatsappLine, RiTwitterXLine, RiSendPlane2Line } from 'react-icons/ri
 import { SiThreads } from 'react-icons/si'
 import {
   getStoredArticles,
+  getHydratedServerArticle,
+  fetchArticleByIdOrSlugFromBackend,
   recordArticleView,
   toggleArticleLike,
   fetchArticleComments,
   submitArticleComment,
   fetchArticlesFromBackend
 } from '../utils/articleStorage'
-import { updateDocumentMeta, DEFAULT_SEO } from '../utils/seo.js'
+import {
+  updateDocumentMeta,
+  DEFAULT_SEO,
+  setJsonLd,
+  removeJsonLd,
+  getArticleSchema,
+  getBreadcrumbSchema,
+} from '../utils/seo.js'
 import './ArticleDetail.css'
 
 // ============================================================================
@@ -302,18 +311,41 @@ export default function ArticleDetail() {
   const [authorChoice, setAuthorChoice] = useState('anon') // 'anon' | 'name'
   const [customName, setCustomName] = useState('')
 
-  // Reactive article list loaded from backend
-  const [articleList, setArticleList] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  // Reactive article list loaded from server hydration / backend
+  const initialHydrated = useMemo(() => getHydratedServerArticle(articleSlug), [articleSlug])
+  const [articleList, setArticleList] = useState(() => {
+    const stored = getStoredArticles()
+    if (initialHydrated) {
+      const exists = stored.some(
+        (item) => item.slug === initialHydrated.slug || String(item.id) === String(initialHydrated.id)
+      )
+      return exists ? stored : [initialHydrated, ...stored]
+    }
+    return stored
+  })
+  const [isLoading, setIsLoading] = useState(() => !initialHydrated)
 
   useEffect(() => {
     let isMounted = true
-    fetchArticlesFromBackend().then((data) => {
+    const loadArticles = async () => {
+      const data = await fetchArticlesFromBackend()
+      if (!isMounted) return
+      let merged = Array.isArray(data) ? [...data] : []
+      const matchInList = merged.find(
+        (item) => item.slug === articleSlug || String(item.id) === String(articleSlug)
+      )
+      if (!matchInList && articleSlug) {
+        const single = (await fetchArticleByIdOrSlugFromBackend(articleSlug)) || getHydratedServerArticle(articleSlug)
+        if (single) {
+          merged = [single, ...merged]
+        }
+      }
       if (isMounted) {
-        setArticleList(data || [])
+        setArticleList(merged)
         setIsLoading(false)
       }
-    })
+    }
+    loadArticles()
     const handleUpdate = () => {
       setArticleList(getStoredArticles())
     }
@@ -322,14 +354,16 @@ export default function ArticleDetail() {
       isMounted = false
       window.removeEventListener('sunny_articles_updated', handleUpdate)
     }
-  }, [])
+  }, [articleSlug])
 
-  // Find article by slug (primary) or id (fallback)
+  // Find article by slug (primary), id (fallback), or server-hydrated payload
   const article = useMemo(() => {
-    return articleList.find(
-      (item) => item.slug === articleSlug || String(item.id) === String(articleSlug)
+    return (
+      articleList.find(
+        (item) => item.slug === articleSlug || String(item.id) === String(articleSlug)
+      ) || initialHydrated
     )
-  }, [articleList, articleSlug])
+  }, [articleList, articleSlug, initialHydrated])
 
   // If accessed by ID, replace URL with canonical slug URL
   useEffect(() => {
@@ -346,17 +380,22 @@ export default function ArticleDetail() {
   // Dynamic SEO & Open Graph Metadata for Article Detail
   useEffect(() => {
     if (isLoading) {
-      updateDocumentMeta({
-        title: 'Memuat Artikel... | Mitsubishi Sun Margahayu',
-        description: 'Memuat artikel resmi Mitsubishi Sun Star Motor Margahayu Bekasi...',
-      })
+      // Preserve server-injected title/meta from public/index.php during initial load
       return
     }
 
     if (!article) {
+      const hasServerSchema =
+        typeof document !== 'undefined' &&
+        (document.getElementById('schema-article') || document.getElementById('sunny-initial-article'))
+      if (hasServerSchema) {
+        return
+      }
+      removeJsonLd('schema-article')
       updateDocumentMeta({
         title: 'Artikel Tidak Ditemukan | Mitsubishi Sun Margahayu',
         description: 'Artikel atau berita yang Anda cari tidak tersedia di sistem portal kami.',
+        robots: 'noindex, follow',
       })
       return
     }
@@ -364,10 +403,11 @@ export default function ArticleDetail() {
     const cleanTitle = article.title ? `${article.title} | Mitsubishi Sun Margahayu` : DEFAULT_SEO.title
     const cleanSummary = article.summary || DEFAULT_SEO.description
     const cleanImage = article.imageUrl || article.image_url || DEFAULT_SEO.image
-    const cleanAuthor = article.author || 'PT. Sun Star Motor Margahayu'
+    const cleanAuthor = article.author || 'PT Sun Star Prima Motor'
     const tagsString = Array.isArray(article.tags) && article.tags.length > 0
       ? article.tags.join(', ')
       : `${article.category || 'berita'}, mitsubishi bekasi, sun margahayu`
+    const canonicalArticleUrl = `${window.location.origin}/news/${article.slug || article.id}`
 
     updateDocumentMeta({
       title: cleanTitle,
@@ -376,8 +416,11 @@ export default function ArticleDetail() {
       type: 'article',
       author: cleanAuthor,
       keywords: tagsString,
-      url: window.location.href,
+      url: canonicalArticleUrl,
+      robots: 'index, follow',
     })
+    setJsonLd('schema-article', getArticleSchema(article, canonicalArticleUrl))
+    setJsonLd('schema-breadcrumb', getBreadcrumbSchema(`/news/${article.slug || article.id}`, article.title))
   }, [article, isLoading])
 
   // Track Reading Progress as user scrolls through the article container

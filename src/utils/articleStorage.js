@@ -66,6 +66,22 @@ export const getClientTelemetry = () => {
   return { device, browser, os, city, country, userAgent: ua }
 }
 
+const safeParseJsonArray = (val) => {
+  if (Array.isArray(val)) return val
+  if (typeof val !== 'string') return []
+  const trimmed = val.trim()
+  if (!trimmed) return []
+  if (trimmed.startsWith('[')) {
+    try {
+      const parsed = JSON.parse(trimmed)
+      return Array.isArray(parsed) ? parsed : []
+    } catch {
+      return []
+    }
+  }
+  return trimmed.split(',').map((s) => s.trim()).filter(Boolean)
+}
+
 // Transform backend snake_case article to frontend camelCase
 export const normalizeArticle = (item) => {
   if (!item) return null
@@ -85,21 +101,38 @@ export const normalizeArticle = (item) => {
     isHighlight: Boolean(item.is_highlight ?? item.isHighlight),
     highlightBadge: item.highlight_badge || item.highlightBadge || '',
     fullContent: item.full_content || item.fullContent || '',
-    paragraphs: Array.isArray(item.paragraphs)
-      ? item.paragraphs
-      : (typeof item.paragraphs === 'string' ? JSON.parse(item.paragraphs) : []),
+    paragraphs: safeParseJsonArray(item.paragraphs),
     expertQuote: item.expert_quote || item.expertQuote || '',
-    highlights: Array.isArray(item.highlights)
-      ? item.highlights
-      : (typeof item.highlights === 'string' ? JSON.parse(item.highlights) : []),
-    tags: Array.isArray(item.tags)
-      ? item.tags
-      : (typeof item.tags === 'string' ? JSON.parse(item.tags) : []),
+    highlights: safeParseJsonArray(item.highlights),
+    tags: safeParseJsonArray(item.tags),
     status: item.status || 'published',
     viewsCount: Number(item.views_count ?? item.viewsCount ?? 0),
     likesCount: Number(item.likes_count ?? item.likesCount ?? 0),
     commentsCount: Number(item.comments_count ?? item.commentsCount ?? 0),
     approvedCommentsCount: Number(item.approved_comments_count ?? item.approvedCommentsCount ?? 0)
+  }
+}
+
+// Read server-hydrated article injected by public/index.php (#sunny-initial-article)
+export const getHydratedServerArticle = (idOrSlug = '') => {
+  if (typeof document === 'undefined') return null
+  try {
+    const el = document.getElementById('sunny-initial-article')
+    if (!el || !el.textContent) return null
+    const parsed = JSON.parse(el.textContent)
+    if (!parsed || !parsed.title) return null
+    const normalized = normalizeArticle(parsed)
+    if (!idOrSlug) return normalized
+    const target = String(idOrSlug).trim()
+    if (
+      String(normalized.slug || '').trim() === target ||
+      String(normalized.id || '').trim() === target
+    ) {
+      return normalized
+    }
+    return null
+  } catch {
+    return null
   }
 }
 

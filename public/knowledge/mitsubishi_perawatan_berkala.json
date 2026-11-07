@@ -1,0 +1,2356 @@
+{
+  "metadata": {
+    "judul": "Knowledge Base Estimasi Perawatan Berkala Mitsubishi",
+    "versi": "1.0",
+    "sumber": "PERAWATAN_BERKALA_XPANDER___All_New_Pajero.xlsx",
+    "model_yang_tercakup": [
+      "Xpander",
+      "All New Pajero Sport (ANPS)",
+      "Pajero Sport CR45"
+    ],
+    "mata_uang": "IDR (Rupiah)",
+    "pajak": "PPN 11% sudah termasuk dalam Grand Total"
+  },
+  "kebijakan_free_service": {
+    "nama_program": "Program MMKSI Free Jasa dan Spare Part",
+    "penyelenggara": "MMKSI (Mitsubishi Motors Krama Yudha Sales Indonesia)",
+    "cakupan_km": [
+      10000,
+      20000,
+      30000,
+      40000,
+      50000
+    ],
+    "keterangan_cakupan": "Service pada 10.000 km s.d. 50.000 km ditanggung sepenuhnya oleh Mitsubishi (FREE jasa dan spare part)",
+    "batas_waktu": {
+      "durasi": "4 tahun",
+      "acuan": "PKT (Penyerahan Kendaraan ke Tangan konsumen / Tanggal Serah Terima Kendaraan)",
+      "keterangan": "Free service berlaku untuk 10.000 km hingga 50.000 km DENGAN SYARAT masih dalam batas 4 tahun sejak PKT. Jika batas 4 tahun terlampaui meski belum 50.000 km, maka free service tidak berlaku lagi."
+    },
+    "catatan_penting": [
+      "Perawatan di atas 50.000 km (60.000 km ke atas) TIDAK lagi free service, biaya ditanggung konsumen",
+      "Free service hanya berlaku di bengkel resmi Mitsubishi (dealer resmi MMKSI)",
+      "Konsumen tetap harus datang servis meski gratis untuk menjaga garansi kendaraan",
+      "Estimasi biaya pada tabel 10.000–50.000 km adalah nilai referensi bila free service sudah tidak berlaku (misal unit bekas / batas waktu sudah lewat)",
+      "Warranty Aki / ACCU berlaku 2 tahun",
+      "Garansi Ban 1 tahun atau senilai 1 Juta",
+      "DESTINATOR Free Service sampai 60.000 km",
+      "XFORCE Free Service sampai 50.000 km",
+      "TRITON Free Service sampai 10.000 km",
+      "L300 Free Service sampai 10.000 km",
+      "Selain Pajero Sport dan Xpander, untuk apa saja yang dikerjakan saat service kurang lebih sama, silahkan cek per km di data yang tersedia."
+    ]
+  },
+  "kendaraan": {
+    "xpander": {
+      "nama_lengkap": "Mitsubishi Xpander",
+      "sheet": "xpander",
+      "interval_servis_tambahan": "Servis antara (5.000 km, 15.000 km, 25.000 km, dst.) tidak tercantum secara eksplisit pada sheet ini",
+      "perawatan": {
+        "10000": {
+          "km": 10000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 500000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "7850A002",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 168000,
+              "total": 168000
+            },
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            }
+          ],
+          "subtotal_spare_part": 879000,
+          "total_sebelum_ppn": 1379000,
+          "grand_total": 1530690,
+          "ppn_11_persen": 151690
+        },
+        "20000": {
+          "km": 20000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 1000000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "7850A002",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 168000,
+              "total": 168000
+            },
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            }
+          ],
+          "subtotal_spare_part": 946500,
+          "total_sebelum_ppn": 1946500,
+          "grand_total": 2160615,
+          "ppn_11_persen": 214115
+        },
+        "30000": {
+          "km": 30000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 500000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "7850A002",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 168000,
+              "total": 168000
+            },
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            }
+          ],
+          "subtotal_spare_part": 879000,
+          "total_sebelum_ppn": 1379000,
+          "grand_total": 1530690,
+          "ppn_11_persen": 151690
+        },
+        "40000": {
+          "km": 40000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 1250000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "7850A002",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 168000,
+              "total": 168000
+            },
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "1500A687",
+              "nama": "Filter Udara",
+              "qty": 1,
+              "harga_satuan": 150000,
+              "total": 150000
+            },
+            {
+              "nomor_part": "RORED",
+              "nama": "Oil Transmisi Manual",
+              "qty": 2,
+              "harga_satuan": 50000,
+              "total": 100000
+            },
+            {
+              "nomor_part": "SPC98011",
+              "nama": "Minyak Rem",
+              "qty": 4,
+              "harga_satuan": 50000,
+              "total": 200000
+            },
+            {
+              "nomor_part": "MZ320389",
+              "nama": "Coolant Radiator",
+              "qty": 1,
+              "harga_satuan": 80000,
+              "total": 80000
+            },
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            }
+          ],
+          "subtotal_spare_part": 1476500,
+          "total_sebelum_ppn": 2726500,
+          "grand_total": 3026415,
+          "ppn_11_persen": 299915
+        },
+        "50000": {
+          "km": 50000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 500000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "7850A002",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 168000,
+              "total": 168000
+            },
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            }
+          ],
+          "subtotal_spare_part": 879000,
+          "total_sebelum_ppn": 1379000,
+          "grand_total": 1530690,
+          "ppn_11_persen": 151690
+        },
+        "60000": {
+          "km": 60000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 1000000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "7850A002",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 168000,
+              "total": 168000
+            },
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            },
+            {
+              "nomor_part": "1340A181",
+              "nama": "Fan Belt",
+              "qty": 1,
+              "harga_satuan": 137000,
+              "total": 137000
+            },
+            {
+              "nomor_part": "4605B949",
+              "nama": "Kanvas Rem Depan",
+              "qty": 1,
+              "harga_satuan": 600000,
+              "total": 600000
+            }
+          ],
+          "subtotal_spare_part": 1683500,
+          "total_sebelum_ppn": 2683500,
+          "grand_total": 2978685,
+          "ppn_11_persen": 295185
+        },
+        "70000": {
+          "km": 70000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 500000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "7850A002",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 168000,
+              "total": 168000
+            },
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            }
+          ],
+          "subtotal_spare_part": 879000,
+          "total_sebelum_ppn": 1379000,
+          "grand_total": 1530690,
+          "ppn_11_persen": 151690
+        },
+        "80000": {
+          "km": 80000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 1250000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "7850A002",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 168000,
+              "total": 168000
+            },
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "1500A687",
+              "nama": "Filter Udara",
+              "qty": 1,
+              "harga_satuan": 150000,
+              "total": 150000
+            },
+            {
+              "nomor_part": "RORED",
+              "nama": "Oil Transmisi Manual",
+              "qty": 2,
+              "harga_satuan": 50000,
+              "total": 100000
+            },
+            {
+              "nomor_part": "SPC98011",
+              "nama": "Minyak Rem",
+              "qty": 4,
+              "harga_satuan": 50000,
+              "total": 200000
+            },
+            {
+              "nomor_part": "MZ320389",
+              "nama": "Coolant Radiator",
+              "qty": 1,
+              "harga_satuan": 80000,
+              "total": 80000
+            },
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            },
+            {
+              "nomor_part": "SPC02001",
+              "nama": "Oil Transmisi Automatic",
+              "qty": 5,
+              "harga_satuan": 215000,
+              "total": 1075000
+            }
+          ],
+          "subtotal_spare_part": 2551500,
+          "total_sebelum_ppn": 3801500,
+          "grand_total": 4219665,
+          "ppn_11_persen": 418165
+        },
+        "90000": {
+          "km": 90000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 500000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "7850A002",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 168000,
+              "total": 168000
+            },
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            }
+          ],
+          "subtotal_spare_part": 879000,
+          "total_sebelum_ppn": 1379000,
+          "grand_total": 1530690,
+          "ppn_11_persen": 151690
+        },
+        "100000": {
+          "km": 100000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 1000000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "7850A002",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 168000,
+              "total": 168000
+            },
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            },
+            {
+              "nomor_part": "1822A086",
+              "nama": "Busi",
+              "qty": 4,
+              "harga_satuan": 335000,
+              "total": 1340000
+            }
+          ],
+          "subtotal_spare_part": 2286500,
+          "total_sebelum_ppn": 3286500,
+          "grand_total": 3648015,
+          "ppn_11_persen": 361515
+        }
+      },
+      "layanan_khusus": [
+        {
+          "id": "xpander_ganti_oli_saja",
+          "nama": "Ganti Oli Mesin Saja (Quick Lube)",
+          "kategori": "Quick Service / Pelumasan",
+          "estimasi_waktu": "30 - 45 Menit",
+          "jasa": 150000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320346",
+              "nama": "Oil Mesin MMGO (4 Liter)",
+              "qty": 4,
+              "harga_satuan": 129000,
+              "total": 516000
+            },
+            {
+              "nomor_part": "MD360935",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Gasket Drain Plug (Ring Baut Oli)",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            }
+          ],
+          "subtotal_spare_part": 586000,
+          "total_sebelum_ppn": 736000,
+          "ppn_11_persen": 80960,
+          "grand_total": 816960,
+          "keterangan": "Penggantian oli mesin MMGO 0W-20 + saringan oli + ring baut oli, pengerjaan express tanpa inspeksi menyeluruh 10.000 KM."
+        },
+        {
+          "id": "xpander_tune_up",
+          "nama": "Tune Up & Throttle Body Cleaning",
+          "kategori": "Mesin & Performa",
+          "estimasi_waktu": "60 Menit",
+          "jasa": 250000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ100723",
+              "nama": "E/G Flush & Throttle Cleaner",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            }
+          ],
+          "subtotal_spare_part": 140000,
+          "total_sebelum_ppn": 390000,
+          "ppn_11_persen": 42900,
+          "grand_total": 432900,
+          "keterangan": "Pembersihan kerak ruang bakar, throttle body intake, reset ECU kalibrasi idle, dan pengecekan busi."
+        },
+        {
+          "id": "xpander_servis_rem",
+          "nama": "Servis & Pembersihan Rem 4 Roda",
+          "kategori": "Sistem Pengereman",
+          "estimasi_waktu": "45 - 60 Menit",
+          "jasa": 200000,
+          "spare_part": [
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner Spray",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            }
+          ],
+          "subtotal_spare_part": 67500,
+          "total_sebelum_ppn": 267500,
+          "ppn_11_persen": 29425,
+          "grand_total": 296925,
+          "keterangan": "Bongkar dan bersihkan kampas rem depan cakram dan belakang tromol, pelumasan pin caliper, dan penyetelan celah handbrake."
+        },
+        {
+          "id": "xpander_spooring_balancing",
+          "nama": "Spooring 3D & Balancing 4 Roda",
+          "kategori": "Roda & Kemudi",
+          "estimasi_waktu": "45 Menit",
+          "jasa": 250000,
+          "spare_part": [],
+          "subtotal_spare_part": 0,
+          "total_sebelum_ppn": 250000,
+          "ppn_11_persen": 27500,
+          "grand_total": 277500,
+          "keterangan": "Penyelarasan sudut toe, camber, caster dengan sensor 3D computerized + timbel balancing 4 roda untuk kenyamanan berkendara."
+        }
+      ]
+    },
+    "all_new_pajero_sport": {
+      "nama_lengkap": "All New Pajero Sport (ANPS)",
+      "sheet": "ANPS",
+      "catatan_tambahan": "Terdapat servis interval antara (5K, 15K, 25K, 35K, 45K, 55K, 65K, 75K, 85K, 95K) tidak tercantum di sheet ANPS secara eksplisit",
+      "perawatan": {
+        "10000": {
+          "km": 10000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 8,
+              "harga_satuan": 105000,
+              "total": 840000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 210000,
+              "total": 210000
+            },
+            {
+              "nomor_part": "7803A112",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 330000,
+              "total": 330000
+            },
+            {
+              "nomor_part": "ADITIF",
+              "nama": "Aditif",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "MZ100723EX",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            }
+          ],
+          "subtotal_spare_part": 1575000,
+          "total_sebelum_ppn": 2175000,
+          "grand_total": 2414250,
+          "ppn_11_persen": 239250
+        },
+        "20000": {
+          "km": 20000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 1400000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 8,
+              "harga_satuan": 105000,
+              "total": 840000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 210000,
+              "total": 210000
+            },
+            {
+              "nomor_part": "7803A112",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 330000,
+              "total": 330000
+            },
+            {
+              "nomor_part": "ADITIF",
+              "nama": "Aditif",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "MZ100723EX",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner",
+              "qty": 1,
+              "harga_satuan": 58000,
+              "total": 58000
+            }
+          ],
+          "subtotal_spare_part": 1633000,
+          "total_sebelum_ppn": 3033000,
+          "grand_total": 3366630,
+          "ppn_11_persen": 333630
+        },
+        "30000": {
+          "km": 30000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 8,
+              "harga_satuan": 105000,
+              "total": 840000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 210000,
+              "total": 210000
+            },
+            {
+              "nomor_part": "7803A112",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 330000,
+              "total": 330000
+            },
+            {
+              "nomor_part": "ADITIF",
+              "nama": "Aditif",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "MZ100723EX",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            }
+          ],
+          "subtotal_spare_part": 1575000,
+          "total_sebelum_ppn": 2175000,
+          "grand_total": 2414250,
+          "ppn_11_persen": 239250
+        },
+        "40000": {
+          "km": 40000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 1800000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 8,
+              "harga_satuan": 105000,
+              "total": 840000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 210000,
+              "total": 210000
+            },
+            {
+              "nomor_part": "7803A112",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 330000,
+              "total": 330000
+            },
+            {
+              "nomor_part": "MZ100723EX",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "1500A608",
+              "nama": "Filter Udara",
+              "qty": 1,
+              "harga_satuan": 341000,
+              "total": 341000
+            },
+            {
+              "nomor_part": "SPC02001",
+              "nama": "Oil Transmisi Manual",
+              "qty": 3,
+              "harga_satuan": 215000,
+              "total": 645000
+            },
+            {
+              "nomor_part": "SPC98011",
+              "nama": "Minyak Rem",
+              "qty": 1,
+              "harga_satuan": 50000,
+              "total": 50000
+            },
+            {
+              "nomor_part": "MZ320389",
+              "nama": "Coolant Radiator",
+              "qty": 1,
+              "harga_satuan": 80000,
+              "total": 80000
+            },
+            {
+              "nomor_part": "ADITIF",
+              "nama": "Aditif",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            }
+          ],
+          "subtotal_spare_part": 2758500,
+          "total_sebelum_ppn": 4558500,
+          "grand_total": 5059935,
+          "ppn_11_persen": 501435
+        },
+        "50000": {
+          "km": 50000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 8,
+              "harga_satuan": 105000,
+              "total": 840000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 210000,
+              "total": 210000
+            },
+            {
+              "nomor_part": "7803A112",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 330000,
+              "total": 330000
+            },
+            {
+              "nomor_part": "ADITIF",
+              "nama": "Aditif",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "MZ100723EX",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            }
+          ],
+          "subtotal_spare_part": 1575000,
+          "total_sebelum_ppn": 2175000,
+          "grand_total": 2414250,
+          "ppn_11_persen": 239250
+        },
+        "60000": {
+          "km": 60000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 1400000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 8,
+              "harga_satuan": 105000,
+              "total": 840000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 210000,
+              "total": 210000
+            },
+            {
+              "nomor_part": "7803A112",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 330000,
+              "total": 330000
+            },
+            {
+              "nomor_part": "ADITIF",
+              "nama": "Aditif",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            },
+            {
+              "nomor_part": "MZ100723EX",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            },
+            {
+              "nomor_part": "4451A140",
+              "nama": "Fan Belt",
+              "qty": 1,
+              "harga_satuan": 407000,
+              "total": 407000
+            },
+            {
+              "nomor_part": "1340A193",
+              "nama": "Fan Belt (2)",
+              "qty": 1,
+              "harga_satuan": 184000,
+              "total": 184000
+            }
+          ],
+          "subtotal_spare_part": 2233500,
+          "total_sebelum_ppn": 3633500,
+          "grand_total": 4033185,
+          "ppn_11_persen": 399685
+        },
+        "70000": {
+          "km": 70000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 8,
+              "harga_satuan": 105000,
+              "total": 840000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 210000,
+              "total": 210000
+            },
+            {
+              "nomor_part": "7803A112",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 330000,
+              "total": 330000
+            },
+            {
+              "nomor_part": "MZ100723EX",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "ADITIF",
+              "nama": "Aditif",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            }
+          ],
+          "subtotal_spare_part": 1575000,
+          "total_sebelum_ppn": 2175000,
+          "grand_total": 2414250,
+          "ppn_11_persen": 239250
+        },
+        "80000": {
+          "km": 80000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 1800000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 8,
+              "harga_satuan": 105000,
+              "total": 840000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 210000,
+              "total": 210000
+            },
+            {
+              "nomor_part": "7803A112",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 330000,
+              "total": 330000
+            },
+            {
+              "nomor_part": "MZ100723EX",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "1500A608",
+              "nama": "Filter Udara",
+              "qty": 1,
+              "harga_satuan": 341000,
+              "total": 341000
+            },
+            {
+              "nomor_part": "SPC02001",
+              "nama": "Oil Transmisi Manual",
+              "qty": 3,
+              "harga_satuan": 215000,
+              "total": 645000
+            },
+            {
+              "nomor_part": "SPC98011",
+              "nama": "Minyak Rem",
+              "qty": 1,
+              "harga_satuan": 50000,
+              "total": 50000
+            },
+            {
+              "nomor_part": "MZ320389",
+              "nama": "Coolant Radiator",
+              "qty": 1,
+              "harga_satuan": 80000,
+              "total": 80000
+            },
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            },
+            {
+              "nomor_part": "SPC02001",
+              "nama": "Oil Transmisi Automatic",
+              "qty": 6,
+              "harga_satuan": 215000,
+              "total": 1290000
+            },
+            {
+              "nomor_part": "ADITIF",
+              "nama": "Aditif",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            }
+          ],
+          "subtotal_spare_part": 4048500,
+          "total_sebelum_ppn": 5848500,
+          "grand_total": 6491835,
+          "ppn_11_persen": 643335
+        },
+        "90000": {
+          "km": 90000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 8,
+              "harga_satuan": 105000,
+              "total": 840000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 210000,
+              "total": 210000
+            },
+            {
+              "nomor_part": "7803A112",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 330000,
+              "total": 330000
+            },
+            {
+              "nomor_part": "MZ100723EX",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "ADITIF",
+              "nama": "Aditif",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            }
+          ],
+          "subtotal_spare_part": 1575000,
+          "total_sebelum_ppn": 2175000,
+          "grand_total": 2414250,
+          "ppn_11_persen": 239250
+        },
+        "100000": {
+          "km": 100000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 1400000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 8,
+              "harga_satuan": 105000,
+              "total": 840000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 210000,
+              "total": 210000
+            },
+            {
+              "nomor_part": "7803A112",
+              "nama": "Filter AC",
+              "qty": 1,
+              "harga_satuan": 330000,
+              "total": 330000
+            },
+            {
+              "nomor_part": "MZ100723EX",
+              "nama": "E/G Flush",
+              "qty": 1,
+              "harga_satuan": 140000,
+              "total": 140000
+            },
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            }
+          ],
+          "subtotal_spare_part": 1587500,
+          "total_sebelum_ppn": 2987500,
+          "grand_total": 3316125,
+          "ppn_11_persen": 328625
+        }
+      },
+      "layanan_khusus": [
+        {
+          "id": "anps_ganti_oli_saja",
+          "nama": "Ganti Oli Mesin Diesel Saja (Quick Lube)",
+          "kategori": "Quick Service / Pelumasan",
+          "estimasi_waktu": "30 - 45 Menit",
+          "jasa": 200000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320368",
+              "nama": "Oil Mesin Diesel MMGO DL-1 (7 Liter)",
+              "qty": 7,
+              "harga_satuan": 145000,
+              "total": 1015000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter Diesel Pajero Sport",
+              "qty": 1,
+              "harga_satuan": 185000,
+              "total": 185000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Gasket Drain Plug",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            }
+          ],
+          "subtotal_spare_part": 1215000,
+          "total_sebelum_ppn": 1415000,
+          "ppn_11_persen": 155650,
+          "grand_total": 1570650,
+          "keterangan": "Penggantian oli mesin diesel turbo MMGO 7 Liter + saringan oli diesel asli + ring baut karter oli."
+        },
+        {
+          "id": "anps_purging_diesel",
+          "nama": "Diesel Purging & Injector Cleaner",
+          "kategori": "Mesin & Performa",
+          "estimasi_waktu": "60 Menit",
+          "jasa": 300000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ100724",
+              "nama": "Diesel Purge Canister",
+              "qty": 1,
+              "harga_satuan": 220000,
+              "total": 220000
+            }
+          ],
+          "subtotal_spare_part": 220000,
+          "total_sebelum_ppn": 520000,
+          "ppn_11_persen": 57200,
+          "grand_total": 577200,
+          "keterangan": "Pembersihan injektor common-rail diesel, ruang bakar, dan pompa injeksi dengan cairan purge langsung tanpa membongkar mesin."
+        },
+        {
+          "id": "anps_servis_rem",
+          "nama": "Brake Overhaul & Pembersihan Rem 4 Roda SUV",
+          "kategori": "Sistem Pengereman",
+          "estimasi_waktu": "60 Menit",
+          "jasa": 250000,
+          "spare_part": [
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner Spray",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            }
+          ],
+          "subtotal_spare_part": 67500,
+          "total_sebelum_ppn": 317500,
+          "ppn_11_persen": 34925,
+          "grand_total": 352425,
+          "keterangan": "Pembersihan 4 rem cakram SUV, pelumasan pin caliper tahan panas, dan pengecekan ketebalan piringan rotor."
+        }
+      ]
+    },
+    "pajero_sport_cr45": {
+      "nama_lengkap": "Pajero Sport CR45 (Diesel)",
+      "sheet": "CR45",
+      "catatan_tambahan": "Terdapat jadwal servis tambahan di interval 5K, 15K, 25K, 35K, 45K, 55K, 65K, 75K, 85K, 95K dengan biaya jasa Rp 400.000",
+      "perawatan_interval_antara": {
+        "km_berlaku": [
+          5000,
+          15000,
+          25000,
+          35000,
+          45000,
+          55000,
+          65000,
+          75000,
+          85000,
+          95000
+        ],
+        "jasa": 400000,
+        "spare_part": [
+          {
+            "nomor_part": "MZ320235",
+            "nama": "Oil Mesin",
+            "qty": 7,
+            "harga_satuan": 105000,
+            "total": 735000
+          },
+          {
+            "nomor_part": "MD050317",
+            "nama": "Ring Drain Plug",
+            "qty": 1,
+            "harga_satuan": 20000,
+            "total": 20000
+          },
+          {
+            "nomor_part": "AIR ACCU",
+            "nama": "Air Accu",
+            "qty": 1,
+            "harga_satuan": 15000,
+            "total": 15000
+          }
+        ],
+        "subtotal_spare_part": 770000,
+        "total_sebelum_ppn": 1170000,
+        "ppn_10_persen": 117000,
+        "grand_total": 1287000
+      },
+      "perawatan": {
+        "10000": {
+          "km": 10000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 7,
+              "harga_satuan": 105000,
+              "total": 735000
+            },
+            {
+              "nomor_part": "1230A045",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 275000,
+              "total": 275000
+            },
+            {
+              "nomor_part": "1770A233",
+              "nama": "Fuel Filter",
+              "qty": 1,
+              "harga_satuan": 388000,
+              "total": 388000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Ring Drain Plug",
+              "qty": 1,
+              "harga_satuan": 20000,
+              "total": 20000
+            },
+            {
+              "nomor_part": "AIR ACCU",
+              "nama": "Air Accu",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            }
+          ],
+          "subtotal_spare_part": 1433000,
+          "total_sebelum_ppn": 2033000,
+          "grand_total": 2256630,
+          "ppn_11_persen": 223630
+        },
+        "20000": {
+          "km": 20000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 1400000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 7,
+              "harga_satuan": 105000,
+              "total": 735000
+            },
+            {
+              "nomor_part": "1230A045",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 275000,
+              "total": 275000
+            },
+            {
+              "nomor_part": "1770A233",
+              "nama": "Fuel Filter",
+              "qty": 1,
+              "harga_satuan": 388000,
+              "total": 388000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Ring Drain Plug",
+              "qty": 1,
+              "harga_satuan": 20000,
+              "total": 20000
+            },
+            {
+              "nomor_part": "1500A098",
+              "nama": "Element Air (Filter Udara)",
+              "qty": 1,
+              "harga_satuan": 385000,
+              "total": 385000
+            },
+            {
+              "nomor_part": "OIL DIFF",
+              "nama": "Oil Differensial",
+              "qty": 3,
+              "harga_satuan": 100000,
+              "total": 300000
+            },
+            {
+              "nomor_part": "AIR ACCU",
+              "nama": "Air Accu",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            },
+            {
+              "nomor_part": "ML151003",
+              "nama": "Brake Fluid (Minyak Rem)",
+              "qty": 1,
+              "harga_satuan": 114000,
+              "total": 114000
+            }
+          ],
+          "subtotal_spare_part": 2232000,
+          "total_sebelum_ppn": 3632000,
+          "grand_total": 4031520,
+          "ppn_11_persen": 399520
+        },
+        "30000": {
+          "km": 30000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 7,
+              "harga_satuan": 105000,
+              "total": 735000
+            },
+            {
+              "nomor_part": "1230A045",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 275000,
+              "total": 275000
+            },
+            {
+              "nomor_part": "1770A233",
+              "nama": "Fuel Filter",
+              "qty": 1,
+              "harga_satuan": 388000,
+              "total": 388000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Ring Drain Plug",
+              "qty": 1,
+              "harga_satuan": 20000,
+              "total": 20000
+            },
+            {
+              "nomor_part": "AIR ACCU",
+              "nama": "Air Accu",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            }
+          ],
+          "subtotal_spare_part": 1433000,
+          "total_sebelum_ppn": 2033000,
+          "grand_total": 2256630,
+          "ppn_11_persen": 223630
+        },
+        "40000": {
+          "km": 40000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 1800000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 7,
+              "harga_satuan": 105000,
+              "total": 735000
+            },
+            {
+              "nomor_part": "1230A045",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 275000,
+              "total": 275000
+            },
+            {
+              "nomor_part": "1770A233",
+              "nama": "Fuel Filter",
+              "qty": 1,
+              "harga_satuan": 388000,
+              "total": 388000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Ring Drain Plug",
+              "qty": 1,
+              "harga_satuan": 20000,
+              "total": 20000
+            },
+            {
+              "nomor_part": "MZ320344",
+              "nama": "Oil A/T SPIII",
+              "qty": 8,
+              "harga_satuan": 135000,
+              "total": 1080000
+            },
+            {
+              "nomor_part": "4605A284",
+              "nama": "Pad Set FR Brake (Kanvas Rem Depan)",
+              "qty": 1,
+              "harga_satuan": 867000,
+              "total": 867000
+            },
+            {
+              "nomor_part": "1500A098",
+              "nama": "Element Air (Filter Udara)",
+              "qty": 1,
+              "harga_satuan": 385000,
+              "total": 385000
+            },
+            {
+              "nomor_part": "4605A783",
+              "nama": "Pad Set RR Brake (Kanvas Rem Belakang)",
+              "qty": 1,
+              "harga_satuan": 1540000,
+              "total": 1540000
+            },
+            {
+              "nomor_part": "ML151003",
+              "nama": "Brake Fluid (Minyak Rem)",
+              "qty": 1,
+              "harga_satuan": 114000,
+              "total": 114000
+            },
+            {
+              "nomor_part": "OIL DIFF",
+              "nama": "Oil Differensial",
+              "qty": 3,
+              "harga_satuan": 100000,
+              "total": 300000
+            },
+            {
+              "nomor_part": "AIR ACCU",
+              "nama": "Air Accu",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            },
+            {
+              "nomor_part": "COOLANT RADIATOR",
+              "nama": "Coolant Radiator",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            }
+          ],
+          "subtotal_spare_part": 5774000,
+          "total_sebelum_ppn": 7574000,
+          "grand_total": 8407140,
+          "ppn_11_persen": 833140
+        },
+        "50000": {
+          "km": 50000,
+          "status_free_service": true,
+          "catatan_free_service": "FREE jasa dan spare part (program MMKSI), berlaku s.d. 4 tahun dari PKT",
+          "jasa": 1600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 7,
+              "harga_satuan": 105000,
+              "total": 735000
+            },
+            {
+              "nomor_part": "1230A045",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 275000,
+              "total": 275000
+            },
+            {
+              "nomor_part": "1770A233",
+              "nama": "Fuel Filter",
+              "qty": 1,
+              "harga_satuan": 388000,
+              "total": 388000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Ring Drain Plug",
+              "qty": 1,
+              "harga_satuan": 20000,
+              "total": 20000
+            },
+            {
+              "nomor_part": "AIR ACCU",
+              "nama": "Air Accu",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            },
+            {
+              "nomor_part": "MZ320344",
+              "nama": "ATF SPIII",
+              "qty": 1,
+              "harga_satuan": 135000,
+              "total": 135000
+            },
+            {
+              "nomor_part": "1145A031",
+              "nama": "Adj Timing Belt",
+              "qty": 1,
+              "harga_satuan": 990000,
+              "total": 990000
+            },
+            {
+              "nomor_part": "1145A020",
+              "nama": "Arm Timing Belt",
+              "qty": 1,
+              "harga_satuan": 915000,
+              "total": 915000
+            },
+            {
+              "nomor_part": "1145A078",
+              "nama": "Pulley Timing",
+              "qty": 1,
+              "harga_satuan": 407000,
+              "total": 407000
+            },
+            {
+              "nomor_part": "1145A019",
+              "nama": "Belt T/Belt A",
+              "qty": 1,
+              "harga_satuan": 509000,
+              "total": 509000
+            },
+            {
+              "nomor_part": "MD372536",
+              "nama": "Oil Seal A",
+              "qty": 1,
+              "harga_satuan": 190000,
+              "total": 190000
+            },
+            {
+              "nomor_part": "MD168058",
+              "nama": "Oil Seal B",
+              "qty": 1,
+              "harga_satuan": 127000,
+              "total": 127000
+            },
+            {
+              "nomor_part": "MD174462",
+              "nama": "Oil Seal C",
+              "qty": 1,
+              "harga_satuan": 271000,
+              "total": 271000
+            },
+            {
+              "nomor_part": "MD041021",
+              "nama": "O Ring",
+              "qty": 1,
+              "harga_satuan": 38000,
+              "total": 38000
+            },
+            {
+              "nomor_part": "MB298267",
+              "nama": "Belt AC",
+              "qty": 1,
+              "harga_satuan": 52000,
+              "total": 52000
+            },
+            {
+              "nomor_part": "1340A044",
+              "nama": "Belt P/S",
+              "qty": 1,
+              "harga_satuan": 909000,
+              "total": 909000
+            }
+          ],
+          "subtotal_spare_part": 5976000,
+          "total_sebelum_ppn": 7576000,
+          "grand_total": 8409360,
+          "ppn_11_persen": 833360
+        },
+        "60000": {
+          "km": 60000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 1400000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 7,
+              "harga_satuan": 105000,
+              "total": 735000
+            },
+            {
+              "nomor_part": "1230A045",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 275000,
+              "total": 275000
+            },
+            {
+              "nomor_part": "1770A233",
+              "nama": "Fuel Filter",
+              "qty": 1,
+              "harga_satuan": 388000,
+              "total": 388000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Ring Drain Plug",
+              "qty": 1,
+              "harga_satuan": 20000,
+              "total": 20000
+            },
+            {
+              "nomor_part": "1500A098",
+              "nama": "Element Air (Filter Udara)",
+              "qty": 1,
+              "harga_satuan": 385000,
+              "total": 385000
+            },
+            {
+              "nomor_part": "OIL DIFF",
+              "nama": "Oil Differensial",
+              "qty": 3,
+              "harga_satuan": 100000,
+              "total": 300000
+            },
+            {
+              "nomor_part": "AIR ACCU",
+              "nama": "Air Accu",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            },
+            {
+              "nomor_part": "ML151003",
+              "nama": "Brake Fluid (Minyak Rem)",
+              "qty": 1,
+              "harga_satuan": 114000,
+              "total": 114000
+            }
+          ],
+          "subtotal_spare_part": 2232000,
+          "total_sebelum_ppn": 3632000,
+          "grand_total": 4031520,
+          "ppn_11_persen": 399520
+        },
+        "70000": {
+          "km": 70000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 7,
+              "harga_satuan": 105000,
+              "total": 735000
+            },
+            {
+              "nomor_part": "1230A045",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 275000,
+              "total": 275000
+            },
+            {
+              "nomor_part": "1770A233",
+              "nama": "Fuel Filter",
+              "qty": 1,
+              "harga_satuan": 388000,
+              "total": 388000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Ring Drain Plug",
+              "qty": 1,
+              "harga_satuan": 20000,
+              "total": 20000
+            },
+            {
+              "nomor_part": "AIR ACCU",
+              "nama": "Air Accu",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            }
+          ],
+          "subtotal_spare_part": 1433000,
+          "total_sebelum_ppn": 2033000,
+          "grand_total": 2256630,
+          "ppn_11_persen": 223630
+        },
+        "80000": {
+          "km": 80000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 1800000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 7,
+              "harga_satuan": 105000,
+              "total": 735000
+            },
+            {
+              "nomor_part": "1230A045",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 275000,
+              "total": 275000
+            },
+            {
+              "nomor_part": "1770A233",
+              "nama": "Fuel Filter",
+              "qty": 1,
+              "harga_satuan": 388000,
+              "total": 388000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Ring Drain Plug",
+              "qty": 1,
+              "harga_satuan": 20000,
+              "total": 20000
+            },
+            {
+              "nomor_part": "MZ320344",
+              "nama": "Oil A/T SPIII",
+              "qty": 8,
+              "harga_satuan": 135000,
+              "total": 1080000
+            },
+            {
+              "nomor_part": "4605A284",
+              "nama": "Pad Set FR Brake",
+              "qty": 1,
+              "harga_satuan": 867000,
+              "total": 867000
+            },
+            {
+              "nomor_part": "1500A098",
+              "nama": "Element Air (Filter Udara)",
+              "qty": 1,
+              "harga_satuan": 385000,
+              "total": 385000
+            },
+            {
+              "nomor_part": "4605A783",
+              "nama": "Pad Set RR Brake",
+              "qty": 1,
+              "harga_satuan": 1540000,
+              "total": 1540000
+            },
+            {
+              "nomor_part": "ML151003",
+              "nama": "Brake Fluid",
+              "qty": 1,
+              "harga_satuan": 114000,
+              "total": 114000
+            },
+            {
+              "nomor_part": "OIL DIFF",
+              "nama": "Oil Differensial",
+              "qty": 3,
+              "harga_satuan": 100000,
+              "total": 300000
+            },
+            {
+              "nomor_part": "AIR ACCU",
+              "nama": "Air Accu",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            },
+            {
+              "nomor_part": "COOLANT RADIATOR",
+              "nama": "Coolant Radiator",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            }
+          ],
+          "subtotal_spare_part": 5774000,
+          "total_sebelum_ppn": 7574000,
+          "grand_total": 8407140,
+          "ppn_11_persen": 833140
+        },
+        "90000": {
+          "km": 90000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 7,
+              "harga_satuan": 105000,
+              "total": 735000
+            },
+            {
+              "nomor_part": "1230A045",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 275000,
+              "total": 275000
+            },
+            {
+              "nomor_part": "1770A233",
+              "nama": "Fuel Filter",
+              "qty": 1,
+              "harga_satuan": 388000,
+              "total": 388000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Ring Drain Plug",
+              "qty": 1,
+              "harga_satuan": 20000,
+              "total": 20000
+            },
+            {
+              "nomor_part": "AIR ACCU",
+              "nama": "Air Accu",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            }
+          ],
+          "subtotal_spare_part": 1433000,
+          "total_sebelum_ppn": 2033000,
+          "grand_total": 2256630,
+          "ppn_11_persen": 223630
+        },
+        "100000": {
+          "km": 100000,
+          "status_free_service": false,
+          "catatan_free_service": "BERBAYAR – di luar program free service MMKSI",
+          "jasa": 1600000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320235",
+              "nama": "Oil Mesin",
+              "qty": 7,
+              "harga_satuan": 105000,
+              "total": 735000
+            },
+            {
+              "nomor_part": "1230A045",
+              "nama": "Oil Filter",
+              "qty": 1,
+              "harga_satuan": 275000,
+              "total": 275000
+            },
+            {
+              "nomor_part": "1770A233",
+              "nama": "Fuel Filter",
+              "qty": 1,
+              "harga_satuan": 388000,
+              "total": 388000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Ring Drain Plug",
+              "qty": 1,
+              "harga_satuan": 20000,
+              "total": 20000
+            },
+            {
+              "nomor_part": "AIR ACCU",
+              "nama": "Air Accu",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            },
+            {
+              "nomor_part": "MZ320344",
+              "nama": "ATF SPIII",
+              "qty": 1,
+              "harga_satuan": 135000,
+              "total": 135000
+            },
+            {
+              "nomor_part": "1145A031",
+              "nama": "Adj Timing Belt",
+              "qty": 1,
+              "harga_satuan": 990000,
+              "total": 990000
+            },
+            {
+              "nomor_part": "1145A020",
+              "nama": "Arm Timing Belt",
+              "qty": 1,
+              "harga_satuan": 915000,
+              "total": 915000
+            },
+            {
+              "nomor_part": "1145A078",
+              "nama": "Pulley Timing",
+              "qty": 1,
+              "harga_satuan": 407000,
+              "total": 407000
+            },
+            {
+              "nomor_part": "1145A019",
+              "nama": "Belt T/Belt A",
+              "qty": 1,
+              "harga_satuan": 509000,
+              "total": 509000
+            },
+            {
+              "nomor_part": "MD372536",
+              "nama": "Oil Seal A",
+              "qty": 1,
+              "harga_satuan": 190000,
+              "total": 190000
+            },
+            {
+              "nomor_part": "MD168058",
+              "nama": "Oil Seal B",
+              "qty": 1,
+              "harga_satuan": 127000,
+              "total": 127000
+            },
+            {
+              "nomor_part": "MD174462",
+              "nama": "Oil Seal C",
+              "qty": 1,
+              "harga_satuan": 271000,
+              "total": 271000
+            },
+            {
+              "nomor_part": "MD041021",
+              "nama": "O Ring",
+              "qty": 1,
+              "harga_satuan": 38000,
+              "total": 38000
+            },
+            {
+              "nomor_part": "MB298267",
+              "nama": "Belt AC",
+              "qty": 1,
+              "harga_satuan": 52000,
+              "total": 52000
+            },
+            {
+              "nomor_part": "1340A044",
+              "nama": "Belt P/S",
+              "qty": 1,
+              "harga_satuan": 909000,
+              "total": 909000
+            },
+            {
+              "nomor_part": "PENETRAN",
+              "nama": "Penetran",
+              "qty": 1,
+              "harga_satuan": 55000,
+              "total": 55000
+            }
+          ],
+          "subtotal_spare_part": 6031000,
+          "total_sebelum_ppn": 7631000,
+          "grand_total": 8470410,
+          "ppn_11_persen": 839410
+        }
+      },
+      "layanan_khusus": [
+        {
+          "id": "anps_ganti_oli_saja",
+          "nama": "Ganti Oli Mesin Diesel Saja (Quick Lube)",
+          "kategori": "Quick Service / Pelumasan",
+          "estimasi_waktu": "30 - 45 Menit",
+          "jasa": 200000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ320368",
+              "nama": "Oil Mesin Diesel MMGO DL-1 (7 Liter)",
+              "qty": 7,
+              "harga_satuan": 145000,
+              "total": 1015000
+            },
+            {
+              "nomor_part": "1230A182",
+              "nama": "Oil Filter Diesel Pajero Sport",
+              "qty": 1,
+              "harga_satuan": 185000,
+              "total": 185000
+            },
+            {
+              "nomor_part": "MD050317",
+              "nama": "Gasket Drain Plug",
+              "qty": 1,
+              "harga_satuan": 15000,
+              "total": 15000
+            }
+          ],
+          "subtotal_spare_part": 1215000,
+          "total_sebelum_ppn": 1415000,
+          "ppn_11_persen": 155650,
+          "grand_total": 1570650,
+          "keterangan": "Penggantian oli mesin diesel turbo MMGO 7 Liter + saringan oli diesel asli + ring baut karter oli."
+        },
+        {
+          "id": "anps_purging_diesel",
+          "nama": "Diesel Purging & Injector Cleaner",
+          "kategori": "Mesin & Performa",
+          "estimasi_waktu": "60 Menit",
+          "jasa": 300000,
+          "spare_part": [
+            {
+              "nomor_part": "MZ100724",
+              "nama": "Diesel Purge Canister",
+              "qty": 1,
+              "harga_satuan": 220000,
+              "total": 220000
+            }
+          ],
+          "subtotal_spare_part": 220000,
+          "total_sebelum_ppn": 520000,
+          "ppn_11_persen": 57200,
+          "grand_total": 577200,
+          "keterangan": "Pembersihan injektor common-rail diesel, ruang bakar, dan pompa injeksi dengan cairan purge langsung tanpa membongkar mesin."
+        },
+        {
+          "id": "anps_servis_rem",
+          "nama": "Brake Overhaul & Pembersihan Rem 4 Roda SUV",
+          "kategori": "Sistem Pengereman",
+          "estimasi_waktu": "60 Menit",
+          "jasa": 250000,
+          "spare_part": [
+            {
+              "nomor_part": "SPC98001",
+              "nama": "Brake Cleaner Spray",
+              "qty": 1,
+              "harga_satuan": 67500,
+              "total": 67500
+            }
+          ],
+          "subtotal_spare_part": 67500,
+          "total_sebelum_ppn": 317500,
+          "ppn_11_persen": 34925,
+          "grand_total": 352425,
+          "keterangan": "Pembersihan 4 rem cakram SUV, pelumasan pin caliper tahan panas, dan pengecekan ketebalan piringan rotor."
+        }
+      ]
+    }
+  },
+  "ringkasan_biaya": {
+    "xpander": {
+      "10000": {
+        "grand_total": 1530690,
+        "free_service": true
+      },
+      "20000": {
+        "grand_total": 2160615,
+        "free_service": true
+      },
+      "30000": {
+        "grand_total": 1530690,
+        "free_service": true
+      },
+      "40000": {
+        "grand_total": 3026415,
+        "free_service": true
+      },
+      "50000": {
+        "grand_total": 1530690,
+        "free_service": true
+      },
+      "60000": {
+        "grand_total": 2978685,
+        "free_service": false
+      },
+      "70000": {
+        "grand_total": 1530690,
+        "free_service": false
+      },
+      "80000": {
+        "grand_total": 4219665,
+        "free_service": false
+      },
+      "90000": {
+        "grand_total": 1530690,
+        "free_service": false
+      },
+      "100000": {
+        "grand_total": 3648015,
+        "free_service": false
+      }
+    },
+    "all_new_pajero_sport": {
+      "10000": {
+        "grand_total": 2414250,
+        "free_service": true
+      },
+      "20000": {
+        "grand_total": 3366630,
+        "free_service": true
+      },
+      "30000": {
+        "grand_total": 2414250,
+        "free_service": true
+      },
+      "40000": {
+        "grand_total": 5059935,
+        "free_service": true
+      },
+      "50000": {
+        "grand_total": 2414250,
+        "free_service": true
+      },
+      "60000": {
+        "grand_total": 4033185,
+        "free_service": false
+      },
+      "70000": {
+        "grand_total": 2414250,
+        "free_service": false
+      },
+      "80000": {
+        "grand_total": 6491835,
+        "free_service": false
+      },
+      "90000": {
+        "grand_total": 2414250,
+        "free_service": false
+      },
+      "100000": {
+        "grand_total": 3316125,
+        "free_service": false
+      }
+    },
+    "pajero_sport_cr45": {
+      "10000": {
+        "grand_total": 2256630,
+        "free_service": true
+      },
+      "20000": {
+        "grand_total": 4031520,
+        "free_service": true
+      },
+      "30000": {
+        "grand_total": 2256630,
+        "free_service": true
+      },
+      "40000": {
+        "grand_total": 8407140,
+        "free_service": true
+      },
+      "50000": {
+        "grand_total": 8409360,
+        "free_service": true
+      },
+      "60000": {
+        "grand_total": 4031520,
+        "free_service": false
+      },
+      "70000": {
+        "grand_total": 2256630,
+        "free_service": false
+      },
+      "80000": {
+        "grand_total": 8407140,
+        "free_service": false
+      },
+      "90000": {
+        "grand_total": 2256630,
+        "free_service": false
+      },
+      "100000": {
+        "grand_total": 8470410,
+        "free_service": false
+      },
+      "interval_antara_5K_15K_dst": {
+        "grand_total": 1298700,
+        "free_service": false
+      }
+    }
+  }
+}

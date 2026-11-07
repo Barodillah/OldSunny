@@ -30,6 +30,45 @@ Route::get('/health', function () {
     ], $dbOk ? 200 : 503);
 });
 
+Route::get('/seo/dynamic', function (Request $request) {
+    $providerCandidates = [
+        base_path('../public/seo-db-provider.php'),
+        base_path('../seo-db-provider.php'),
+        public_path('../../public/seo-db-provider.php'),
+        public_path('../../seo-db-provider.php'),
+    ];
+    foreach ($providerCandidates as $candidate) {
+        if (file_exists($candidate)) {
+            require_once $candidate;
+            break;
+        }
+    }
+
+    if (!function_exists('sunnyLoadDynamicDatabaseContext')) {
+        return response()->json(['success' => false, 'message' => 'SEO provider not found'], 404);
+    }
+
+    $pdo = null;
+    try {
+        $pdo = \Illuminate\Support\Facades\DB::connection()->getPdo();
+    } catch (\Throwable $e) {
+        $pdo = null;
+    }
+
+    $ctx = sunnyLoadDynamicDatabaseContext($pdo);
+    $baseUrl = rtrim($request->getSchemeAndHttpHost() ?: 'https://cssunmotor.com', '/');
+    if (function_exists('sunnySyncPhysicalLlmsFiles')) {
+        sunnySyncPhysicalLlmsFiles($ctx, 'https://cssunmotor.com');
+    }
+
+    return response()->json([
+        'success' => true,
+        'generated_at' => $ctx['generated_at'],
+        'faqs_by_route' => sunnyBuildDynamicFaqsByRoute($ctx),
+        'vehicle_catalog_schema' => sunnyBuildVehicleCatalogSchema($ctx, $baseUrl),
+    ]);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Portal Dashboard Operational Statistics

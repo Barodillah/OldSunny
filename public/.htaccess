@@ -1,28 +1,63 @@
+<IfModule mod_dir.c>
+  DirectorySlash Off
+  DirectoryIndex index.php index.html
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # 0. DYNAMIC XML SITEMAP, LLM KNOWLEDGE FILES & ROUTE FOLDER COLLISION GUARD:
+  # Arahkan permintaan /sitemap.xml, /llms.txt, /llms-full.txt, dan route /sales (yang memiliki
+  # folder fisik /sales/*.jpg) langsung ke generator/router dinamis agar tidak terkena 403 Forbidden.
+  RewriteRule ^sitemap\.xml$ sitemap.php [L]
+  RewriteRule ^llms\.txt$ llms.php?mode=summary [L,QSA]
+  RewriteRule ^llms-full\.txt$ llms.php?mode=full [L,QSA]
+  RewriteRule ^sales/?$ index.php [L,QSA]
 
   # 1. PENGECUALIAN UNTUK BACKEND API:
   # Jangan arahkan request /api atau /api/... ke index.html frontend agar backend Laravel diproses normal
   RewriteCond %{REQUEST_URI} ^/api($|/) [NC]
   RewriteRule ^ - [L]
 
-  # 2. FILE & DIREKTORI STATIS FISIK:
-  # Jika file (seperti bundle js, css, gambar, font) atau folder benar-benar ada, layani langsung
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
+  # 2. FILE STATIS FISIK:
+  # Hanya layani langsung jika request benar-benar menunjuk ke sebuah FILE fisik (-f) seperti
+  # /assets/*.js, /assets/*.css, atau /sales/sales_champion_rian.jpg (jangan gunakan -d agar folder tidak terkena 403).
+  RewriteCond %{REQUEST_URI} !^/$
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # 3. DYNAMIC OPEN GRAPH METADATA & SPA ROUTING FALLBACK:
-  # Arahkan ke index.php agar crawler media sosial (WhatsApp, FB, Twitter/X, Telegram, LinkedIn)
-  # menerima thumbnail artikel, judul, dan ringkasan dinamis secara real-time.
-  <IfModule mod_dir.c>
-    DirectoryIndex index.php index.html
-  </IfModule>
-
+  # 2b. PROTEKSI ASET STATIS (CEGAH BLANK PUTIH SAAT DEPLOY):
+  # Jangan pernah mengarahkan request /assets/* atau file .js/.css yang tidak ditemukan ke index.php,
+  # karena browser/CDN akan menerima text/html sebagai script module dan menyebabkan layar putih (MIME error).
+  RewriteCond %{REQUEST_URI} ^/assets/ [NC,OR]
+  RewriteCond %{REQUEST_URI} \.(js|mjs|css|map|json|webp|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$ [NC]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ - [R=404,L]
+
+  # 3. DYNAMIC OPEN GRAPH METADATA & SPA ROUTING FALLBACK:
+  # Arahkan seluruh route SPA ke index.php agar crawler pencari & media sosial
+  # menerima metadata, schema JSON-LD, dan halaman aplikasi dengan status HTTP 200.
+  RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ index.php [L]
+</IfModule>
+
+# 3b. PASTIKAN MIME TYPE MODULE JAVASCRIPT & CSS STANDAR:
+<IfModule mod_mime.c>
+  AddType text/javascript .js .mjs
+  AddType text/css .css
+  AddType application/json .json
+</IfModule>
+
+# 3c. MATIKAN CACHE PADA DOKUMEN HTML UTAMA & IZINKAN CORS PADA ASET STATIS (CSS/JS/FONT):
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|htm|php)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(css|js|mjs|json|woff|woff2|ttf|eot|svg|webp|png|jpg|jpeg)$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
 </IfModule>
 
 # 4. KEAMANAN: Cegah akses langsung ke file tersembunyi

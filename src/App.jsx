@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import { useState, lazy, Suspense } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
 import AIAssistantFloating from './components/AIAssistantFloating.jsx'
@@ -16,6 +16,7 @@ import Accessories from './pages/Accessories.jsx'
 import Promo from './pages/Promo.jsx'
 import ServiceOnRoad from './pages/ServiceOnRoad.jsx'
 import BookingService from './pages/BookingService.jsx'
+import FaqPage from './pages/FaqPage.jsx'
 import SearchResults from './pages/SearchResults.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Forbidden from './pages/Forbidden.jsx'
@@ -25,30 +26,10 @@ import ServerError from './pages/ServerError.jsx'
 import ServiceUnavailable from './pages/ServiceUnavailable.jsx'
 import ErrorPage from './pages/ErrorPage.jsx'
 import './App.css'
-
-// Portal Management Imports
-import { PortalAuthProvider } from './portal/context/PortalAuthContext.jsx'
-import PortalLayout from './portal/PortalLayout.jsx'
-import PortalDashboard from './portal/pages/PortalDashboard.jsx'
-import PortalUsers from './portal/pages/PortalUsers.jsx'
-import PortalChatHistory from './portal/pages/PortalChatHistory.jsx'
-import PortalLeads from './portal/pages/PortalLeads.jsx'
-import PortalLogin from './portal/pages/PortalLogin.jsx'
-import PortalOrganization from './portal/pages/PortalOrganization.jsx'
-import PortalSales from './portal/pages/PortalSales.jsx'
-import PortalInactive from './portal/pages/PortalInactive.jsx'
-import PortalSalesRate from './portal/pages/PortalSalesRate.jsx'
-import PortalKnowledgePlaceholder from './portal/pages/PortalKnowledgePlaceholder.jsx'
-import PortalPriceList from './portal/pages/PortalPriceList.jsx'
-import PortalAccessories from './portal/pages/PortalAccessories.jsx'
-import PortalSparepart from './portal/pages/PortalSparepart.jsx'
-import PortalPromoEvent from './portal/pages/PortalPromoEvent.jsx'
-import PortalExtendedPackage from './portal/pages/PortalExtendedPackage.jsx'
-import PortalServiceData from './portal/pages/PortalServiceData.jsx'
-import PortalArticles from './portal/pages/PortalArticles.jsx'
-import PortalArticleEditor from './portal/pages/PortalArticleEditor.jsx'
-import PortalProfile from './portal/pages/PortalProfile.jsx'
 import RouteSeoManager from './components/RouteSeoManager.jsx'
+import DynamicFaqSection from './components/DynamicFaqSection.jsx'
+
+const PortalApp = lazy(() => import('./portal/PortalApp.jsx'))
 
 function App() {
   const [selectedAiService, setSelectedAiService] = useState(null)
@@ -63,37 +44,12 @@ function App() {
   }
 
   return (
-    <PortalAuthProvider>
+    <>
       <RouteSeoManager />
       {isPortalRoute ? (
-        <Routes>
-          <Route path="/portal/login" element={<PortalLogin />} />
-          <Route path="/portal/403" element={<Forbidden />} />
-          <Route path="/portal" element={<PortalLayout />}>
-            <Route index element={<PortalDashboard />} />
-            <Route path="dashboard" element={<PortalDashboard />} />
-            <Route path="leads" element={<PortalLeads />} />
-            <Route path="chat-history" element={<PortalChatHistory />} />
-            <Route path="employees" element={<Navigate to="/portal/employees/organization" replace />} />
-            <Route path="employees/organization" element={<PortalOrganization />} />
-            <Route path="employees/sales" element={<PortalSales />} />
-            <Route path="employees/inactive" element={<PortalInactive />} />
-            <Route path="knowledge" element={<Navigate to="/portal/knowledge/price-list" replace />} />
-            <Route path="knowledge/price-list" element={<PortalPriceList />} />
-            <Route path="knowledge/accessories" element={<PortalAccessories />} />
-            <Route path="knowledge/sparepart" element={<PortalSparepart />} />
-            <Route path="knowledge/promo-event" element={<PortalPromoEvent />} />
-            <Route path="knowledge/extended-package" element={<PortalExtendedPackage />} />
-            <Route path="knowledge/service-data" element={<PortalServiceData />} />
-            <Route path="articles" element={<PortalArticles />} />
-            <Route path="articles/create" element={<PortalArticleEditor />} />
-            <Route path="articles/edit/:id" element={<PortalArticleEditor />} />
-            <Route path="sales-rate" element={<PortalSalesRate />} />
-            <Route path="users" element={<PortalUsers />} />
-            <Route path="profile" element={<PortalProfile />} />
-          </Route>
-          <Route path="/portal/*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<div style={{ minHeight: '100vh', background: '#0F172A' }} />}>
+          <PortalApp />
+        </Suspense>
       ) : (
         <div className="app-shell">
           <Navbar onOpenEmergency={handleOpenEmergency} />
@@ -122,6 +78,8 @@ function App() {
               <Route path="/news/:slug" element={<ArticleDetail />} />
               <Route path="/article/:slug" element={<ArticleDetail />} />
               <Route path="/contact" element={<Contact onOpenAiChat={(topic) => setSelectedAiService(topic)} />} />
+              <Route path="/faq" element={<FaqPage onOpenAiChat={(topic) => setSelectedAiService(topic)} />} />
+              <Route path="/faqs" element={<FaqPage onOpenAiChat={(topic) => setSelectedAiService(topic)} />} />
               <Route path="/search" element={<SearchResults />} />
 
               {/* Explicit & Catch-All Error Pages */}
@@ -135,6 +93,7 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
+          <DynamicFaqSection onOpenAiChat={(topic) => setSelectedAiService(topic)} />
           <Footer />
 
           {/* Floating Retro AI Companion (Sunny) - Active on public pages */}
@@ -147,7 +106,7 @@ function App() {
           <SunnyCustomerChatHistoryModal />
         </div>
       )}
-    </PortalAuthProvider>
+    </>
   )
 }
 

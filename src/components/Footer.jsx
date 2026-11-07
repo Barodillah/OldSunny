@@ -70,11 +70,11 @@ export default function Footer() {
             <nav className="footer-inline-nav" aria-label="Navigasi Footer">
               <Link to="/">Beranda</Link>
               <span className="footer-nav-sep" aria-hidden="true">•</span>
-              <Link to="/vehicles">Kendaraan</Link>
-              <span className="footer-nav-sep" aria-hidden="true">•</span>
               <Link to="/about">Tentang</Link>
               <span className="footer-nav-sep" aria-hidden="true">•</span>
               <Link to="/services">Layanan</Link>
+              <span className="footer-nav-sep" aria-hidden="true">•</span>
+              <Link to="/faq">FAQ</Link>
               <span className="footer-nav-sep" aria-hidden="true">•</span>
               <Link to="/contact">Kontak</Link>
             </nav>
